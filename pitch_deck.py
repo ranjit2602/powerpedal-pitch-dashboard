@@ -1367,7 +1367,7 @@ with tabs[4]:
         unsafe_allow_html=True
     )
 
-    # CSS for the custom header and tagline
+    # CSS to retain custom header and tagline styles
     st.markdown(
         """
         <style>
@@ -1393,38 +1393,41 @@ with tabs[4]:
         unsafe_allow_html=True
     )
 
-    # Use st.expander for independent, collapsible sections
+    # Main content section using Streamlit columns for proper spacing
+    col1, col2 = st.columns(2)
+
+    with col1:
+        # Expander 1: Hardware Sales
+        with st.expander("Hardware Sales 💰", expanded=False):
+            st.markdown("### Hardware Sales")
+            st.markdown("🛠 Sold in bulk to OEMs as the core revenue driver.")
+            st.markdown("📦 Each PowerPedal system is a premium, one-time purchase.")
+            st.markdown(
+                """
+                At the heart of PowerPedal’s business model is hardware sales to eBike OEMs. 
+                Our PowerPedal system — including the sensor, controller, and HMI — is supplied directly 
+                to manufacturers for seamless integration into their eBike models. 
+                This OEM-first approach ensures predictable, scalable revenue, 
+                while positioning our technology as part of the bike’s DNA rather than an add-on.
+                """
+            )
+            
+    with col2:
+        # Expander 2: AI Diagnostics Subscription
+        with st.expander("AI Diagnostics Subscription 📈", expanded=False):
+            st.markdown("### AI Diagnostics Subscription")
+            st.markdown("🤖 Remote monitoring, predictive maintenance, and troubleshooting.")
+            st.markdown("💳 Monthly per-bike fee — keeps bikes running and customers happy.")
+            st.markdown(
+                """
+                Once our hardware is in the field, we expand the value chain through AI-powered Remote Diagnostics. 
+                OEMs, dealers, and fleet operators can subscribe to our service for real-time health monitoring, 
+                predictive maintenance alerts, and data-driven performance optimization. 
+                These subscriptions create a steady, recurring revenue stream 
+                while lowering service costs and improving rider satisfaction.
+                """
+            )
     
-    # Expander 1: Hardware Sales
-    with st.expander("Hardware Sales 💰", expanded=False):
-        st.markdown("### Hardware Sales")
-        st.markdown("🛠 Sold in bulk to OEMs as the core revenue driver.")
-        st.markdown("📦 Each PowerPedal system is a premium, one-time purchase.")
-        st.markdown(
-            """
-            At the heart of PowerPedal’s business model is hardware sales to eBike OEMs. 
-            Our PowerPedal system — including the sensor, controller, and HMI — is supplied directly 
-            to manufacturers for seamless integration into their eBike models. 
-            This OEM-first approach ensures predictable, scalable revenue, 
-            while positioning our technology as part of the bike’s DNA rather than an add-on.
-            """
-        )
-
-    # Expander 2: AI Diagnostics Subscription
-    with st.expander("AI Diagnostics Subscription 📈", expanded=False):
-        st.markdown("### AI Diagnostics Subscription")
-        st.markdown("🤖 Remote monitoring, predictive maintenance, and troubleshooting.")
-        st.markdown("💳 Monthly per-bike fee — keeps bikes running and customers happy.")
-        st.markdown(
-            """
-            Once our hardware is in the field, we expand the value chain through AI-powered Remote Diagnostics. 
-            OEMs, dealers, and fleet operators can subscribe to our service for real-time health monitoring, 
-            predictive maintenance alerts, and data-driven performance optimization. 
-            These subscriptions create a steady, recurring revenue stream 
-            while lowering service costs and improving rider satisfaction.
-            """
-        )
-
     # Bottom Section
     st.markdown(
         """

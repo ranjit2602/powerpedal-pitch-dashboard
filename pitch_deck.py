@@ -113,7 +113,7 @@ st.markdown(
                 white-space: nowrap; /* Keep logo and 'PowerPedal' on one line */
             }
             .main-title-logo-container img {
-                height: 25px !important; /* Smaller logo for mobile */
+                height: 30px !important; /* Larger logo for mobile */
             }
             .main-title-tagline {
                 font-size: 0.7em !important; /* Smaller tagline for mobile */

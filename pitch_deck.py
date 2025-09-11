@@ -16,9 +16,14 @@ st.set_page_config(
 # Use st.markdown with HTML to embed the image and text as a single title element
 st.markdown(
     """
-    <h1 style='display: flex; align-items: center; gap: 10px;'>
-        <img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/logo.png" style="height: 40px; vertical-align: middle;">
-        PowerPedal – The Future of Smart Urban Mobility
+    <h1 style='display: flex; flex-direction: column; align-items: center; text-align: center;'>
+        <div style='display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; white-space: nowrap;'>
+            <img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/logo.png" style="height: 40px; vertical-align: middle;">
+            PowerPedal
+        </div>
+        <div style='font-size: 0.7em; font-weight: 500; opacity: 0.8;'>
+            The Future of Smart Urban Mobility
+        </div>
     </h1>
     """,
     unsafe_allow_html=True
@@ -80,7 +85,6 @@ st.markdown(
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.5rem !important; /* Significantly reduced size for the main title */
-                white-space: nowrap !important; /* Forces the text to stay on one line */
             }
             h1 img {
                 height: 25px !important; /* Slightly reduced height for mobile */

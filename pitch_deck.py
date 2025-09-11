@@ -1592,6 +1592,15 @@ with tabs[3]:
 # ---- TAB 5: Business Model ----
 with tabs[4]:
     # Top Section: Title & Tagline
+    import os
+import streamlit as st
+
+@st.cache_resource
+def load_image(image_path):
+    if os.path.exists(image_path):
+        return image_path
+    return None
+
     st.markdown(
         """
         <div class="business-model-header">
@@ -1630,64 +1639,38 @@ with tabs[4]:
             flex-wrap: wrap;
             gap: 20px;
         }
-        .business-model-section .expander-container {
+        .business-model-section details {
             flex: 1;
             margin: 0 10px;
             min-width: 300px;
             max-width: 400px;
-        }
-        .business-model-section .highlight-expander {
-            flex: 1;
-            margin: 0 10px;
-            min-width: 300px;
-            max-width: 800px; /* Wider when expanded */
-            background: linear-gradient(135deg, #2e2e2e, #1B3C53);
-            border: 3px solid #A8F1FF !important;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(120, 200, 65, 0.5);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 10px rgba(120, 200, 65, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(120, 200, 65, 0.8); }
-            100% { box-shadow: 0 0 10px rgba(120, 200, 65, 0.5); }
-        }
-        .business-model-section .component-container {
-            display: flex;
-            flex-direction: column; /* Changed to column to avoid image column */
-            align-items: flex-start;
-            gap: 20px;
-            padding: 15px;
             background: linear-gradient(135deg, #1B3C53, #2e2e2e);
             border: 2px solid #78C841;
             border-radius: 12px;
+            padding: 15px;
+            color: #A8F1FF;
         }
-        .business-model-section .text-container {
-            flex: 1;
-            min-width: 150px;
-            padding-right: 10px;
+        .business-model-section details[open] {
+            background: linear-gradient(135deg, #2e2e2e, #1B3C53);
+            border: 3px solid #A8F1FF !important;
+            box-shadow: 0 0 15px rgba(120, 200, 65, 0.6);
+        }
+        .business-model-section summary {
+            font-size: 18px;
+            font-weight: 600;
+            color: #78C841;
+            cursor: pointer;
+            outline: none;
         }
         .business-model-section h3 {
             font-size: 20px;
             color: #78C841;
-            margin: 0 0 10px 0;
+            margin: 10px 0;
         }
         .business-model-section p {
             font-size: 14px;
             line-height: 1.5;
-            color: #A8F1FF;
-            margin: 0 0 10px 0;
-        }
-        .business-model-section .expander-title {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        .business-model-section .expander-title p {
-            font-size: 14px;
-            color: #A8F1FF;
-            margin: 0;
+            margin: 5px 0;
         }
         .impact-statement {
             text-align: center;
@@ -1705,82 +1688,51 @@ with tabs[4]:
         unsafe_allow_html=True
     )
 
-    # Middle Section: 3 Visual Blocks (Expanders)
-    st.markdown('<div class="business-model-section">', unsafe_allow_html=True)
-
-    # Single row of expanders
-    col1, col2, col3 = st.columns([1, 1, 1])
-
-    with col1:
-        with st.expander("Hardware Sales  💰"):
-            st.markdown('<div class="component-container">', unsafe_allow_html=True)
-            st.markdown('<div class="expander-title">', unsafe_allow_html=True)
-            st.markdown('<h3>Hardware Sales</h3>', unsafe_allow_html=True)
-            st.markdown('<p>🛠 Sold in bulk to OEMs as the core revenue driver.</p>', unsafe_allow_html=True)
-            st.markdown('<p>📦 Each PowerPedal system is a premium, one-time purchase.</p>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-            st.markdown(
-                """
-                <p>At the heart of PowerPedal’s business model is hardware sales to eBike OEMs. Our PowerPedal system — including the sensor, controller, and HMI — is supplied directly to manufacturers for seamless integration into their eBike models. This OEM-first approach ensures predictable, scalable revenue, while positioning our technology as part of the bike’s DNA rather than an add-on.</p>
-                """,
-                unsafe_allow_html=True
-            )
-            st.markdown('</div>', unsafe_allow_html=True)
-
-    with col2:
-        with st.expander("AI Diagnostics Subscription  📈"):
-            st.markdown('<div class="component-container highlight-expander">', unsafe_allow_html=True)
-            st.markdown('<div class="expander-title">', unsafe_allow_html=True)
-            st.markdown('<h3>AI Diagnostics Subscription</h3>', unsafe_allow_html=True)
-            st.markdown('<p>🤖 Remote monitoring, predictive maintenance, and troubleshooting.</p>', unsafe_allow_html=True)
-            st.markdown('<p>💳 Monthly per-bike fee — keeps bikes running and customers happy.</p>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-            st.markdown('<div class="text-container">', unsafe_allow_html=True)
-            st.markdown(
-                """
-                <p>Once our hardware is in the field, we expand the value chain through AI-powered Remote Diagnostics. OEMs, dealers, and fleet operators can subscribe to our service for real-time health monitoring, predictive maintenance alerts, and data-driven performance optimization. These subscriptions create a steady, recurring revenue stream while lowering service costs and improving rider satisfaction.</p>
-                """,
-                unsafe_allow_html=True
-            )
-            st.markdown('</div>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-    with col3:
-        with st.expander("Training & Certification  🎓"):
-            st.markdown('<div class="component-container">', unsafe_allow_html=True)
-            st.markdown('<div class="expander-title">', unsafe_allow_html=True)
-            st.markdown('<h3>Training & Certification</h3>', unsafe_allow_html=True)
-            st.markdown('<p>🎓 Paid courses for technicians.</p>', unsafe_allow_html=True)
-            st.markdown('<p>🌍 Builds a global network of certified service hubs.</p>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-            st.markdown(
-                """
-                <p>The third pillar is technician training and certification. Our training programs ensure that service professionals are fully equipped to work on PowerPedal systems. Certified technicians gain exclusive access to our diagnostic tools, while OEMs benefit from a growing, skilled service network. This training module, combined with our AI tools, can operate as a standalone business — one that we can license or monetize through subscription models.</p>
-                """,
-                unsafe_allow_html=True
-            )
-            st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Bottom Section: Impact Statement
+    # Middle Section: 2 Expanders (Training removed)
     st.markdown(
         """
-        <div class="impact-statement">
-            <p>Every hardware sale creates a long-term recurring revenue stream — making each customer part of our ecosystem for years</p>
+        <div class="business-model-section">
+          <details>
+            <summary>Hardware Sales 💰</summary>
+            <h3>Hardware Sales</h3>
+            <p>🛠 Sold in bulk to OEMs as the core revenue driver.</p>
+            <p>📦 Each PowerPedal system is a premium, one-time purchase.</p>
+            <p>
+            At the heart of PowerPedal’s business model is hardware sales to eBike OEMs. 
+            Our PowerPedal system — including the sensor, controller, and HMI — is supplied directly 
+            to manufacturers for seamless integration into their eBike models. 
+            This OEM-first approach ensures predictable, scalable revenue, 
+            while positioning our technology as part of the bike’s DNA rather than an add-on.
+            </p>
+          </details>
+
+          <details open>
+            <summary>AI Diagnostics Subscription 📈</summary>
+            <h3>AI Diagnostics Subscription</h3>
+            <p>🤖 Remote monitoring, predictive maintenance, and troubleshooting.</p>
+            <p>💳 Monthly per-bike fee — keeps bikes running and customers happy.</p>
+            <p>
+            Once our hardware is in the field, we expand the value chain through AI-powered Remote Diagnostics. 
+            OEMs, dealers, and fleet operators can subscribe to our service for real-time health monitoring, 
+            predictive maintenance alerts, and data-driven performance optimization. 
+            These subscriptions create a steady, recurring revenue stream 
+            while lowering service costs and improving rider satisfaction.
+            </p>
+          </details>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-
-# Cache image loading to improve performance
-@st.cache_resource
-def load_image(image_path):
-    if os.path.exists(image_path):
-        return image_path
-    return None
-
+    # Bottom Section: Impact Statement
+    st.markdown(
+        """
+        <div class="impact-statement">
+            <p>Every hardware sale creates a long-term recurring revenue stream — making each customer part of our ecosystem for years.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 # ---- TAB 5: Go-to-Market Strategy ----
 with tabs[5]:
     # Minimal CSS for Go-to-Market Tab

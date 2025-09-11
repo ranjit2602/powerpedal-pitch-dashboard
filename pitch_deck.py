@@ -8,7 +8,29 @@ st.set_page_config(page_title="PowerPedal Interactive Pitch Deck", layout="wide"
 st.title("🚴 PowerPedal – The Future of Smart Urban Mobility")
 st.caption("Switch Mobility | Interactive Investor Deck")
 
-with st.expander("👋 Welcome! Read this for a detailed guide on navigating the deck."):
+import streamlit as st
+
+# CSS to hide Streamlit's built-in keyboard hints on expanders
+st.markdown(
+    """
+    <style>
+    /* Hide the "keyboard down/right" overlay in expanders */
+    div[data-testid="stExpander"] button p {
+        visibility: hidden;
+        position: relative;
+    }
+    div[data-testid="stExpander"] button p:before {
+        content: "👋 Welcome! Read this for a detailed guide on navigating the deck.";
+        visibility: visible;
+        position: absolute;
+        left: 0;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+with st.expander(" "):  # leave label empty, CSS injects your custom text
     st.markdown("""
     This interactive deck is designed for deep exploration. Here’s a detailed guide to each section to help you get the most out of our presentation.
     """)
@@ -38,7 +60,7 @@ with st.expander("👋 Welcome! Read this for a detailed guide on navigating the
 
     * **🔮 Future Tech & Expansion:** Look ahead at our exciting product roadmap, R&D plans, and strategy for future market expansion.
     
-    * **🎙️Audio Pitch:** For a convenient summary, listen to our narrated pitch here. It's a great place to start or to recap the entire presentation.
+    * **🎙️ Audio Pitch:** For a convenient summary, listen to our narrated pitch here. It's a great place to start or to recap the entire presentation.
     """)
 
 # Initialize session state globally

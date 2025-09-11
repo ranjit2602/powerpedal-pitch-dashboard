@@ -1612,7 +1612,7 @@ with tabs[4]:
         unsafe_allow_html=True
     )
 
-    # CSS
+    # CSS for styling expanders
     st.markdown(
         """
         <style>
@@ -1640,28 +1640,17 @@ with tabs[4]:
             flex-wrap: wrap;
             gap: 20px;
         }
-        .business-model-section details {
+        .business-model-section .expander-container {
             flex: 1;
             margin: 0 10px;
             min-width: 300px;
             max-width: 400px;
+        }
+        .business-model-section .component-container {
+            padding: 15px;
             background: linear-gradient(135deg, #1B3C53, #2e2e2e);
             border: 2px solid #78C841;
             border-radius: 12px;
-            padding: 15px;
-            color: #A8F1FF;
-        }
-        .business-model-section details[open] {
-            background: linear-gradient(135deg, #2e2e2e, #1B3C53);
-            border: 3px solid #A8F1FF !important;
-            box-shadow: 0 0 15px rgba(120, 200, 65, 0.6);
-        }
-        .business-model-section summary {
-            font-size: 18px;
-            font-weight: 600;
-            color: #78C841;
-            cursor: pointer;
-            outline: none;
         }
         .business-model-section h3 {
             font-size: 20px;
@@ -1671,6 +1660,7 @@ with tabs[4]:
         .business-model-section p {
             font-size: 14px;
             line-height: 1.5;
+            color: #A8F1FF;
             margin: 5px 0;
         }
         .impact-statement {
@@ -1684,20 +1674,25 @@ with tabs[4]:
             font-weight: 400;
             margin: 0;
         }
+        /* Hide Streamlit's keyboard navigation hints */
+        [data-testid="stTooltip"] {
+            display: none !important;
+        }
         </style>
         """,
         unsafe_allow_html=True
     )
 
     # Middle Section: 2 Expanders (Training removed)
-    st.markdown(
-        """
-        <div class="business-model-section">
-          <details>
-            <summary>Hardware Sales 💰</summary>
-            <h3>Hardware Sales</h3>
-            <p>🛠 Sold in bulk to OEMs as the core revenue driver.</p>
-            <p>📦 Each PowerPedal system is a premium, one-time purchase.</p>
+    st.markdown('<div class="business-model-section">', unsafe_allow_html=True)
+
+    with st.expander("Hardware Sales 💰", expanded=False):
+        st.markdown('<div class="component-container">', unsafe_allow_html=True)
+        st.markdown("<h3>Hardware Sales</h3>", unsafe_allow_html=True)
+        st.markdown("<p>🛠 Sold in bulk to OEMs as the core revenue driver.</p>", unsafe_allow_html=True)
+        st.markdown("<p>📦 Each PowerPedal system is a premium, one-time purchase.</p>", unsafe_allow_html=True)
+        st.markdown(
+            """
             <p>
             At the heart of PowerPedal’s business model is hardware sales to eBike OEMs. 
             Our PowerPedal system — including the sensor, controller, and HMI — is supplied directly 
@@ -1705,13 +1700,18 @@ with tabs[4]:
             This OEM-first approach ensures predictable, scalable revenue, 
             while positioning our technology as part of the bike’s DNA rather than an add-on.
             </p>
-          </details>
+            """,
+            unsafe_allow_html=True
+        )
+        st.markdown('</div>', unsafe_allow_html=True)
 
-          <details open>
-            <summary>AI Diagnostics Subscription 📈</summary>
-            <h3>AI Diagnostics Subscription</h3>
-            <p>🤖 Remote monitoring, predictive maintenance, and troubleshooting.</p>
-            <p>💳 Monthly per-bike fee — keeps bikes running and customers happy.</p>
+    with st.expander("AI Diagnostics Subscription 📈", expanded=False):
+        st.markdown('<div class="component-container">', unsafe_allow_html=True)
+        st.markdown("<h3>AI Diagnostics Subscription</h3>", unsafe_allow_html=True)
+        st.markdown("<p>🤖 Remote monitoring, predictive maintenance, and troubleshooting.</p>", unsafe_allow_html=True)
+        st.markdown("<p>💳 Monthly per-bike fee — keeps bikes running and customers happy.</p>", unsafe_allow_html=True)
+        st.markdown(
+            """
             <p>
             Once our hardware is in the field, we expand the value chain through AI-powered Remote Diagnostics. 
             OEMs, dealers, and fleet operators can subscribe to our service for real-time health monitoring, 
@@ -1719,13 +1719,14 @@ with tabs[4]:
             These subscriptions create a steady, recurring revenue stream 
             while lowering service costs and improving rider satisfaction.
             </p>
-          </details>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    # Bottom Section
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # Bottom Section: Impact Statement
     st.markdown(
         """
         <div class="impact-statement">

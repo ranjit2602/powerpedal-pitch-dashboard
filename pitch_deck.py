@@ -80,6 +80,7 @@ st.markdown(
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.5rem !important; /* Significantly reduced size for the main title */
+                white-space: nowrap !important; /* Forces the text to stay on one line */
             }
             h1 img {
                 height: 25px !important; /* Slightly reduced height for mobile */

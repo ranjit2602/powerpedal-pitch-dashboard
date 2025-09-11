@@ -1589,18 +1589,19 @@ with tabs[3]:
     st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ---- TAB 5: Business Model ----
-with tabs[4]:
-    # Top Section: Title & Tagline
-    import os
+import os
 import streamlit as st
 
+# Define helper at the top
 @st.cache_resource
 def load_image(image_path):
     if os.path.exists(image_path):
         return image_path
     return None
 
+# ---- TAB 5: Business Model ----
+with tabs[4]:
+    # Top Section: Title & Tagline
     st.markdown(
         """
         <div class="business-model-header">
@@ -1611,7 +1612,7 @@ def load_image(image_path):
         unsafe_allow_html=True
     )
 
-    # CSS for Business Model Tab
+    # CSS
     st.markdown(
         """
         <style>
@@ -1724,7 +1725,7 @@ def load_image(image_path):
         unsafe_allow_html=True
     )
 
-    # Bottom Section: Impact Statement
+    # Bottom Section
     st.markdown(
         """
         <div class="impact-statement">
@@ -1733,6 +1734,7 @@ def load_image(image_path):
         """,
         unsafe_allow_html=True
     )
+
 # ---- TAB 5: Go-to-Market Strategy ----
 with tabs[5]:
     # Minimal CSS for Go-to-Market Tab

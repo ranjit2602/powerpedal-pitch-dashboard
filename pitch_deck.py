@@ -3,8 +3,16 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import requests
+from io import BytesIO
+from PIL import Image
 
-st.set_page_config(page_title="PowerPedal Interactive Pitch Deck", layout="wide")
+st.set_page_config(
+    page_title="PowerPedal Interactive Pitch Deck",
+    layout="wide",
+    page_icon="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/logo.png"
+)
+
 st.title("🚴 PowerPedal – The Future of Smart Urban Mobility")
 st.caption("Switch Mobility | Interactive Investor Deck")
 
@@ -41,9 +49,9 @@ st.markdown(
 
 # Initialize session state globally
 if 'selected_market' not in st.session_state:
-    st.session_state.selected_market = "PAM"  # Default to PAM
+    st.session_state.selected_market = "PAM"   # Default to PAM
 if 'selected_challenge' not in st.session_state:
-    st.session_state.selected_challenge = None  # For challenge sub-tab selection
+    st.session_state.selected_challenge = None   # For challenge sub-tab selection
 
 # ---- Global CSS (Moved here to avoid conflicts) ----
 st.markdown(
@@ -58,6 +66,19 @@ st.markdown(
             font-family: 'Figtree', sans-serif !important;
         }
 
+        /* --- Mobile-specific styles for title and tabs --- */
+        @media (max-width: 768px) {
+            .stTitle {
+                font-size: 24px !important;
+            }
+            .stTabs [data-baseweb="tab"] {
+                font-size: 14px !important;
+                font-weight: 500 !important;
+                padding: 8px 12px !important;
+            }
+        }
+        /* --- End of mobile styles --- */
+        
         /* Main tabs styling */
         .stTabs [data-baseweb="tab-list"] {
             display: flex;
@@ -264,10 +285,6 @@ tabs = st.tabs([
     "🎙️Audio Pitch"
     
 ])
-
-import requests
-from io import BytesIO
-
 # ---- TAB 1: Vision & Mission ---
 with tabs[0]:
     st.header("🌍 Vision & Mission")

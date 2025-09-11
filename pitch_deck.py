@@ -1367,7 +1367,8 @@ with tabs[4]:
         unsafe_allow_html=True
     )
 
-    # All CSS is now moved to one block for clarity and global effect.
+    # Only include the CSS for the custom header and tagline.
+    # The CSS for expanders is completely removed.
     st.markdown(
         """
         <style>
@@ -1388,26 +1389,6 @@ with tabs[4]:
             font-weight: 400;
             margin: 0;
         }
-        /* Styling for the expander title/summary text */
-        .st-emotion-cache-m0r1n9 p {
-            font-size: 18px;
-            font-weight: 600;
-            color: #78C841;
-        }
-        /* Styling for the content inside the expander */
-        .st-emotion-cache-1w3v53x {
-            color: #A8F1FF;
-            font-size: 14px;
-            line-height: 1.5;
-            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
-            border: 2px solid #78C841;
-            border-radius: 12px;
-            padding: 15px;
-        }
-        .st-emotion-cache-1w3v53x:hover {
-            border: 3px solid #A8F1FF !important;
-            box-shadow: 0 0 15px rgba(120, 200, 65, 0.6);
-        }
         .impact-statement {
             text-align: center;
             margin: 20px auto;
@@ -1424,8 +1405,7 @@ with tabs[4]:
         unsafe_allow_html=True
     )
 
-    # Use st.columns for proper, independent spacing of components.
-    # This is the key to preventing the overlap.
+    # Use st.columns for proper, independent spacing.
     col1, col2 = st.columns(2)
 
     with col1:
@@ -1443,7 +1423,7 @@ with tabs[4]:
                 while positioning our technology as part of the bike’s DNA rather than an add-on.
                 """
             )
-            
+
     with col2:
         # Expander 2: AI Diagnostics Subscription
         with st.expander("AI Diagnostics Subscription 📈", expanded=False):
@@ -1459,7 +1439,7 @@ with tabs[4]:
                 while lowering service costs and improving rider satisfaction.
                 """
             )
-    
+
     # Bottom Section
     st.markdown(
         """

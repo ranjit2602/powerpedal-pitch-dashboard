@@ -272,9 +272,15 @@ with tabs[0]:
     st.header("🌍 Vision & Mission")
     
     # Display single vision.png image
-    image_path = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/vision.png"
-    st.markdown('<div class="vision-images">', unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 2, 1])
+import os
+image_path = os.path.join("assets", "images", "vision.png")
+
+st.markdown('<div class="vision-images">', unsafe_allow_html=True)
+col1, col2, col3 = st.columns([1, 2, 1])
+
+with col2:
+    st.image(image_path, use_column_width=True)
+
     with col2:
         if os.path.exists(image_path):
             try:

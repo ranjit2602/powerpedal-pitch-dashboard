@@ -46,6 +46,37 @@ if 'selected_challenge' not in st.session_state:
     st.session_state.selected_challenge = None  # For challenge sub-tab selection
 
 # ---- Global CSS (Moved here to avoid conflicts) ----
+
+st.markdown(
+    """
+    <style>
+    /* ... (Your existing CSS code goes here) ... */
+
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+        .stTabs [data-baseweb="tab"] {
+            padding: 10px 12px !important;
+            font-size: 14px !important;
+            flex: 1 1 auto; /* Allow tabs to grow and shrink */
+        }
+        .stTabs [data-baseweb="tab-list"] {
+            flex-wrap: nowrap; /* Prevent wrapping for smaller screens */
+            overflow-x: auto; /* Add horizontal scroll if needed */
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;  /* Hide scrollbar for Firefox */
+        }
+        .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome/Safari */
+        }
+        .stTabs [data-baseweb="tab"][aria-selected="true"]::after {
+            /* Keep the selected tab indicator smaller on mobile */
+            height: 2px;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 st.markdown(
     """
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">

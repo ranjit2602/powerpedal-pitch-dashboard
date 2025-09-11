@@ -68,13 +68,14 @@ st.markdown(
 
         /* --- Mobile-specific styles for title and tabs --- */
         @media (max-width: 768px) {
-            .stTitle {
-                font-size: 16px !important;
+            .st-emotion-cache-1629p8f {
+                font-size: 24px !important;
             }
             .stTabs [data-baseweb="tab"] {
                 font-size: 10px !important;
                 font-weight: 500 !important;
                 padding: 4px 8px !important;
+                flex-basis: auto !important;
             }
         }
         /* --- End of mobile styles --- */

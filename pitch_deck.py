@@ -267,28 +267,36 @@ tabs = st.tabs([
     
 ])
 
+import requests
+from io import BytesIO
+
 # ---- TAB 1: Vision & Mission ---
 with tabs[0]:
     st.header("🌍 Vision & Mission")
     
     # Display single vision.png image
-import os
-image_path = os.path.join("assets", "images", "vision.png")
-
-st.markdown('<div class="vision-images">', unsafe_allow_html=True)
-col1, col2, col3 = st.columns([1, 2, 1])
-
-with col2:
-    st.image(image_path, use_column_width=True)
-
+    image_path = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/vision.png"
+    st.markdown('<div class="vision-images">', unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if os.path.exists(image_path):
-            try:
-                st.image(image_path, use_container_width=False, width=1500, output_format="auto", channels="RGB")
-            except Exception as e:
-                st.error(f"Failed to display image at {image_path}. Error: {str(e)}")
-        else:
-            st.error(f"Image not found at: {image_path}")
+        try:
+            # Fetch the image from the URL
+            response = requests.get(image_path)
+            if response.status_code == 200:
+                img = BytesIO(response.content)
+                st.image(img, use_container_width=False, width=1500, output_format="auto", channels="RGB")
+            else:
+                st.error(f"Failed to load image from {image_path}. Status code: {response.status_code}")
+                st.markdown(
+                    """
+                    <div style="text-align: center; border: 1px solid #e6e6e6; border-radius: 10px; padding: 20px; background-color: #f0f0f0;">
+                        <p style="color: #555;">Placeholder: No image</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+        except Exception as e:
+            st.error(f"Failed to display image at {image_path}. Error: {str(e)}")
             st.markdown(
                 """
                 <div style="text-align: center; border: 1px solid #e6e6e6; border-radius: 10px; padding: 20px; background-color: #f0f0f0;">
@@ -321,6 +329,10 @@ with col2:
         unsafe_allow_html=True
     )
 
+import streamlit as st
+import requests
+from io import BytesIO
+
 # ---- TAB 2: Problem ----
 with tabs[1]:
     st.header("⚠️ Problem")
@@ -339,18 +351,29 @@ with tabs[1]:
     )
 
     # Display problem.png (centered)
-    problem_image_path = os.path.abspath("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/problem.png")
+    problem_image_path = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/problem.png"
     image_class = "problem-image-container faded" if st.session_state.get('selected_challenge') else "problem-image-container"
     st.markdown(f'<div class="{image_class}">', unsafe_allow_html=True)
-    if os.path.exists(problem_image_path):
-        try:
+    try:
+        # Fetch the image from the URL
+        response = requests.get(problem_image_path)
+        if response.status_code == 200:
+            img = BytesIO(response.content)
             col1, col2, col3 = st.columns([1, 2, 1])
             with col2:
-                st.image(problem_image_path, use_container_width=False, width=1500, output_format="auto", channels="RGB")
-        except Exception as e:
-            st.error(f"Failed to display image at {problem_image_path}. Error: {str(e)}")
-    else:
-        st.error(f"Image not found at: {problem_image_path}")
+                st.image(img, use_container_width=False, width=1500, output_format="auto", channels="RGB")
+        else:
+            st.error(f"Failed to load image from {problem_image_path}. Status code: {response.status_code}")
+            st.markdown(
+                """
+                <div style="text-align: center; border: 1px solid #e6e6e6; border-radius: 10px; padding: 20px; background-color: #f0f0f0;">
+                    <p style="color: #555;">Placeholder: No image available for problem.png</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+    except Exception as e:
+        st.error(f"Failed to display image at {problem_image_path}. Error: {str(e)}")
         st.markdown(
             """
             <div style="text-align: center; border: 1px solid #e6e6e6; border-radius: 10px; padding: 20px; background-color: #f0f0f0;">
@@ -360,7 +383,6 @@ with tabs[1]:
             unsafe_allow_html=True
         )
     st.markdown('</div>', unsafe_allow_html=True)
-
     # Challenge data
     challenges = [
         {
@@ -456,6 +478,30 @@ with tabs[1]:
     # Close problem-tab div
     st.markdown('</div>', unsafe_allow_html=True)
 
+# Helper function to load Excel data with proper URL handling
+def load_excel_data(url, expected_columns, fallback_data, transpose=True):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        df = pd.read_excel(BytesIO(response.content))
+        if not all(col in df.columns for col in expected_columns):
+            st.warning(f"Expected columns {expected_columns} not found in {url}. Using fallback data.")
+            if transpose and isinstance(fallback_data, pd.DataFrame):
+                return fallback_data, f"Column mismatch in {url}"
+            elif not transpose and isinstance(fallback_data, pd.DataFrame):
+                return fallback_data, f"Column mismatch in {url}"
+            else:
+                return pd.DataFrame(fallback_data), f"Column mismatch in {url}"
+        return df, None
+    except Exception as e:
+        st.warning(f"Error loading {url}: {str(e)}. Using fallback data.")
+        if transpose and isinstance(fallback_data, pd.DataFrame):
+            return fallback_data, str(e)
+        elif not transpose and isinstance(fallback_data, pd.DataFrame):
+            return fallback_data, str(e)
+        else:
+            return pd.DataFrame(fallback_data), str(e)
+
 # ---- TAB 3: Market Opportunity ----
 with tabs[2]:
     st.header("🌏 Market Opportunity")
@@ -541,7 +587,7 @@ with tabs[2]:
         df_pos.columns = expected_columns_pos
         df_pos.index = df_pos_fallback.index
     df_market, error_market = load_excel_data(
-        "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/data/PowerPedal’s_Market_Positioning.xlsx",
+        "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/data/PowerPedal_Market_Positioning.xlsx",
         expected_columns_market,
         fallback_data_market
     )
@@ -712,9 +758,9 @@ with tabs[2]:
                             unsafe_allow_html=True
                         )
                         fig, (ax_bar, ax_pie) = plt.subplots(1, 2, figsize=(6, 3), gridspec_kw={'width_ratios': [3, 2.3]})
+                        fig.patch.set_facecolor('none')
                         ax_bar.set_facecolor('none')
                         ax_pie.set_facecolor('none')
-                        fig.patch.set_facecolor('none')
 
                         labels = ['Global eBike', 'Hub-Drive', 'Non-China', 'PowerPedal']
                         values = [48.9, 29.34, 11, 1]
@@ -2787,17 +2833,20 @@ try:
 except AttributeError:
     pass  # Handle older Streamlit versions
 
-with tabs[8]:
-    import streamlit as st
-    import time
-    import base64
-    from pathlib import Path
-    import os
+import streamlit as st
+import time
+import base64
+from pathlib import Path
+import os
+import requests
+from io import BytesIO
 
+# ---- TAB 8: Team & Advisors ----
+with tabs[8]:
     st.header("🧑‍🤝‍🧑 Team & Advisors", anchor=False)
     st.caption("Meet the Visionaries Powering Our Mission")
 
-    # --- CSS (Original with added styles for Media Coverage and Connect With Us) ---
+    # --- CSS (Updated for profile-image fit) ---
     st.markdown(
         f"""
         <style>
@@ -2819,6 +2868,7 @@ with tabs[8]:
             box-sizing: border-box;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
             text-align: center;
+            text-decoration: none; /* Ensure no underline on link */
         }}
         .team-advisors-tab .profile-container:hover {{
             transform: scale(1.07);
@@ -2828,7 +2878,7 @@ with tabs[8]:
             width: 120px !important;
             height: 120px !important;
             border-radius: 50%;
-            object-fit: contain;
+            object-fit: cover; /* Changed to cover for consistent fill */
             border: 2px solid #A8F1FF;
             padding: 2px;
             background: #FFFFFF;
@@ -2912,7 +2962,7 @@ with tabs[8]:
             margin: 50px 0;
         }}
         .team-advisors-tab .media-container {{
-            background: #1seekers: 0
+            background: #1B3C53;
             border: 3px solid #00FF7F;
             border-radius: 8px;
             padding: 15px;
@@ -2991,31 +3041,49 @@ with tabs[8]:
         unsafe_allow_html=True
     )
 
-    # Cache image loading with base64 encoding
+    # Cache image loading with base64 encoding for both local files and URLs
     @st.cache_data
     def load_image(image_name):
-        base_path = r"C:\Users\ranji\OneDrive - Switch\Switch\Dashboards\Pitch Dashboard"
-        image_path = Path(base_path) / image_name
-        try:
-            if image_path.is_file():
-                with open(image_path, "rb") as f:
-                    encoded = base64.b64encode(f.read()).decode()
-                ext = image_path.suffix.lower()
-                mime_type = "image/jpeg" if ext in [".jpg", ".jpeg"] else "image/png"
-                return f"data:{mime_type};base64,{encoded}"
-            else:
-                st.warning(f"Image not found: {image_name}")
-                return "https://via.placeholder.com/200"  # Kept original placeholder size
-        except Exception as e:
-            st.error(f"Error loading image {image_name}: {e}")
-            return "https://via.placeholder.com/200"  # Kept original placeholder size
+        # Check if the image_name is a URL
+        if image_name.startswith("http"):
+            try:
+                response = requests.get(image_name)
+                if response.status_code == 200:
+                    encoded = base64.b64encode(response.content).decode()
+                    # Determine MIME type based on file extension
+                    ext = image_name.lower().split('.')[-1]
+                    mime_type = "image/jpeg" if ext in ["jpg", "jpeg"] else "image/png"
+                    return f"data:{mime_type};base64,{encoded}"
+                else:
+                    st.warning(f"Failed to fetch image from {image_name}. Status code: {response.status_code}")
+                    return "https://via.placeholder.com/200"
+            except Exception as e:
+                st.error(f"Error loading image {image_name}: {str(e)}")
+                return "https://via.placeholder.com/200"
+        else:
+            # Handle local files
+            base_path = r"C:\Users\ranji\OneDrive - Switch\Switch\Dashboards\Pitch Dashboard"
+            image_path = Path(base_path) / image_name
+            try:
+                if image_path.is_file():
+                    with open(image_path, "rb") as f:
+                        encoded = base64.b64encode(f.read()).decode()
+                    ext = image_path.suffix.lower()
+                    mime_type = "image/jpeg" if ext in [".jpg", ".jpeg"] else "image/png"
+                    return f"data:{mime_type};base64,{encoded}"
+                else:
+                    st.warning(f"Image not found: {image_name}")
+                    return "https://via.placeholder.com/200"
+            except Exception as e:
+                st.error(f"Error loading image {image_name}: {e}")
+                return "https://via.placeholder.com/200"
 
     # --- Core Team Section ---
     st.markdown('<div class="team-advisors-tab"><h2 class="section-title" style="text-align:center;">Core Team</h2></div>', unsafe_allow_html=True)
     team_members = [
         {"name": "Vineeth Muthanna", "role": "Technical Head", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Vineeth.png", "linkedin": "https://linkedin.com/in/vineethmuthanna", "bio": "Vineeth leads product development..."},
         {"name": "Ranjit B C", "role": "Business & Operations", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Ranjit.jpeg", "linkedin": "https://linkedin.com/in/ranjit-b-c-a3981215a", "bio": "Ranjit drives operational excellence..."},
-        {"name": "Vinay Sharma", "role": "Marketing & Finance", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Vinay.png", "linkedin": "https://linkedin.com/in/vinay-sharma-0563a816a", "bio": "Vinay drives brand growth..."},
+        {"name": "Vinay Sharma", "role": "Marketing & Finance", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/vinay.png", "linkedin": "https://linkedin.com/in/vinay-sharma-0563a816a", "bio": "Vinay drives brand growth..."},
         {"name": "Shravan Aiyappa", "role": "Production Head", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Shravan.png", "linkedin": "https://linkedin.com/in/shravan-aiyappa-kadiamada-b8958ab9", "bio": "Shravan oversees production..."},
         {"name": "Rohit Kuttappa", "role": "Strategy & GTM", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Rohit.jpg", "linkedin": "https://linkedin.com/in/rohit-kuttappa-a6256439", "bio": "Rohit shapes go-to-market strategies..."},
         {"name": "Abbishek Bharadwaj", "role": "Sales & OEM Partnerships", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Abbishek.jpg", "linkedin": "https://linkedin.com/in/abbishek-v-bharadwaj-21171911", "bio": "Abbishek drives sales..."}
@@ -3025,19 +3093,20 @@ with tabs[8]:
         for j, member in enumerate(team_members[i:i+3]):
             with cols[j]:
                 st.markdown(f"""
-                    <div class="team-advisors-tab profile-container">
-                        <a href="{member['linkedin']}" target="_blank">
+                    <a href="{member['linkedin']}" target="_blank" style="text-decoration: none;">
+                        <div class="team-advisors-tab profile-container">
                             <img src="{load_image(member['image'])}" class="profile-image">
-                        </a>
-                        <div class="profile-name">{member['name']}</div>
-                        <div class="profile-role">{member['role']}</div>
-                    </div>""", unsafe_allow_html=True)
+                            <div class="profile-name">{member['name']}</div>
+                            <div class="profile-role">{member['role']}</div>
+                        </div>
+                    </a>
+                """, unsafe_allow_html=True)
                 with st.expander(f"About {member['name']}"):
                     st.markdown(f'<div class="team-advisors-tab profile-details">{member["bio"]}</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="team-advisors-tab summary-text">Our core team drives innovation and execution to lead our e-mobility revolution.</div>', unsafe_allow_html=True)
 
-    # --- Team Collaboration Section (Collage, unchanged from provided code) ---
+    # --- Team Collaboration Section ---
     team_images = ["https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/team1.jpg", "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/team2.jpg", "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/team3.jpg", "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/team4.jpg", "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/team5.jpg"]
     images_html = ""
     for img_file in team_images:
@@ -3061,7 +3130,7 @@ with tabs[8]:
     advisors = [
         {"name": "Supria Dhanda", "role": "CEO, WYSER", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Supria.jpeg", "linkedin": "https://linkedin.com/in/supriadhanda", "bio": "Supria brings expertise in AI..."},
         {"name": "Satyakam Mohanty", "role": "Entrepreneur", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Satyakam.png", "linkedin": "https://linkedin.com/in/satymohanty", "bio": "Satyakam brings expertise in building AI-driven startups..."},
-        {"name": "Krishna Prasad", "role": "Tech Manager, CeNSE IISc", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Krishna.png", "linkedin": "https://linkedin.com/in/placeholder", "bio": "Krishna guides in integrating advanced sensor systems..."},
+        {"name": "Krishna Prasad", "role": "Tech Manager, CeNSE IISc", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/krishna.png", "linkedin": "https://linkedin.com/in/placeholder", "bio": "Krishna guides in integrating advanced sensor systems..."},
         {"name": "Dr. Vijay Mishra", "role": "Ex-CTO, CeNSE IISc", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Vijay.jpg", "linkedin": "https://linkedin.com/in/placeholder", "bio": "Dr. Vijay Mishra brings decades of leadership..."},
         {"name": "Rohan Ganapathy", "role": "CEO, Bellatrix Aerospace", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/rohan.png", "linkedin": "https://linkedin.com/in/rohanmganapathy", "bio": "Rohan brings deep-tech startup expertise..."},
         {"name": "Sandeep Bahl", "role": "Vice President, NASSCOM", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Sandeep.png", "linkedin": "https://linkedin.com/in/sandeepbahl1", "bio": "Sandeep provides access to a vast network..."}
@@ -3071,13 +3140,14 @@ with tabs[8]:
         for j, advisor in enumerate(advisors[i:i+3]):
             with cols[j]:
                 st.markdown(f"""
-                    <div class="team-advisors-tab profile-container">
-                        <a href="{advisor['linkedin']}" target="_blank">
+                    <a href="{advisor['linkedin']}" target="_blank" style="text-decoration: none;">
+                        <div class="team-advisors-tab profile-container">
                             <img src="{load_image(advisor['image'])}" class="profile-image">
-                        </a>
-                        <div class="profile-name">{advisor['name']}</div>
-                        <div class="profile-role">{advisor['role']}</div>
-                    </div>""", unsafe_allow_html=True)
+                            <div class="profile-name">{advisor['name']}</div>
+                            <div class="profile-role">{advisor['role']}</div>
+                        </div>
+                    </a>
+                """, unsafe_allow_html=True)
                 with st.expander(f"About {advisor['name']}"):
                     st.markdown(f'<div class="team-advisors-tab profile-details">{advisor["bio"]}</div>', unsafe_allow_html=True)
     st.markdown('<div class="team-advisors-tab summary-text">Our advisors bring world-class expertise to propel our global impact.</div>', unsafe_allow_html=True)
@@ -3151,7 +3221,6 @@ with tabs[8]:
         """,
         unsafe_allow_html=True
     )
- 
 with tabs[9]:
     import streamlit as st
     import plotly.graph_objects as go

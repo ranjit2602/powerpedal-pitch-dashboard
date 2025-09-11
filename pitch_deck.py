@@ -1367,7 +1367,7 @@ with tabs[4]:
         unsafe_allow_html=True
     )
 
-    # CSS to retain custom header and tagline styles
+    # All CSS is now moved to one block for clarity and global effect.
     st.markdown(
         """
         <style>
@@ -1388,12 +1388,44 @@ with tabs[4]:
             font-weight: 400;
             margin: 0;
         }
+        /* Styling for the expander title/summary text */
+        .st-emotion-cache-m0r1n9 p {
+            font-size: 18px;
+            font-weight: 600;
+            color: #78C841;
+        }
+        /* Styling for the content inside the expander */
+        .st-emotion-cache-1w3v53x {
+            color: #A8F1FF;
+            font-size: 14px;
+            line-height: 1.5;
+            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
+            border: 2px solid #78C841;
+            border-radius: 12px;
+            padding: 15px;
+        }
+        .st-emotion-cache-1w3v53x:hover {
+            border: 3px solid #A8F1FF !important;
+            box-shadow: 0 0 15px rgba(120, 200, 65, 0.6);
+        }
+        .impact-statement {
+            text-align: center;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+        .impact-statement p {
+            color: #A8F1FF;
+            font-size: 18px;
+            font-weight: 400;
+            margin: 0;
+        }
         </style>
         """,
         unsafe_allow_html=True
     )
 
-    # Main content section using Streamlit columns for proper spacing
+    # Use st.columns for proper, independent spacing of components.
+    # This is the key to preventing the overlap.
     col1, col2 = st.columns(2)
 
     with col1:
@@ -1434,26 +1466,6 @@ with tabs[4]:
         <div class="impact-statement">
             <p>Every hardware sale creates a long-term recurring revenue stream — making each customer part of our ecosystem for years.</p>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # CSS for the impact statement
-    st.markdown(
-        """
-        <style>
-        .impact-statement {
-            text-align: center;
-            margin: 20px auto;
-            max-width: 800px;
-        }
-        .impact-statement p {
-            color: #A8F1FF;
-            font-size: 18px;
-            font-weight: 400;
-            margin: 0;
-        }
-        </style>
         """,
         unsafe_allow_html=True
     )

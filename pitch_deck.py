@@ -1099,6 +1099,14 @@ with tabs[3]:
             color: #FFF5F2;
             text-align: center;
         }
+        .product-tab .main-product-section {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
+            border: 3px solid #78C841;
+            border-radius: 12px;
+        }
         .product-tab .tab-container {
             margin-top: 20px;
         }
@@ -1146,6 +1154,51 @@ with tabs[3]:
         .tab-content .text-container {
             flex: 1;
             min-width: 200px;
+        }
+        .app-screenshots-container {
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .app-screenshots-container::-webkit-scrollbar {
+            display: none;
+        }
+        .app-screenshot {
+            flex: 0 0 300px;
+            width: 300px;
+            height: 600px;
+            object-fit: cover;
+            border-radius: 12px;
+            scroll-snap-align: start;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .app-description {
+            margin-top: 20px;
+            text-align: center;
+            color: #A8F1FF;
+        }
+        .app-description h3 {
+            color: #78C841;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .app-description p {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .highlight-screenshot {
+            border: 3px solid #A8F1FF !important;
+            box-shadow: 0 0 10px rgba(168, 241, 255, 0.5);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px rgba(168, 241, 255, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(168, 241, 255, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(168, 241, 255, 0.5); }
         }
         .test-lab {
             margin: 20px auto;
@@ -1211,100 +1264,46 @@ with tabs[3]:
             font-size: 14px;
             margin: 0;
         }
-        .app-section {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .app-section .expander-container {
-            flex: 1;
-            margin: 0 10px;
-            min-width: 300px;
-            max-width: 400px;
-        }
-        .app-section .highlight-expander {
-            flex: 1;
-            margin: 0 10px;
-            min-width: 300px;
-            max-width: 800px; /* Wider when expanded */
-            background: linear-gradient(135deg, #2e2e2e, #1B3C53);
-            border: 3px solid #A8F1FF !important;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(120, 200, 65, 0.5);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 10px rgba(120, 200, 65, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(120, 200, 65, 0.8); }
-            100% { box-shadow: 0 0 10px rgba(120, 200, 65, 0.5); }
-        }
-        .app-section .component-container {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            gap: 20px;
-            padding: 15px;
-            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
-            border: 2px solid #78C841;
-            border-radius: 12px;
-        }
-        .app-section .image-container {
-            flex: 0 0 150px;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-        }
-        .app-section .image-container img {
-            max-width: 150px;
-            width: 150px;
-            height: auto;
-            border-radius: 8px;
-        }
-        .app-section .text-container {
-            flex: 1;
-            min-width: 150px;
-            padding-right: 10px;
-        }
-        .app-section h3 {
-            font-size: 20px;
-            color: #78C841;
-            margin: 0 0 10px 0;
-        }
-        .app-section p {
-            font-size: 14px;
-            line-height: 1.5;
-            color: #A8F1FF;
-            margin: 0;
-        }
         </style>
         """,
         unsafe_allow_html=True
     )
+
+    def load_image(image_url):
+        """Load remote image as PIL Image or return None if fails."""
+        try:
+            response = requests.get(image_url)
+            response.raise_for_status()
+            image = Image.open(BytesIO(response.content))
+            return image
+        except Exception:
+            return None
 
     # Banner with Main Picture
     st.markdown('<div class="product-tab">', unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 4, 1])
     with col2:
         st.markdown('<div class="banner-container">', unsafe_allow_html=True)
-        product_image_path = os.path.abspath("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/product.png")
-        if os.path.exists(product_image_path):
-            st.image(product_image_path, use_container_width=True)
+        product_image = load_image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/product.png")
+        if product_image:
+            st.image(product_image, use_container_width=True)
             st.markdown(
                 '<div class="banner-tagline">Mid-drive experience. Rear hub affordability.</div>',
                 unsafe_allow_html=True
             )
         else:
-            st.warning(f"Image not found: {product_image_path}")
-            st.markdown(
-                """
-                <div style="text-align: center; border: 1px solid #e6e6e6; border-radius: 10px; padding: 20px; background-color: #f0f0f0;">
-                    <p style="color: #555;">Placeholder: No image available for product.png</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            try:
+                st.image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/product.png", use_container_width=True)
+                st.markdown(
+                    '<div class="banner-tagline">Mid-drive experience. Rear hub affordability.</div>',
+                    unsafe_allow_html=True
+                )
+            except Exception:
+                st.markdown(
+                    '<div style="text-align: center; border: 1px solid #e6e6e6; border-radius: 10px; padding: 20px; background-color: #f0f0f0;">'
+                    '<p style="color: #555;">Placeholder: No image available for product.png</p></div>',
+                    unsafe_allow_html=True
+                )
         st.markdown('</div>', unsafe_allow_html=True)
 
     # Overview
@@ -1317,6 +1316,9 @@ with tabs[3]:
     )
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # Main Product Section Container
+    st.markdown('<div class="main-product-section">', unsafe_allow_html=True)
+
     # Tab Container with 4 Sections
     st.markdown('<div class="tab-container">', unsafe_allow_html=True)
     tab1, tab2, tab3, tab4 = st.tabs(["Power Sensor", "Controller", "HMI Control Unit", "Mobile App"])
@@ -1326,11 +1328,14 @@ with tabs[3]:
         col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
         with col_img2:
             st.markdown('<div class="image-container">', unsafe_allow_html=True)
-            image_path = os.path.abspath("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powersense.png")
-            if os.path.exists(image_path):
-                st.image(image_path, caption="Power Sensor")
+            powersense_image = load_image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powersense.png")
+            if powersense_image:
+                st.image(powersense_image, caption="Power Sensor")
             else:
-                st.warning(f"Image not found: {image_path}")
+                try:
+                    st.image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powersense.png", caption="Power Sensor")
+                except Exception:
+                    st.markdown('<p>Image not available</p>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
         st.markdown('<div class="component-container">', unsafe_allow_html=True)
         st.markdown('<h3>Power Sensor – The “muscle detector” of the rider’s eBike</h3>', unsafe_allow_html=True)
@@ -1346,11 +1351,14 @@ with tabs[3]:
         col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
         with col_img2:
             st.markdown('<div class="image-container">', unsafe_allow_html=True)
-            image_path = os.path.abspath("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powerdrive.png")
-            if os.path.exists(image_path):
-                st.image(image_path, caption="Controller")
+            powerdrive_image = load_image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powerdrive.png")
+            if powerdrive_image:
+                st.image(powerdrive_image, caption="Controller")
             else:
-                st.warning(f"Image not found: {image_path}")
+                try:
+                    st.image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powerdrive.png", caption="Controller")
+                except Exception:
+                    st.markdown('<p>Image not available</p>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
         st.markdown('<div class="component-container">', unsafe_allow_html=True)
         st.markdown('<h3>Controller – The brain that makes split-second decisions</h3>', unsafe_allow_html=True)
@@ -1366,11 +1374,14 @@ with tabs[3]:
         col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
         with col_img2:
             st.markdown('<div class="image-container">', unsafe_allow_html=True)
-            image_path = os.path.abspath("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powershift.png")
-            if os.path.exists(image_path):
-                st.image(image_path, caption="HMI Control Unit")
+            powershift_image = load_image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powershift.png")
+            if powershift_image:
+                st.image(powershift_image, caption="HMI Control Unit")
             else:
-                st.warning(f"Image not found: {image_path}")
+                try:
+                    st.image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powershift.png", caption="HMI Control Unit")
+                except Exception:
+                    st.markdown('<p>Image not available</p>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
         st.markdown('<div class="component-container">', unsafe_allow_html=True)
         st.markdown('<h3>HMI (Human–Machine Interface) – The rider’s handlebar command center</h3>', unsafe_allow_html=True)
@@ -1382,153 +1393,52 @@ with tabs[3]:
         st.markdown('</div>', unsafe_allow_html=True)
 
     with tab4:
-        st.markdown('<div class="tab-content">', unsafe_allow_html=True)
-        # Mobile App Section with Dropdowns
-        st.markdown('<div class="app-section">', unsafe_allow_html=True)
-
-        # First row of expanders
-        col1, col2, col3 = st.columns([1, 1, 1])
-
-        with col1:
-            with st.expander("Ride Dashboard 📊", expanded=st.session_state.get('ride_dashboard_expanded', False)):
-                st.markdown('<div class="component-container">', unsafe_allow_html=True)
-                st.markdown('<h3>Ride Dashboard – The rider’s live stats hub</h3>', unsafe_allow_html=True)
-                col_img, col_text = st.columns([2, 3])
-                with col_img:
-                    st.markdown('<div class="image-container">', unsafe_allow_html=True)
-                    image_path = os.path.abspath("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_live.jpg")
-                    if os.path.exists(image_path):
-                        st.image(image_path, caption="Ride Dashboard", width=150, output_format="PNG", channels="RGB")
+        # Mobile App - Play Store Style: Horizontal swipeable screenshots above, detailed description below
+        st.markdown('<div class="app-screenshots-container">', unsafe_allow_html=True)
+        
+        # Define screenshots in order
+        app_screenshots = [
+            "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_live.jpg",  # Ride Dashboard
+            "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_ride_history.jpg",  # Ride History
+            "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_analytics.jpg",  # Performance Analytics
+            "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_diagnostic.jpg"  # Remote Diagnostics (highlight)
+        ]
+        
+        for idx, screenshot_url in enumerate(app_screenshots):
+            is_highlight = idx == 3  # Highlight the diagnostics one
+            screenshot_img = load_image(screenshot_url)
+            if screenshot_img:
+                if is_highlight:
+                    st.image(screenshot_img, width=300, class_="app-screenshot highlight-screenshot")
+                else:
+                    st.image(screenshot_img, width=300, class_="app-screenshot")
+            else:
+                try:
+                    if is_highlight:
+                        st.image(screenshot_url, width=300, class_="app-screenshot highlight-screenshot")
                     else:
-                        st.warning(f"Image not found: {image_path}")
-                    st.markdown('</div>', unsafe_allow_html=True)
-                with col_text:
-                    st.markdown('<div class="text-container">', unsafe_allow_html=True)
-                    st.markdown(
-                        '<p>Step into the rider’s cockpit with the Ride Dashboard—a dynamic hub that brings the journey to life. Watch current speed, assist level, battery percentage (accurate to ±1%), pedal force, and estimated range refresh in under a second, mirroring every twist and turn in real time. No need to glance down at the hardware HMI—this keeps the rider’s effort and battery perfectly in sync, letting them focus on the road ahead!</p>',
-                        unsafe_allow_html=True
-                    )
-                    st.markdown('</div>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-
-        with col2:
-            with st.expander("Ride History 📜", expanded=st.session_state.get('ride_history_expanded', False)):
-                st.markdown('<div class="component-container">', unsafe_allow_html=True)
-                st.markdown('<h3>Ride History – The rider’s cycling time machine</h3>', unsafe_allow_html=True)
-                col_img, col_text = st.columns([2, 3])
-                with col_img:
-                    st.markdown('<div class="image-container">', unsafe_allow_html=True)
-                    image_path = os.path.abspath("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_ride_history.jpg")
-                    if os.path.exists(image_path):
-                        st.image(image_path, caption="Ride History", width=150, output_format="PNG", channels="RGB")
-                    else:
-                        st.warning(f"Image not found: {image_path}")
-                    st.markdown('</div>', unsafe_allow_html=True)
-                with col_text:
-                    st.markdown('<div class="text-container">', unsafe_allow_html=True)
-                    st.markdown(
-                        '<p>Unlock the rider’s past with the Ride History—a magical scroll of every adventure. Dive into details like distance, duration, average speed, calories burned, and total elevation gain, all neatly organized by date. With week or month filters at the rider’s fingertips, they can trace progress or relive the best rides, turning every pedal stroke into a story worth telling!</p>',
-                        unsafe_allow_html=True
-                    )
-                    st.markdown('</div>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-
-        with col3:
-            with st.expander("Performance Analytics 📈", expanded=st.session_state.get('performance_analytics_expanded', False)):
-                st.markdown('<div class="component-container">', unsafe_allow_html=True)
-                st.markdown('<h3>Performance Analytics – For the data-driven rider</h3>', unsafe_allow_html=True)
-                col_img, col_text = st.columns([2, 3])
-                with col_img:
-                    st.markdown('<div class="image-container">', unsafe_allow_html=True)
-                    image_path = os.path.abspath("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_analytics.jpg")
-                    if os.path.exists(image_path):
-                        st.image(image_path, caption="Performance Analytics", width=150, output_format="PNG", channels="RGB")
-                    else:
-                        st.warning(f"Image not found: {image_path}")
-                    st.markdown('</div>', unsafe_allow_html=True)
-                with col_text:
-                    st.markdown('<div class="text-container">', unsafe_allow_html=True)
-                    st.markdown(
-                        '<p>Embark on a data adventure for the rider with Performance Analytics—where graphs and charts unravel the secrets of their ride. Explore power output patterns, battery efficiency over time, and assistance usage across terrains, with the app spotlighting the rider’s most efficient rides. It’s like having a coach in the rider’s pocket, guiding them to ride smarter with every journey!</p>',
-                        unsafe_allow_html=True
-                    )
-                    st.markdown('</div>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-
-        # Second row of expanders
-        st.markdown('<div class="app-section">', unsafe_allow_html=True)
-        col4, col5, col6 = st.columns([1, 1, 1])
-
-        with col4:
-            with st.expander("Settings & Profiles ⚙️", expanded=st.session_state.get('settings_profiles_expanded', False)):
-                st.markdown('<div class="component-container">', unsafe_allow_html=True)
-                st.markdown('<h3>Settings & Profiles – The rider’s bike, their rules</h3>', unsafe_allow_html=True)
-                col_img, col_text = st.columns([2, 3])
-                with col_img:
-                    st.markdown('<div class="image-container">', unsafe_allow_html=True)
-                    st.markdown('<p>No image available</p>', unsafe_allow_html=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
-                with col_text:
-                    st.markdown('<div class="text-container">', unsafe_allow_html=True)
-                    st.markdown(
-                        '<p>Take the reins for the rider with Settings & Profiles—their personal command center. Tweak assist levels, sculpt power delivery curves, set speed limits (within OEM-defined max), and activate battery-saving modes. For riders with multiple eBikes, store profiles for each and switch between them in an instant—it’s like tailoring the ride to the rider’s every whim!</p>',
-                        unsafe_allow_html=True
-                    )
-                    st.markdown('</div>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-
-        with col5:
-            with st.expander("Remote Diagnostics 🛠" + "\u00A0" * 20 + "Key Feature ⭐", expanded=st.session_state.get('remote_diagnostics_expanded', False)):
-                st.markdown('<div class="component-container highlight-expander">', unsafe_allow_html=True)
-                st.markdown(
-                    '<h3>Remote Diagnostics (AI-Powered & Monetizable) – The rider’s bike’s personal mechanic in their pocket</h3>',
-                    unsafe_allow_html=True
-                )
-                col_img, col_text = st.columns([2, 3])
-                with col_img:
-                    st.markdown('<div class="image-container">', unsafe_allow_html=True)
-                    image_path = os.path.abspath("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_diagnostic.jpg")
-                    if os.path.exists(image_path):
-                        st.image(image_path, caption="Remote Diagnostics", width=150, output_format="PNG", channels="RGB")
-                    else:
-                        st.warning(f"Image not found: {image_path}")
-                    st.markdown('</div>', unsafe_allow_html=True)
-                with col_text:
-                    st.markdown('<div class="text-container">', unsafe_allow_html=True)
-                    st.markdown(
-                        '<p>Meet the rider’s bike’s guardian angel—the Remote Diagnostics system, a pocket-sized mechanic powered by AI. It doesn’t just spot faults; it learns from ride data, sensor readings, and trends across thousands of eBikes, catching early warnings like torque sensor drift or motor temperature spikes before the rider notices. When an issue arises, it notifies the rider with a clear explanation and actions, sends technical reports to technicians for remote fixes, and suggests preventive maintenance based on the rider’s actual usage—not guesses.</p>',
-                        unsafe_allow_html=True
-                    )
-                    st.markdown(
-                        '<p>We’re training certified technicians to use this remotely or in the field, making repairs faster and smarter. This platform is a standalone product—OEMs, fleets, and service centers can subscribe to our diagnostics API and dashboard to manage hundreds or thousands of bikes. Monetization shines with free basics for riders, premium AI alerts by subscription, OEM licensing fees, and fleet monitoring per bike.</p>',
-                        unsafe_allow_html=True
-                    )
-                    st.markdown('</div>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-
-        with col6:
-            with st.expander("Updates & Notifications 🔔", expanded=st.session_state.get('updates_notifications_expanded', False)):
-                st.markdown('<div class="component-container">', unsafe_allow_html=True)
-                st.markdown('<h3>Updates & Notifications – Keeping the rider’s bike future-ready</h3>', unsafe_allow_html=True)
-                col_img, col_text = st.columns([2, 3])
-                with col_img:
-                    st.markdown('<div class="image-container">', unsafe_allow_html=True)
-                    st.markdown('<p>No image available</p>', unsafe_allow_html=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
-                with col_text:
-                    st.markdown('<div class="text-container">', unsafe_allow_html=True)
-                    st.markdown(
-                        '<p>Step into the future for the rider with Updates & Notifications—their gateway to a smarter bike. Firmware updates flow through the app, unlocking new features and optimizations without ever touching the hardware. Stay ahead with maintenance reminders, battery care tips, and celebratory milestones, all delivered right to the rider’s screen—it’s like having a personal bike concierge!</p>',
-                        unsafe_allow_html=True
-                    )
-                    st.markdown('</div>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-
+                        st.image(screenshot_url, width=300, class_="app-screenshot")
+                except Exception:
+                    st.markdown('<div style="flex: 0 0 300px; width: 300px; height: 600px; background: #333; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #A8F1FF;">Screenshot Placeholder</div>', unsafe_allow_html=True)
+        
         st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Detailed Description Below
+        st.markdown('<div class="app-description">', unsafe_allow_html=True)
+        st.markdown('<h3>PowerPedal Mobile App – Your eBike Companion</h3>', unsafe_allow_html=True)
+        st.markdown(
+            """
+            <p>The PowerPedal Mobile App transforms your smartphone into a powerful control center for your eBike. Swipe through the screenshots above to explore key features like real-time ride tracking, historical data insights, performance analytics, and AI-powered diagnostics. Designed for seamless integration, the app connects via Bluetooth to deliver live stats, customize settings, and provide proactive maintenance alerts—all in an intuitive interface that enhances every ride.</p>
+            <p>Key highlights include the dynamic Ride Dashboard for instant feedback, detailed Ride History to track progress, insightful Performance Analytics for optimization, and our standout Remote Diagnostics feature, which uses AI to predict and resolve issues before they arise. Whether you're a casual commuter or a dedicated cyclist, this app makes your PowerPedal experience smarter and more engaging.</p>
+            """,
+            unsafe_allow_html=True
+        )
         st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)  # Close tab-container
+    st.markdown('</div>', unsafe_allow_html=True)  # Close main-product-section
 
     # Test Lab Section
-    st.container()
     st.markdown(
         """
         <div class="test-lab">
@@ -1540,64 +1450,20 @@ with tabs[3]:
         unsafe_allow_html=True
     )
 
-    # Test Videos Section
+    # Test Videos Section (Placeholder - to be fixed next)
     st.markdown(
         """
         <div class="video-section">
             <div class="video-header">
                 <h3>Test Videos</h3>
             </div>
+            <p>Videos will be displayed here once fixed.</p>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    # Video Section with Side-by-Side Layout
-    st.markdown('<div class="video-section">', unsafe_allow_html=True)
-    video_dir = os.path.dirname(__file__)  # Use relative directory
-
-    col1, col2 = st.columns(2)  # Two columns for side-by-side videos
-
-    with col1:
-        video_path1 = os.path.join(video_dir, "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/videos/powerpedal_efficiency_testing.mp4")
-        if os.path.exists(video_path1):
-            st.markdown('<div class="video-item">', unsafe_allow_html=True)
-            st.markdown('<h4>Efficiency Testing</h4>', unsafe_allow_html=True)
-            st.markdown(
-                '<p>Explore how PowerPedal optimizes energy use across various riding conditions, showcasing its superior efficiency and range extension.</p>',
-                unsafe_allow_html=True
-            )
-            st.video(video_path1, start_time=0, width=300)
-            st.markdown('</div>', unsafe_allow_html=True)
-        else:
-            st.warning(f"Video not found: {video_path1}")
-
-    with col2:
-        video_path2 = os.path.join(video_dir, "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/videos/powerpedal_terrain_testing.mp4")
-        if os.path.exists(video_path2):
-            st.markdown('<div class="video-item">', unsafe_allow_html=True)
-            st.markdown('<h4>Terrain Testing</h4>', unsafe_allow_html=True)
-            st.markdown(
-                '<p>Witness PowerPedal’s performance across diverse terrains, from steep hills to rough trails, proving its versatility and durability.</p>',
-                unsafe_allow_html=True
-            )
-            st.video(video_path2, start_time=0, width=300)
-            st.markdown('</div>', unsafe_allow_html=True)
-        else:
-            st.warning(f"Video not found: {video_path2}")
-
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-import os
-import streamlit as st
-
-# Define helper at the top
-@st.cache_resource
-def load_image(image_path):
-    if os.path.exists(image_path):
-        return image_path
-    return None
+    st.markdown('</div>', unsafe_allow_html=True)  # Close product-tab
 
 # ---- TAB 5: Business Model ----
 with tabs[4]:

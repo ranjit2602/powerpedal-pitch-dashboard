@@ -19,10 +19,10 @@ st.markdown(
     <h1 class='main-title'>
         <div class='main-title-logo-container'>
             <img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/logo.png" style="height: 40px; vertical-align: middle;">
-            PowerPedal
+            <span class='powerpedal-wordmark'><i>powerpedal</i></span>
         </div>
         <div class='main-title-tagline'>
-            The Future of Smart Urban Mobility
+            <i>- The Future of Smart Urban Mobility</i>
         </div>
     </h1>
     """,
@@ -72,13 +72,23 @@ if 'selected_challenge' not in st.session_state:
 st.markdown(
     """
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* Import Figtree font */
+        /* Import Figtree and Oswald fonts */
         @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
 
         /* Apply Figtree globally to all elements */
         * {
             font-family: 'Figtree', sans-serif !important;
+        }
+
+        /* Specific font and consistent color/weight for the wordmark and tagline */
+        .powerpedal-wordmark, .main-title-tagline {
+            font-family: 'Oswald', sans-serif !important;
+            font-weight: 700 !important;
+            color: #E0E0E0 !important; /* Light Grey */
+            opacity: 1 !important; /* Ensure full opacity */
         }
 
         /* --- Global styles for the title (desktop) --- */
@@ -89,8 +99,6 @@ st.markdown(
         }
         .main-title-tagline {
             font-size: 1em;
-            font-weight: 600;
-            opacity: 0.8;
             margin-left: 10px;
         }
         .main-title-logo-container img {
@@ -110,7 +118,7 @@ st.markdown(
                 display: flex;
                 align-items: center;
                 gap: 5px;
-                white-space: nowrap; /* Keep logo and 'PowerPedal' on one line */
+                white-space: nowrap; /* Keep logo and 'powerpedal' on one line */
             }
             .main-title-logo-container img {
                 height: 30px !important; /* Larger logo for mobile */

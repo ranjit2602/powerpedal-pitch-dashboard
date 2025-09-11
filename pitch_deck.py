@@ -3587,7 +3587,7 @@ with tabs[11]:
     )
 
     # --- Load and Display Audio ---
-    audio_path = Path(r"https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/audio\powerpedal_audio_pitch.mp3")
+    audio_path = Path(r"https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/audio/powerpedal_audio_pitch.mp3")
     try:
         if audio_path.is_file():
             st.markdown('<div class="audio-pitch-tab audio-container">', unsafe_allow_html=True)

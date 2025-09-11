@@ -1054,416 +1054,86 @@ with tabs[2]:
         unsafe_allow_html=True
     )
 
-# ---- TAB 4: PowerPedal – The Product ----
-with tabs[3]:
-    # Header aligned to the left
-    st.header("Meet PowerPedal")
-    st.caption("The Smart, Affordable, and High-Performance eBike Drive System")
+import streamlit as st
 
-    # CSS for Product Tab
+# ---- Main Product Page Layout ----
+st.header("Meet PowerPedal")
+st.caption("The Smart, Affordable, and High-Performance eBike Drive System")
+
+# Main Banner with Image and Tagline - Centered
+col1, col2, col3 = st.columns([1, 4, 1])
+with col2:
+    st.image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/product.png", use_container_width=True)
     st.markdown(
-        """
-        <style>
-        .product-tab .banner-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .product-tab .banner-image {
-            max-width: 800px;
-            width: 100%;
-            height: auto;
-            border-radius: 12px;
-            transition: transform 0.3s ease;
-        }
-        .product-tab .banner-image:hover {
-            transform: scale(1.02);
-        }
-        .product-tab .banner-tagline {
-            color: #FFF5F2;
-            font-size: 22px;
-            font-weight: 600;
-            text-align: center;
-            margin-top: 10px;
-            background: linear-gradient(45deg, #1B3C53, #78C841);
-            padding: 10px 20px;
-            border-radius: 8px;
-            display: inline-block;
-        }
-        .product-tab .overview {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
-            border: 2px solid #78C841;
-            border-radius: 12px;
-            color: #FFF5F2;
-            text-align: center;
-        }
-        .product-tab .main-product-section {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
-            border: 3px solid #78C841;
-            border-radius: 12px;
-        }
-        .product-tab .tab-container {
-            margin-top: 20px;
-        }
-        .tab-content {
-            padding: 20px;
-        }
-        .tab-content .component-container {
-            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
-            border: 2px solid #78C841;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 10px 0;
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            justify-content: flex-start;
-            gap: 20px;
-            min-height: 150px;
-        }
-        .tab-content h3 {
-            font-size: 24px;
-            color: #78C841;
-            margin: 0 0 10px 0;
-        }
-        .tab-content p {
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 0;
-            color: #A8F1FF;
-            text-align: left;
-        }
-        .tab-content .image-container {
-            flex: 0 0 150px;
-            margin-right: 20px;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-        }
-        .tab-content .image-container img {
-            max-width: 150px;
-            width: 150px;
-            height: auto;
-            border-radius: 8px;
-        }
-        .tab-content .text-container {
-            flex: 1;
-            min-width: 200px;
-        }
-        .app-screenshots-container {
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            display: flex;
-            gap: 10px;
-            padding: 10px 0;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        .app-screenshots-container::-webkit-scrollbar {
-            display: none;
-        }
-        .app-screenshot {
-            flex: 0 0 300px;
-            width: 300px;
-            height: 600px;
-            object-fit: cover;
-            border-radius: 12px;
-            scroll-snap-align: start;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
-        .app-description {
-            margin-top: 20px;
-            text-align: center;
-            color: #A8F1FF;
-        }
-        .app-description h3 {
-            color: #78C841;
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        .app-description p {
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        .highlight-screenshot {
-            border: 3px solid #A8F1FF !important;
-            box-shadow: 0 0 10px rgba(168, 241, 255, 0.5);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 10px rgba(168, 241, 255, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(168, 241, 255, 0.8); }
-            100% { box-shadow: 0 0 10px rgba(168, 241, 255, 0.5); }
-        }
-        .test-lab {
-            margin: 20px auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
-            border: 2px solid #78C841;
-            border-radius: 12px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            max-width: 500px;
-            width: 100%;
-        }
-        .test-lab h3 {
-            color: #78C841;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-        .test-lab-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background: linear-gradient(45deg, #78C841, #A8F1FF);
-            color: #000000 !important;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            transition: transform 0.3s ease, background 0.3s ease;
-        }
-        .test-lab-link:hover {
-            transform: scale(1.05);
-            background: linear-gradient(45deg, #A8F1FF, #78C841);
-            color: #000000 !important;
-        }
-        .video-section {
-            margin-top: 20px;
-        }
-        .video-section .video-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .video-section .video-header h3 {
-            color: #78C841;
-            font-size: 24px;
-            margin: 0;
-        }
-        .video-section .video-item {
-            margin-bottom: 20px;
-            padding: 10px;
-            background: #2e2e2e;
-            border-radius: 8px;
-            border: 1px solid #78C841;
-        }
-        .video-section .video-item h4 {
-            color: #78C841;
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-        .video-section .video-item p {
-            color: #A8F1FF;
-            font-size: 14px;
-            margin: 0;
-        }
-        </style>
-        """,
+        '<div style="text-align: center; font-size: 22px; font-weight: 600; color: #FFF5F2; background: linear-gradient(45deg, #1B3C53, #78C841); padding: 10px 20px; border-radius: 8px; margin: 0 auto;">Mid-drive experience. Rear hub affordability.</div>',
+        unsafe_allow_html=True
+    )
+st.markdown("""
+<div style="text-align: center; max-width: 800px; margin: 20px auto; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e); border: 2px solid #78C841; border-radius: 12px; color: #FFF5F2;">
+    PowerPedal is a revolutionary eBike drive system that combines mid-drive performance with rear hub affordability. Designed for efficiency and compatibility, it offers a seamless riding experience with advanced torque-sensing technology.
+</div>
+""", unsafe_allow_html=True)
+
+st.divider()
+st.header("Product Components")
+
+# Power Sensor Card - Centered
+col1, col2, col3 = st.columns([1, 4, 1])
+with col2:
+    st.markdown(f'<div style="text-align: center; border: 2px solid #78C841; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e);"><h3>Power Sensor – The “muscle detector” of the rider’s eBike</h3><img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powersense.png" style="max-width: 250px; border-radius: 8px; margin-top: 15px;" /><p style="color: #A8F1FF; margin-top: 15px;">Picture a clever little device tucked inside the rider’s pedal system—the PowerPedal Power Sensor—measuring every bit of force applied with stunning ±2% accuracy. In less than 10 milliseconds, it whisks this data to the controller, painting a vivid picture of the rider’s journey. Unlike basic cadence-based systems that merely tally pedal spins, this sensor knows whether the rider is gliding effortlessly or conquering a steep hill, ensuring the motor responds instantly with just the right boost. Say goodbye to jerky starts or wasted battery—every ride becomes a smooth, natural dance with the road!</p></div>', unsafe_allow_html=True)
+
+# Controller Card - Centered
+col4, col5, col6 = st.columns([1, 4, 1])
+with col5:
+    st.markdown(f'<div style="text-align: center; border: 2px solid #78C841; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e);"><h3>Controller – The brain that makes split-second decisions</h3><img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powerdrive.png" style="max-width: 250px; border-radius: 8px; margin-top: 15px;" /><p style="color: #A8F1FF; margin-top: 15px;">Step into the mind of the rider’s eBike with the Controller—a brilliant brain processing live data from the power sensor, battery, and motor hundreds of times per second. It calculates torque, speed, and efficiency, delivering a power-packed 250W to 350W of assistance with a 1:1 to 3:1 ratio—meaning it can amplify the rider’s effort up to three times! Hills and headwinds melt away, doubling the rider’s range on a single charge. This versatile genius works with nearly any eBike motor, hub or mid-drive, and its remote diagnostics let the support team troubleshoot or fix issues online.</p></div>', unsafe_allow_html=True)
+
+# HMI Control Unit Card - Centered
+col7, col8, col9 = st.columns([1, 4, 1])
+with col8:
+    st.markdown(f'<div style="text-align: center; border: 2px solid #78C841; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e);"><h3>HMI (Human–Machine Interface) – The rider’s handlebar command center</h3><img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powershift.png" style="max-width: 250px; border-radius: 8px; margin-top: 15px;" /><p style="color: #A8F1FF; margin-top: 15px;">Meet the HMI, the rider’s sleek handlebar command center that puts control in their hands. Twist the throttle for 0–100% variable control—though OEM-set speed limits keep it safe—and flip the assist level selector from eco cruising to a full-power boost. A battery State of Charge indicator, accurate to ±1%, reveals the rider’s range at a glance, while the horn switch delivers quick safety alerts in traffic. Plus, the built-in USB port powers the rider’s lights or charges their phone mid-ride—it’s a multitasking marvel!</p></div>', unsafe_allow_html=True)
+    st.header("PowerPedal Mobile App – Your eBike Companion")
+cols = st.columns(4)
+app_screenshots = [
+    ("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_live.jpg", "Ride Dashboard: Live stats and real-time feedback."),
+    ("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_ride_history.jpg", "Ride History: Your personal cycling time machine."),
+    ("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_analytics.jpg", "Performance Analytics: Data-driven insights to ride smarter."),
+    ("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_diagnostic.jpg", "Remote Diagnostics: AI-powered bike mechanic in your pocket."),
+]
+
+for idx, (url, desc) in enumerate(app_screenshots):
+    with cols[idx]:
+        st.image(url, width=150)
+        st.markdown(f'<p style="font-size: 12px; color: #A8F1FF; text-align: center;">{desc}</p>', unsafe_allow_html=True)
+
+st.markdown("""
+<div style="text-align: center; padding: 20px; max-width: 800px; margin: 20px auto; background: linear-gradient(135deg, #1B3C53, #2e2e2e); border: 2px solid #78C841; border-radius: 12px; color: #FFF5F2;">
+    <p>The PowerPedal Mobile App transforms your smartphone into a powerful control center for your eBike. Explore key features like real-time ride tracking, historical data, performance analytics, and AI-powered diagnostics. Designed for seamless integration, the app connects via Bluetooth to deliver live stats, customize settings, and provide proactive maintenance alerts—all in an intuitive interface that enhances every ride.</p>
+    <p>Key highlights include the dynamic <b>Ride Dashboard</b> for instant feedback, detailed <b>Ride History</b> to track progress, insightful <b>Performance Analytics</b> for optimization, and our standout <b>Remote Diagnostics</b> feature, which uses AI to predict and resolve issues before they arise. Whether you're a casual commuter or a dedicated cyclist, this app makes your PowerPedal experience smarter and more engaging.</p>
+</div>
+""", unsafe_allow_html=True)
+
+st.divider()
+st.header("Testing & Performance")
+st.caption("Putting PowerPedal to the Test")
+
+col_tl1, col_tl2, col_tl3 = st.columns([1, 2, 1])
+with col_tl2:
+    st.markdown(
+        f'<div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e); border: 2px solid #78C841; border-radius: 12px;"><h3 style="color: #78C841;">Test Lab</h3><a href="https://powerpedaltestdashboard-4tmrensx9crg9j7ezjytog.streamlit.app/" target="_blank" style="display: inline-block; padding: 10px 20px; background: linear-gradient(45deg, #78C841, #A8F1FF); color: #000000; text-decoration: none; border-radius: 8px; font-size: 18px; font-weight: 600;">Visit PowerPedal Test Dashboard</a></div>',
         unsafe_allow_html=True
     )
 
-    def load_image(image_url):
-        """Load remote image as PIL Image or return None if fails."""
-        try:
-            response = requests.get(image_url)
-            response.raise_for_status()
-            image = Image.open(BytesIO(response.content))
-            return image
-        except Exception:
-            return None
+st.divider()
 
-    # Banner with Main Picture
-    st.markdown('<div class="product-tab">', unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 4, 1])
-    with col2:
-        st.markdown('<div class="banner-container">', unsafe_allow_html=True)
-        product_image = load_image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/product.png")
-        if product_image:
-            st.image(product_image, use_container_width=True)
-            st.markdown(
-                '<div class="banner-tagline">Mid-drive experience. Rear hub affordability.</div>',
-                unsafe_allow_html=True
-            )
-        else:
-            try:
-                st.image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/product.png", use_container_width=True)
-                st.markdown(
-                    '<div class="banner-tagline">Mid-drive experience. Rear hub affordability.</div>',
-                    unsafe_allow_html=True
-                )
-            except Exception:
-                st.markdown(
-                    '<div style="text-align: center; border: 1px solid #e6e6e6; border-radius: 10px; padding: 20px; background-color: #f0f0f0;">'
-                    '<p style="color: #555;">Placeholder: No image available for product.png</p></div>',
-                    unsafe_allow_html=True
-                )
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    # Overview
-    st.markdown('<div class="overview">', unsafe_allow_html=True)
-    st.markdown(
-        """
-        PowerPedal is a revolutionary eBike drive system that combines mid-drive performance with rear hub affordability. 
-        Designed for efficiency and compatibility, it offers a seamless riding experience with advanced torque-sensing technology.
-        """
-    )
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Main Product Section Container
-    st.markdown('<div class="main-product-section">', unsafe_allow_html=True)
-
-    # Tab Container with 4 Sections
-    st.markdown('<div class="tab-container">', unsafe_allow_html=True)
-    tab1, tab2, tab3, tab4 = st.tabs(["Power Sensor", "Controller", "HMI Control Unit", "Mobile App"])
-
-    with tab1:
-        st.markdown('<div class="tab-content">', unsafe_allow_html=True)
-        col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
-        with col_img2:
-            st.markdown('<div class="image-container">', unsafe_allow_html=True)
-            powersense_image = load_image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powersense.png")
-            if powersense_image:
-                st.image(powersense_image, caption="Power Sensor")
-            else:
-                try:
-                    st.image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powersense.png", caption="Power Sensor")
-                except Exception:
-                    st.markdown('<p>Image not available</p>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('<div class="component-container">', unsafe_allow_html=True)
-        st.markdown('<h3>Power Sensor – The “muscle detector” of the rider’s eBike</h3>', unsafe_allow_html=True)
-        st.markdown(
-            '<p>Picture a clever little device tucked inside the rider’s pedal system—the PowerPedal Power Sensor—measuring every bit of force applied with stunning ±2% accuracy. In less than 10 milliseconds, it whisks this data to the controller, painting a vivid picture of the rider’s journey. Unlike basic cadence-based systems that merely tally pedal spins, this sensor knows whether the rider is gliding effortlessly or conquering a steep hill, ensuring the motor responds instantly with just the right boost. Say goodbye to jerky starts or wasted battery—every ride becomes a smooth, natural dance with the road!</p>',
-            unsafe_allow_html=True
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with tab2:
-        st.markdown('<div class="tab-content">', unsafe_allow_html=True)
-        col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
-        with col_img2:
-            st.markdown('<div class="image-container">', unsafe_allow_html=True)
-            powerdrive_image = load_image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powerdrive.png")
-            if powerdrive_image:
-                st.image(powerdrive_image, caption="Controller")
-            else:
-                try:
-                    st.image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powerdrive.png", caption="Controller")
-                except Exception:
-                    st.markdown('<p>Image not available</p>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('<div class="component-container">', unsafe_allow_html=True)
-        st.markdown('<h3>Controller – The brain that makes split-second decisions</h3>', unsafe_allow_html=True)
-        st.markdown(
-            '<p>Step into the mind of the rider’s eBike with the Controller—a brilliant brain processing live data from the power sensor, battery, and motor hundreds of times per second. It calculates torque, speed, and efficiency, delivering a power-packed 250W to 350W of assistance with a 1:1 to 3:1 ratio—meaning it can amplify the rider’s effort up to three times! Hills and headwinds melt away, doubling the rider’s range on a single charge. This versatile genius works with nearly any eBike motor, hub or mid-drive, and its remote diagnostics let the support team troubleshoot or fix issues online.</p>',
-            unsafe_allow_html=True
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with tab3:
-        st.markdown('<div class="tab-content">', unsafe_allow_html=True)
-        col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
-        with col_img2:
-            st.markdown('<div class="image-container">', unsafe_allow_html=True)
-            powershift_image = load_image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powershift.png")
-            if powershift_image:
-                st.image(powershift_image, caption="HMI Control Unit")
-            else:
-                try:
-                    st.image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powershift.png", caption="HMI Control Unit")
-                except Exception:
-                    st.markdown('<p>Image not available</p>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('<div class="component-container">', unsafe_allow_html=True)
-        st.markdown('<h3>HMI (Human–Machine Interface) – The rider’s handlebar command center</h3>', unsafe_allow_html=True)
-        st.markdown(
-            '<p>Meet the HMI, the rider’s sleek handlebar command center that puts control in their hands. Twist the throttle for 0–100% variable control—though OEM-set speed limits keep it safe—and flip the assist level selector from eco cruising to a full-power boost. A battery State of Charge indicator, accurate to ±1%, reveals the rider’s range at a glance, while the horn switch delivers quick safety alerts in traffic. Plus, the built-in USB port powers the rider’s lights or charges their phone mid-ride—it’s a multitasking marvel!</p>',
-            unsafe_allow_html=True
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with tab4:
-        # Mobile App - Play Store Style: Horizontal swipeable screenshots above, detailed description below
-        st.markdown('<div class="app-screenshots-container">', unsafe_allow_html=True)
-        
-        # Define screenshots in order
-        app_screenshots = [
-            "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_live.jpg",  # Ride Dashboard
-            "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_ride_history.jpg",  # Ride History
-            "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_analytics.jpg",  # Performance Analytics
-            "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_diagnostic.jpg"  # Remote Diagnostics (highlight)
-        ]
-        
-        for idx, screenshot_url in enumerate(app_screenshots):
-            is_highlight = idx == 3  # Highlight the diagnostics one
-            screenshot_img = load_image(screenshot_url)
-            if screenshot_img:
-                if is_highlight:
-                    st.image(screenshot_img, width=300, class_="app-screenshot highlight-screenshot")
-                else:
-                    st.image(screenshot_img, width=300, class_="app-screenshot")
-            else:
-                try:
-                    if is_highlight:
-                        st.image(screenshot_url, width=300, class_="app-screenshot highlight-screenshot")
-                    else:
-                        st.image(screenshot_url, width=300, class_="app-screenshot")
-                except Exception:
-                    st.markdown('<div style="flex: 0 0 300px; width: 300px; height: 600px; background: #333; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #A8F1FF;">Screenshot Placeholder</div>', unsafe_allow_html=True)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Detailed Description Below
-        st.markdown('<div class="app-description">', unsafe_allow_html=True)
-        st.markdown('<h3>PowerPedal Mobile App – Your eBike Companion</h3>', unsafe_allow_html=True)
-        st.markdown(
-            """
-            <p>The PowerPedal Mobile App transforms your smartphone into a powerful control center for your eBike. Swipe through the screenshots above to explore key features like real-time ride tracking, historical data insights, performance analytics, and AI-powered diagnostics. Designed for seamless integration, the app connects via Bluetooth to deliver live stats, customize settings, and provide proactive maintenance alerts—all in an intuitive interface that enhances every ride.</p>
-            <p>Key highlights include the dynamic Ride Dashboard for instant feedback, detailed Ride History to track progress, insightful Performance Analytics for optimization, and our standout Remote Diagnostics feature, which uses AI to predict and resolve issues before they arise. Whether you're a casual commuter or a dedicated cyclist, this app makes your PowerPedal experience smarter and more engaging.</p>
-            """,
-            unsafe_allow_html=True
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)  # Close tab-container
-    st.markdown('</div>', unsafe_allow_html=True)  # Close main-product-section
-
-    # Test Lab Section
-    st.markdown(
-        """
-        <div class="test-lab">
-            <h3>Test Lab</h3>
-            <a href="https://powerpedaltestdashboard-4tmrensx9crg9j7ezjytog.streamlit.app/" 
-               target="_blank" class="test-lab-link">Visit PowerPedal Test Dashboard</a>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # Test Videos Section (Placeholder - to be fixed next)
-    st.markdown(
-        """
-        <div class="video-section">
-            <div class="video-header">
-                <h3>Test Videos</h3>
-            </div>
-            <p>Videos will be displayed here once fixed.</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.markdown('</div>', unsafe_allow_html=True)  # Close product-tab
+col_v1, col_v2 = st.columns(2)
+with col_v1:
+    st.video("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/videos/powerpedal_efficiency_testing.mp4")
+    st.markdown('<h4 style="text-align: center;">Efficiency Testing</h4>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center;">Explore how PowerPedal optimizes energy use across various riding conditions, showcasing its superior efficiency and range extension.</p>', unsafe_allow_html=True)
+with col_v2:
+    st.video("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/videos/powerpedal_terrain_testing.mp4")
+    st.markdown('<h4 style="text-align: center;">Terrain Testing</h4>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center;">Witness PowerPedal’s performance across diverse terrains, from steep hills to rough trails, proving its versatility and durability.</p>', unsafe_allow_html=True)
 
 # ---- TAB 5: Business Model ----
 with tabs[4]:

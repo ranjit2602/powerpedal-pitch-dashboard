@@ -68,14 +68,21 @@ st.markdown(
 
         /* --- Mobile-specific styles for title and tabs --- */
         @media (max-width: 768px) {
-            .st-emotion-cache-1629p8f {
-                font-size: 24px !important;
+            h1.st-emotion-cache-1629p8f {
+                font-size: 1.5rem !important;
+            }
+            .stTabs [data-baseweb="tab-list"] {
+                flex-wrap: wrap !important;
+                gap: 5px !important;
             }
             .stTabs [data-baseweb="tab"] {
-                font-size: 10px !important;
+                font-size: 8px !important;
                 font-weight: 500 !important;
-                padding: 4px 8px !important;
-                flex-basis: auto !important;
+                padding: 4px 6px !important;
+                flex: 1 1 auto !important;
+            }
+            .stTabs [data-baseweb="tab"] > div {
+                font-size: 8px !important;
             }
         }
         /* --- End of mobile styles --- */

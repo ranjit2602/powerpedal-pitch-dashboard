@@ -1612,7 +1612,7 @@ with tabs[4]:
         unsafe_allow_html=True
     )
 
-    # CSS for styling expanders
+    # CSS
     st.markdown(
         """
         <style>
@@ -1640,17 +1640,28 @@ with tabs[4]:
             flex-wrap: wrap;
             gap: 20px;
         }
-        .business-model-section .expander-container {
+        .business-model-section details {
             flex: 1;
             margin: 0 10px;
             min-width: 300px;
             max-width: 400px;
-        }
-        .business-model-section .component-container {
-            padding: 15px;
             background: linear-gradient(135deg, #1B3C53, #2e2e2e);
             border: 2px solid #78C841;
             border-radius: 12px;
+            padding: 15px;
+            color: #A8F1FF;
+        }
+        .business-model-section details[open] {
+            background: linear-gradient(135deg, #2e2e2e, #1B3C53);
+            border: 3px solid #A8F1FF !important;
+            box-shadow: 0 0 15px rgba(120, 200, 65, 0.6);
+        }
+        .business-model-section summary {
+            font-size: 18px;
+            font-weight: 600;
+            color: #78C841;
+            cursor: pointer;
+            outline: none;
         }
         .business-model-section h3 {
             font-size: 20px;
@@ -1660,7 +1671,6 @@ with tabs[4]:
         .business-model-section p {
             font-size: 14px;
             line-height: 1.5;
-            color: #A8F1FF;
             margin: 5px 0;
         }
         .impact-statement {
@@ -1674,25 +1684,20 @@ with tabs[4]:
             font-weight: 400;
             margin: 0;
         }
-        /* Hide Streamlit's keyboard navigation hints */
-        [data-testid="stTooltip"] {
-            display: none !important;
-        }
         </style>
         """,
         unsafe_allow_html=True
     )
 
     # Middle Section: 2 Expanders (Training removed)
-    st.markdown('<div class="business-model-section">', unsafe_allow_html=True)
-
-    with st.expander("Hardware Sales 💰", expanded=False):
-        st.markdown('<div class="component-container">', unsafe_allow_html=True)
-        st.markdown("<h3>Hardware Sales</h3>", unsafe_allow_html=True)
-        st.markdown("<p>🛠 Sold in bulk to OEMs as the core revenue driver.</p>", unsafe_allow_html=True)
-        st.markdown("<p>📦 Each PowerPedal system is a premium, one-time purchase.</p>", unsafe_allow_html=True)
-        st.markdown(
-            """
+    st.markdown(
+        """
+        <div class="business-model-section">
+          <details>
+            <summary>Hardware Sales 💰</summary>
+            <h3>Hardware Sales</h3>
+            <p>🛠 Sold in bulk to OEMs as the core revenue driver.</p>
+            <p>📦 Each PowerPedal system is a premium, one-time purchase.</p>
             <p>
             At the heart of PowerPedal’s business model is hardware sales to eBike OEMs. 
             Our PowerPedal system — including the sensor, controller, and HMI — is supplied directly 
@@ -1700,18 +1705,13 @@ with tabs[4]:
             This OEM-first approach ensures predictable, scalable revenue, 
             while positioning our technology as part of the bike’s DNA rather than an add-on.
             </p>
-            """,
-            unsafe_allow_html=True
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
+          </details>
 
-    with st.expander("AI Diagnostics Subscription 📈", expanded=False):
-        st.markdown('<div class="component-container">', unsafe_allow_html=True)
-        st.markdown("<h3>AI Diagnostics Subscription</h3>", unsafe_allow_html=True)
-        st.markdown("<p>🤖 Remote monitoring, predictive maintenance, and troubleshooting.</p>", unsafe_allow_html=True)
-        st.markdown("<p>💳 Monthly per-bike fee — keeps bikes running and customers happy.</p>", unsafe_allow_html=True)
-        st.markdown(
-            """
+          <details open>
+            <summary>AI Diagnostics Subscription 📈</summary>
+            <h3>AI Diagnostics Subscription</h3>
+            <p>🤖 Remote monitoring, predictive maintenance, and troubleshooting.</p>
+            <p>💳 Monthly per-bike fee — keeps bikes running and customers happy.</p>
             <p>
             Once our hardware is in the field, we expand the value chain through AI-powered Remote Diagnostics. 
             OEMs, dealers, and fleet operators can subscribe to our service for real-time health monitoring, 
@@ -1719,14 +1719,13 @@ with tabs[4]:
             These subscriptions create a steady, recurring revenue stream 
             while lowering service costs and improving rider satisfaction.
             </p>
-            """,
-            unsafe_allow_html=True
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
+          </details>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Bottom Section: Impact Statement
+    # Bottom Section
     st.markdown(
         """
         <div class="impact-statement">
@@ -1833,10 +1832,36 @@ with tabs[5]:
             font-weight: 700;
             margin: 0;
         }
+        .gtm-tab .placeholder-image {
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(135deg, #1B3C53, #78C841);
+            border: 1px solid #78C841;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: #A8F1FF;
+            font-size: 12px;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
         </style>
         """,
         unsafe_allow_html=True
     )
+
+    def load_image(image_url):
+        """Load remote image as PIL Image or return None if fails."""
+        try:
+            response = requests.get(image_url)
+            response.raise_for_status()
+            image = Image.open(BytesIO(response.content))
+            return image
+        except Exception:
+            return None
 
     # Hero Section (Image Removed)
     st.markdown('<div class="gtm-tab">', unsafe_allow_html=True)
@@ -1920,16 +1945,17 @@ with tabs[5]:
     year_data = next(year_data for year_data in years if year_data["year"] == selected_year)
     col1, col2 = st.columns([1, 2])
     with col1:
-        image_path = load_image(os.path.abspath(year_data["image"]))
+        image_path = load_image(year_data["image"])
         if image_path:
-            st.image(image_path, use_container_width=True, output_format="PNG")
+            st.image(image_path, use_container_width=True)
         else:
-            st.warning(f"Image not found: {year_data['image']}")
-            st.markdown(
-                '<div style="text-align: center; border: 1px solid #e6e6e6; border-radius: 6px; padding: 10px; background-color: #f0f0f0;">'
-                '<p style="color: #555;">Placeholder: No image available</p></div>',
-                unsafe_allow_html=True
-            )
+            try:
+                st.image(year_data["image"], use_container_width=True)
+            except Exception:
+                st.markdown(
+                    '<div class="placeholder-image">Year Placeholder<br><small>Image Loading...</small></div>',
+                    unsafe_allow_html=True
+                )
     with col2:
         st.markdown(f'<h3 class="year-title">{year_data["year"]} – {year_data["theme"]}</h3>', unsafe_allow_html=True)
         st.markdown(f'<p class="year-text">{year_data["text"]}</p>', unsafe_allow_html=True)
@@ -1949,7 +1975,6 @@ with tabs[5]:
                 )
             st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
-
 with tabs[6]:
     st.header("📈 Financial Projections")
     st.caption("From 1,000 units in 2025 → 1 Million units by 2030")

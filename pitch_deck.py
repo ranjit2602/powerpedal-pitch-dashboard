@@ -68,8 +68,8 @@ st.markdown(
 
         /* --- Mobile-specific styles for title and tabs --- */
         @media (max-width: 768px) {
-            h1.st-emotion-cache-1629p8f {
-                font-size: 1.5rem !important;
+            h1 {
+                font-size: 1.5rem !important; /* Significantly reduced size for the main title */
             }
             .stTabs [data-baseweb="tab-list"] {
                 flex-wrap: wrap !important;

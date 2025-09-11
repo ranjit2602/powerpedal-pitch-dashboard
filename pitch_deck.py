@@ -16,12 +16,12 @@ st.set_page_config(
 # Use st.markdown with HTML to embed the image and text as a single title element
 st.markdown(
     """
-    <h1 style='display: flex; flex-direction: column; align-items: center; text-align: center;'>
-        <div style='display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; white-space: nowrap;'>
+    <h1 class='main-title'>
+        <div class='main-title-logo-container'>
             <img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/logo.png" style="height: 40px; vertical-align: middle;">
             PowerPedal
         </div>
-        <div style='font-size: 0.7em; font-weight: 500; opacity: 0.8;'>
+        <div class='main-title-tagline'>
             The Future of Smart Urban Mobility
         </div>
     </h1>
@@ -81,13 +81,43 @@ st.markdown(
             font-family: 'Figtree', sans-serif !important;
         }
 
-        /* --- Mobile-specific styles for title and tabs --- */
+        /* --- Global styles for the title (desktop) --- */
+        .main-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .main-title-tagline {
+            font-size: 1em;
+            font-weight: 600;
+            opacity: 0.8;
+            margin-left: 10px;
+        }
+        .main-title-logo-container img {
+            height: 40px;
+            vertical-align: middle;
+        }
+        
+        /* --- Mobile-specific styles (on screens <= 768px) --- */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 1.5rem !important; /* Significantly reduced size for the main title */
+            .main-title {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
-            h1 img {
-                height: 25px !important; /* Slightly reduced height for mobile */
+            .main-title-logo-container {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                white-space: nowrap; /* Keep logo and 'PowerPedal' on one line */
+            }
+            .main-title-logo-container img {
+                height: 25px !important; /* Smaller logo for mobile */
+            }
+            .main-title-tagline {
+                font-size: 0.7em !important; /* Smaller tagline for mobile */
+                margin-left: 0;
             }
             .stTabs [data-baseweb="tab-list"] {
                 flex-wrap: wrap !important;

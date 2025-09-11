@@ -49,11 +49,11 @@ st.markdown(
 
 # Initialize session state globally
 if 'selected_market' not in st.session_state:
-    st.session_state.selected_market = "PAM"   # Default to PAM
+    st.session_state.selected_market = "PAM"  # Default to PAM
 if 'selected_challenge' not in st.session_state:
-    st.session_state.selected_challenge = None   # For challenge sub-tab selection
+    st.session_state.selected_challenge = None  # For challenge sub-tab selection
 
-# ---- Global CSS (Moved here to avoid conflicts) ----
+# ---- Global CSS for the entire app, including responsive styles ----
 st.markdown(
     """
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -69,16 +69,16 @@ st.markdown(
         /* --- Mobile-specific styles for title and tabs --- */
         @media (max-width: 768px) {
             .stTitle {
-                font-size: 24px !important;
+                font-size: 16px !important;
             }
             .stTabs [data-baseweb="tab"] {
-                font-size: 14px !important;
+                font-size: 10px !important;
                 font-weight: 500 !important;
-                padding: 8px 12px !important;
+                padding: 4px 8px !important;
             }
         }
         /* --- End of mobile styles --- */
-        
+
         /* Main tabs styling */
         .stTabs [data-baseweb="tab-list"] {
             display: flex;
@@ -285,6 +285,7 @@ tabs = st.tabs([
     "🎙️Audio Pitch"
     
 ])
+
 # ---- TAB 1: Vision & Mission ---
 with tabs[0]:
     st.header("🌍 Vision & Mission")

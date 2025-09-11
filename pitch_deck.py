@@ -13,7 +13,17 @@ st.set_page_config(
     page_icon="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/logo.png"
 )
 
-st.title("🚴 PowerPedal – The Future of Smart Urban Mobility")
+# Use st.markdown with HTML to embed the image and text as a single title element
+st.markdown(
+    """
+    <h1 style='display: flex; align-items: center; gap: 10px;'>
+        <img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/logo.png" style="height: 40px; vertical-align: middle;">
+        PowerPedal – The Future of Smart Urban Mobility
+    </h1>
+    """,
+    unsafe_allow_html=True
+)
+
 st.caption("Switch Mobility | Interactive Investor Deck")
 
 st.markdown(
@@ -70,6 +80,9 @@ st.markdown(
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.5rem !important; /* Significantly reduced size for the main title */
+            }
+            h1 img {
+                height: 25px !important; /* Slightly reduced height for mobile */
             }
             .stTabs [data-baseweb="tab-list"] {
                 flex-wrap: wrap !important;

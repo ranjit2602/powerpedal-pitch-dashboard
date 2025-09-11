@@ -8,157 +8,36 @@ st.set_page_config(page_title="PowerPedal Interactive Pitch Deck", layout="wide"
 st.title("🚴 PowerPedal – The Future of Smart Urban Mobility")
 st.caption("Switch Mobility | Interactive Investor Deck")
 
-import streamlit as st
-
-# CSS to hide Streamlit's built-in keyboard hints on expanders
 st.markdown(
     """
-    <style>
-    /* Hide the "keyboard down/right" overlay in expanders */
-    div[data-testid="stExpander"] button p {
-        visibility: hidden;
-        position: relative;
-    }
-    div[data-testid="stExpander"] button p:before {
-        content: "👋 Welcome! Read this for a detailed guide on navigating the deck.";
-        visibility: visible;
-        position: absolute;
-        left: 0;
-    }
-    </style>
+    <details>
+      <summary style="font-size:16px; font-weight:bold; cursor:pointer;">
+        👋 Welcome! Read this for a detailed guide on navigating the deck.
+      </summary>
+      <div style="margin-top:10px;">
+        <p>
+        This interactive deck is designed for deep exploration. Here’s a detailed guide to each section to help you get the most out of our presentation.
+        </p>
+        <h4>A Tab-by-Tab Guide</h4>
+        <ul>
+          <li><b>🌍 Vision & Mission:</b> Start here to understand our core purpose and long-term goal.</li>
+          <li><b>⚠️ Problem:</b> Learn about the critical challenges in the current e-bike market.</li>
+          <li><b>🌏 Market Opportunity:</b> See our analysis of the market size and target.</li>
+          <li><b>⚙️ PowerPedal – The Product:</b> Discover our hardware + software solution.</li>
+          <li><b>💼 Business Model:</b> Understand our revenue streams.</li>
+          <li><b>🚀 Go-to-Market Strategy:</b> Explore our actionable plan.</li>
+          <li><b>📊 Financial Projections:</b> Review key financial forecasts.</li>
+          <li><b>📍 Milestones & Traction:</b> See the tangible progress we’ve already made.</li>
+          <li><b>🧑‍🤝‍🧑 Team & Advisors:</b> Meet the experienced team driving PowerPedal.</li>
+          <li><b>💰 Funding Ask & Use:</b> Find the details of our funding round.</li>
+          <li><b>🔮 Future Tech & Expansion:</b> Look ahead at our roadmap and R&D.</li>
+          <li><b>🎙️ Audio Pitch:</b> Listen to our narrated pitch for a quick summary.</li>
+        </ul>
+      </div>
+    </details>
     """,
     unsafe_allow_html=True
 )
-
-import streamlit as st
-
-# CSS to completely remove Streamlit's "keyboard" hints from expanders
-st.markdown(
-    """
-    <style>
-    /* Remove the keyboard hints inside expander headers */
-    div[data-testid="stExpander"] button p span {
-        display: none !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-import streamlit as st
-
-# CSS: Remove ONLY the keyboard hint spans in expander headers
-st.markdown(
-    """
-    <style>
-    /* Target expander header hint spans */
-    div[data-testid="stExpander"] button p span {
-        display: none !important;
-    }
-    /* Keep your label aligned properly */
-    div[data-testid="stExpander"] button p {
-        display: flex;
-        align-items: center;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-import streamlit as st
-from streamlit.components.v1 import html
-
-# Robust JS injector: removes Streamlit's "keyboard ↓/→" hint nodes from expander headers
-js_cleaner = r"""
-<script>
-(function(){
-  // avoid double-injection
-  if (window.__streamlitKeyboardCleaner) return;
-  window.__streamlitKeyboardCleaner = true;
-
-  const arrowRe = /keyboard|\u2193|\u2192|↓|→|arrow/i;
-
-  function cleanExpanderHeaders() {
-    document.querySelectorAll('div[data-testid="stExpander"] button').forEach(btn => {
-      const p = btn.querySelector('p');
-      if (!p) return;
-
-      // 1) Remove descendant elements (spans etc.) that match the hint pattern
-      Array.from(p.querySelectorAll('*')).forEach(el => {
-        try {
-          if (arrowRe.test(el.innerText || el.textContent || '')) {
-            el.remove();
-          }
-        } catch(e) {}
-      });
-
-      // 2) Remove/clean text nodes that contain the hint text (for cases where it's plain text)
-      for (let i = p.childNodes.length - 1; i >= 0; i--) {
-        const node = p.childNodes[i];
-        if (node.nodeType === Node.TEXT_NODE) {
-          if (arrowRe.test(node.textContent)) {
-            node.textContent = node.textContent.replace(arrowRe, '').trim();
-            if (node.textContent === '') node.remove();
-          }
-        }
-      }
-
-      // 3) Trim leftover whitespace
-      p.innerHTML = p.innerHTML.trim();
-    });
-  }
-
-  // run once after a small delay (lets Streamlit render)
-  setTimeout(cleanExpanderHeaders, 150);
-
-  // observe DOM changes (handles Streamlit re-renders, lazy-loading, etc.)
-  const mo = new MutationObserver((mutations) => {
-    cleanExpanderHeaders();
-  });
-  mo.observe(document.body, { childList: true, subtree: true });
-
-  // also run on focus (helps when components rerender on interaction)
-  window.addEventListener('focus', cleanExpanderHeaders);
-})();
-</script>
-"""
-
-# inject the script (small iframe) — height small so it doesn't visually affect layout
-html(js_cleaner, height=1)
-
-# --- your expander (paste your full content here) ---
-with st.expander("👋 Welcome! Read this for a detailed guide on navigating the deck."):
-    st.markdown("""
-    This interactive deck is designed for deep exploration. Here’s a detailed guide to each section to help you get the most out of our presentation.
-    """)
-    st.subheader("A Tab-by-Tab Guide")
-    st.markdown("""
-    * **🌍 Vision & Mission:** Start here to understand our core purpose and long-term goal for the future of urban mobility.
-
-    * **⚠️ Problem:** Learn about the critical challenges in the current e-bike market that we are solving.
-        * ✨ **INTERACTIVE:** Click the sub-tabs within this section (e.g., "🚲 Inefficient Ride") for a deep dive into each specific problem.
-
-    * **🌏 Market Opportunity:** See our analysis of the market size and our precise, obtainable target.
-        * ✨ **INTERACTIVE:** Use the dropdown menu to explore the data for the Potential, Total, Serviceable, and Obtainable markets (PAM, TAM, SAM, SOM).
-
-    * **⚙️ PowerPedal – The Product:** Discover our innovative hardware and software solution, its key features, and what makes it unique.
-
-    * **💼 Business Model:** Understand our revenue streams and how we plan to monetize our technology through B2B sales and licensing.
-
-    * **🚀 Go-to-Market Strategy:** Explore our actionable plan for entering the market, acquiring customers, and scaling our operations.
-
-    * **📊 Financial Projections:** Review our key financial forecasts, including projected revenue, growth, and profitability metrics.
-
-    * **📍 Milestones & Traction:** See the tangible progress we’ve already made, including prototypes built, partnerships secured, and early market validation.
-
-    * **🧑‍🤝‍🧑 Team & Advisors:** Meet the experienced founders, engineers, and advisors who are driving the PowerPedal vision forward.
-
-    * **💰 Funding Ask & Use:** Find the details of our current funding round: how much we are raising and precisely how we will allocate the capital to achieve our next set of milestones.
-
-    * **🔮 Future Tech & Expansion:** Look ahead at our exciting product roadmap, R&D plans, and strategy for future market expansion.
-    
-    * **🎙️Audio Pitch:** For a convenient summary, listen to our narrated pitch here. It's a great place to start or to recap the entire presentation.
-    """)
 
 # Initialize session state globally
 if 'selected_market' not in st.session_state:

@@ -45,24 +45,44 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+import streamlit as st
+
+# CSS: Remove ONLY the keyboard hint spans in expander headers
+st.markdown(
+    """
+    <style>
+    /* Target expander header hint spans */
+    div[data-testid="stExpander"] button p span {
+        display: none !important;
+    }
+    /* Keep your label aligned properly */
+    div[data-testid="stExpander"] button p {
+        display: flex;
+        align-items: center;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 with st.expander("👋 Welcome! Read this for a detailed guide on navigating the deck."):
     st.markdown("""
     This interactive deck is designed for deep exploration. Here’s a detailed guide to each section to help you get the most out of our presentation.
     """)
     st.subheader("A Tab-by-Tab Guide")
     st.markdown("""
-    * **🌍 Vision & Mission:** Start here to understand our core purpose and long-term goal for the future of urban mobility.
-    * **⚠️ Problem:** Learn about the critical challenges in the current e-bike market that we are solving.
-    * **🌏 Market Opportunity:** See our analysis of the market size and our precise, obtainable target.
-    * **⚙️ PowerPedal – The Product:** Discover our innovative hardware and software solution.
-    * **💼 Business Model:** Understand our revenue streams.
-    * **🚀 Go-to-Market Strategy:** Explore our actionable plan.
-    * **📊 Financial Projections:** Review our key financial forecasts.
+    * **🌍 Vision & Mission:** Start here to understand our core purpose and long-term goal.
+    * **⚠️ Problem:** Learn about the challenges in the current e-bike market.
+    * **🌏 Market Opportunity:** See our analysis of the market size and obtainable target.
+    * **⚙️ PowerPedal – The Product:** Discover our solution and its unique features.
+    * **💼 Business Model:** Understand our revenue streams and monetization.
+    * **🚀 Go-to-Market Strategy:** Explore our actionable plan for scaling.
+    * **📊 Financial Projections:** Review our forecasts for revenue and growth.
     * **📍 Milestones & Traction:** See the tangible progress we’ve already made.
-    * **🧑‍🤝‍🧑 Team & Advisors:** Meet the team behind PowerPedal.
-    * **💰 Funding Ask & Use:** Details of our current funding round.
-    * **🔮 Future Tech & Expansion:** Look ahead at our roadmap.
-    * **🎙️ Audio Pitch:** Listen to our narrated pitch.
+    * **🧑‍🤝‍🧑 Team & Advisors:** Meet the experienced team driving PowerPedal.
+    * **💰 Funding Ask & Use:** Details of our funding round and allocation.
+    * **🔮 Future Tech & Expansion:** Look ahead at our roadmap and R&D.
+    * **🎙️ Audio Pitch:** Listen to our narrated pitch for a quick summary.
     """)
 
 # Initialize session state globally

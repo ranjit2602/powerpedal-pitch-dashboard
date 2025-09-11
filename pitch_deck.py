@@ -3,8 +3,17 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import requests
+from io import BytesIO
+from PIL import Image
+import base64
+import time
 
-st.set_page_config(page_title="PowerPedal Interactive Pitch Deck", layout="wide")
+# --- Set page configuration with favicon ---
+# This must be the first command. We'll use the URL for the logo.
+logo_img_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/logo.png"
+st.set_page_config(page_title="PowerPedal Interactive Pitch Deck", layout="wide", page_icon=logo_img_url)
+
 st.title("🚴 PowerPedal – The Future of Smart Urban Mobility")
 st.caption("Switch Mobility | Interactive Investor Deck")
 
@@ -41,55 +50,52 @@ st.markdown(
 
 # Initialize session state globally
 if 'selected_market' not in st.session_state:
-    st.session_state.selected_market = "PAM"  # Default to PAM
+    st.session_state.selected_market = "PAM"
 if 'selected_challenge' not in st.session_state:
-    st.session_state.selected_challenge = None  # For challenge sub-tab selection
+    st.session_state.selected_challenge = None
+if 'is_mobile' not in st.session_state:
+    st.session_state.is_mobile = False
+if 'selected_tab_index' not in st.session_state:
+    st.session_state.selected_tab_index = 0
 
-# ---- Global CSS (Moved here to avoid conflicts) ----
-
-st.markdown(
+# ---- Device detection using JavaScript and Session State ---
+st.components.v1.html(
     """
-    <style>
-    /* ... (Your existing CSS code goes here) ... */
-
-    /* Mobile-specific styles */
-    @media (max-width: 768px) {
-        .stTabs [data-baseweb="tab"] {
-            padding: 10px 12px !important;
-            font-size: 14px !important;
-            flex: 1 1 auto; /* Allow tabs to grow and shrink */
-        }
-        .stTabs [data-baseweb="tab-list"] {
-            flex-wrap: nowrap; /* Prevent wrapping for smaller screens */
-            overflow-x: auto; /* Add horizontal scroll if needed */
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;  /* Hide scrollbar for Firefox */
-        }
-        .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar {
-            display: none; /* Hide scrollbar for Chrome/Safari */
-        }
-        .stTabs [data-baseweb="tab"][aria-selected="true"]::after {
-            /* Keep the selected tab indicator smaller on mobile */
-            height: 2px;
-        }
+    <script>
+    const userAgent = navigator.userAgent;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent) || (window.innerWidth < 768);
+    const streamlitIframe = window.parent.document.querySelector('iframe');
+    if (isMobile && streamlitIframe) {
+        streamlitIframe.contentWindow.postMessage('is_mobile', '*');
     }
-    </style>
+    </script>
     """,
-    unsafe_allow_html=True
+    height=0,
 )
+
+# Use st.query_params to get the mobile state
+if 'is_mobile' in st.query_params:
+    st.session_state.is_mobile = st.query_params['is_mobile'][0] == 'true'
+
+# The toggle buttons for debugging now have unique keys
+if st.button("Toggle View (Debug) - Desktop", key="toggle_desktop"):
+    st.session_state.is_mobile = False
+    st.rerun()
+elif st.button("Toggle View (Debug) - Mobile", key="toggle_mobile"):
+    st.session_state.is_mobile = True
+    st.rerun()
+
+
+# ---- Custom CSS for styling (including mobile dropdown) ----
 st.markdown(
     """
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Import Figtree font */
         @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap');
-
-        /* Apply Figtree globally to all elements */
         * {
             font-family: 'Figtree', sans-serif !important;
         }
 
-        /* Main tabs styling */
         .stTabs [data-baseweb="tab-list"] {
             display: flex;
             flex-wrap: wrap;
@@ -125,7 +131,14 @@ st.markdown(
             bottom: 0;
             left: 0;
         }
-        /* Separate CSS for Problem tab sub-tabs */
+
+        /* Mobile-specific styles for tabs (hidden) and dropdown (shown) */
+        @media (max-width: 768px) {
+            .stTabs [data-baseweb="tab-list"] {
+                display: none !important;
+            }
+        }
+        
         .problem-tab .stTabs [data-baseweb="tab-list"] .stTabs [data-baseweb="tab"] {
             flex: 0 0 40% !important;
             padding: 56px 80px !important;
@@ -279,8 +292,8 @@ def load_excel_data(file_name, expected_columns, fallback_data, transpose=False)
         st.error(f"Error loading {file_name}: {str(e)}")
         return pd.DataFrame(fallback_data, columns=expected_columns), f"Error loading {file_name}"
 
-# ---- TABS ----
-tabs = st.tabs([
+# Define the list of tab titles
+tab_titles = [
     "🌍 Vision & Mission",
     "⚠️ Problem",
     "🌏 Market Opportunity",
@@ -293,23 +306,39 @@ tabs = st.tabs([
     "💰 Funding Ask & Use",
     "🔮 Future Tech & Expansion",
     "🎙️Audio Pitch"
-    
-])
+]
 
-import requests
-from io import BytesIO
+# --- RENDER TABS OR SELECTBOX BASED ON DEVICE TYPE ---
+if 'is_mobile' in st.query_params:
+    st.session_state.is_mobile = st.query_params['is_mobile'][0] == 'true'
+
+if st.session_state.is_mobile:
+    # Mobile view: Use a selectbox
+    selected_title = st.selectbox("Navigate to", options=tab_titles, key="mobile_nav_selectbox")
+    # Determine the index of the selected tab
+    selected_index = tab_titles.index(selected_title)
+    
+    # Create a list of empty containers.
+    tabs = [st.empty() for _ in tab_titles]
+    
+    # We will only put content into the container corresponding to the selected index.
+    tabs[selected_index] = st.container()
+
+else:
+    # Desktop view: Use normal tabs
+    tabs = st.tabs(tab_titles)
+
+# --- All your existing tab content remains unchanged from here ---
 
 # ---- TAB 1: Vision & Mission ---
 with tabs[0]:
     st.header("🌍 Vision & Mission")
     
-    # Display single vision.png image
     image_path = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/vision.png"
     st.markdown('<div class="vision-images">', unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         try:
-            # Fetch the image from the URL
             response = requests.get(image_path)
             if response.status_code == 200:
                 img = BytesIO(response.content)
@@ -358,18 +387,12 @@ with tabs[0]:
         unsafe_allow_html=True
     )
 
-import streamlit as st
-import requests
-from io import BytesIO
-
 # ---- TAB 2: Problem ----
 with tabs[1]:
     st.header("⚠️ Problem")
     
-    # Add problem-tab class to wrap sub-tabs
     st.markdown('<div class="problem-tab">', unsafe_allow_html=True)
 
-    # Challenges Infographic
     st.markdown(
         """
         <p class='problem-text' style='font-size: 18px; color: #e0e0e0; text-align: center; margin: 20px 0;'>
@@ -379,12 +402,10 @@ with tabs[1]:
         unsafe_allow_html=True
     )
 
-    # Display problem.png (centered)
     problem_image_path = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/problem.png"
     image_class = "problem-image-container faded" if st.session_state.get('selected_challenge') else "problem-image-container"
     st.markdown(f'<div class="{image_class}">', unsafe_allow_html=True)
     try:
-        # Fetch the image from the URL
         response = requests.get(problem_image_path)
         if response.status_code == 200:
             img = BytesIO(response.content)
@@ -412,7 +433,6 @@ with tabs[1]:
             unsafe_allow_html=True
         )
     st.markdown('</div>', unsafe_allow_html=True)
-    # Challenge data
     challenges = [
         {
             "icon": "🚲",
@@ -459,11 +479,9 @@ with tabs[1]:
         }
     ]
 
-    # Sub-tabs for challenges (including Overview)
     sub_tab_titles = ["Overview"] + [f"{challenge['icon']} {challenge['title']}" for challenge in challenges]
     sub_tabs = st.tabs(sub_tab_titles)
 
-    # Overview tab: show all challenge icons and titles in a grid
     with sub_tabs[0]:
         st.session_state.selected_challenge = None
         st.markdown(
@@ -489,7 +507,6 @@ with tabs[1]:
             unsafe_allow_html=True
         )
 
-    # Individual challenge tabs
     for i, challenge in enumerate(challenges):
         with sub_tabs[i + 1]:
             st.session_state.selected_challenge = challenge["title"]
@@ -504,10 +521,8 @@ with tabs[1]:
                 unsafe_allow_html=True
             )
 
-    # Close problem-tab div
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Helper function to load Excel data with proper URL handling
 def load_excel_data(url, expected_columns, fallback_data, transpose=True):
     try:
         response = requests.get(url)
@@ -531,12 +546,10 @@ def load_excel_data(url, expected_columns, fallback_data, transpose=True):
         else:
             return pd.DataFrame(fallback_data), str(e)
 
-# ---- TAB 3: Market Opportunity ----
 with tabs[2]:
     st.header("🌏 Market Opportunity")
     st.caption("PAM / TAM / SAM / SOM for PowerPedal")
 
-    # Market data for circles and containers
     market_data = [
         {
             "id": "pam",
@@ -568,7 +581,6 @@ with tabs[2]:
         }
     ]
 
-    # Define expected columns and fallback data
     expected_columns_seg = ["Drive System", "Global Market Share", "Indian Market Share", "Key Insights"]
     fallback_data_seg = [
         {"Drive System": "Hub Drive", "Global Market Share": "~60%", "Indian Market Share": "Dominant", "Key Insights": "Low cost, widely adopted"},
@@ -580,7 +592,7 @@ with tabs[2]:
         "Performance": ["Poor performance", "Amazing performance", "Amazing performance"],
         "Efficiency": ["Low efficiency", "High efficiency", "High efficiency"],
         "Features": ["No Features", "Usually feature rich", "Feature rich"],
-        "Average Price": ["Average price ~ €1,200-1,500", "Average price ~ €3,000-3,500", "Average price ~ €1,400-2,000"]
+        "Average Price": ["Average price ~ €1,200-1,500", "Average price ~ €3,000-3-500", "Average price ~ €1,400-2,000"]
     }
     df_pos_fallback = pd.DataFrame(fallback_data_pos).T
     df_pos_fallback.index.name = "Attribute"
@@ -592,7 +604,6 @@ with tabs[2]:
         {"Feature": "Retrofittable", "Advantage": "Can be installed on existing hub-driven ebikes without the need to modify frames"}
     ]
 
-    # Load data for each table
     df_seg, error_seg = load_excel_data(
         "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/data/Ebike_Drive_Segmentation_and_Comparison.xlsx",
         expected_columns_seg,
@@ -621,7 +632,6 @@ with tabs[2]:
         fallback_data_market
     )
 
-    # Layout: Centered image at top using columns
     with st.container():
         st.markdown(
             """
@@ -639,20 +649,17 @@ with tabs[2]:
                 width: 100%;
                 height: auto;
             }
-            /* Scope Streamlit overrides to Market Opportunity tab */
-            .market-opportunity-tab .stElementContainer, 
-            .market-opportunity-tab .st-emotion-cache-uf99v8, 
-            .market-opportunity-tab .st-emotion-cache-1wivap2, 
+            .market-opportunity-tab .stElementContainer,
+            .market-opportunity-tab .st-emotion-cache-uf99v8,
+            .market-opportunity-tab .st-emotion-cache-1wivap2,
             .market-opportunity-tab .st-emotion-cache-1r4s1g0 {
                 padding: 0 !important;
                 margin: 0 !important;
             }
-            /* Scope div override to Market Opportunity tab */
             .market-opportunity-tab div {
                 margin: 0 !important;
                 padding: 0 !important;
             }
-            /* Scope caption styling */
             .market-opportunity-tab .stCaption p {
                 margin: 0 !important;
                 padding: 0 !important;
@@ -665,7 +672,7 @@ with tabs[2]:
             }
             .market-opportunity-tab .table-viz-container {
                 display: flex;
-                align-items: flex-start; /* Changed to flex-start for top alignment */
+                align-items: flex-start;
                 justify-content: space-between;
                 margin: 0 0 -25px 0;
                 padding: 0;
@@ -690,7 +697,7 @@ with tabs[2]:
                 margin: 0;
                 display: flex;
                 flex-direction: column;
-                justify-content: flex-start; /* Changed to flex-start for top alignment */
+                justify-content: flex-start;
                 align-items: center;
                 min-height: 10px;
                 box-sizing: border-box;
@@ -720,7 +727,6 @@ with tabs[2]:
                 )
             st.markdown('</div>', unsafe_allow_html=True)
 
-    # Content below image in a single container
     with st.container():
         st.markdown("<div style='margin: 0; padding: 0; margin-bottom: -25px;'>", unsafe_allow_html=True)
         col1, col2 = st.columns([1, 1])
@@ -801,10 +807,10 @@ with tabs[2]:
                             ax_bar.barh(y_pos[i], value, color='#000000', alpha=0.2, left=0.2, zorder=1)
                             if value > 5:
                                 ax_bar.text(value * 0.4, y_pos[i], f'{label}\n{value}M',
-                                            ha='center', va='center', color='#e0e0e0', fontsize=7, fontweight='bold')
+                                             ha='center', va='center', color='#e0e0e0', fontsize=7, fontweight='bold')
                             else:
                                 ax_bar.text(value + 0.5, y_pos[i], f'{label}\n{value}M',
-                                            ha='left', va='center', color='#e0e0e0', fontsize=7, fontweight='bold')
+                                             ha='left', va='center', color='#e0e0e0', fontsize=7, fontweight='bold')
 
                         ax_bar.set_xlim(0, 55)
                         ax_bar.set_yticks([])
@@ -834,13 +840,12 @@ with tabs[2]:
                             unsafe_allow_html=True
                         )
 
-        # Add CSS for table-visual alignment, scoped to Market Opportunity tab
         st.markdown(
             """
             <style>
             .market-opportunity-tab .table-viz-container {
                 display: flex;
-                align-items: flex-start; /* Changed to flex-start for top alignment */
+                align-items: flex-start;
                 justify-content: space-between;
                 margin: 0 0 -25px 0;
                 padding: 0;
@@ -865,7 +870,7 @@ with tabs[2]:
                 margin: 0;
                 display: flex;
                 flex-direction: column;
-                justify-content: flex-start; /* Changed to flex-start for top alignment */
+                justify-content: flex-start;
                 align-items: center;
                 min-height: 10px;
                 box-sizing: border-box;
@@ -875,7 +880,6 @@ with tabs[2]:
             unsafe_allow_html=True
         )
 
-        # Helper function to clean market share values
         def clean_share(s):
             if isinstance(s, str):
                 cleaned = s.replace('~', '').replace('%', '').replace(' ', '').strip()
@@ -889,8 +893,6 @@ with tabs[2]:
                     return 0.0
             return float(s) if isinstance(s, (int, float)) else 0.0
 
-        # Tables and Visualizations Section
-        # Table 1: Ebike Drive Segmentation and Comparison
         st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
         col_table1, col_viz1 = st.columns([2, 1])
         with col_table1:
@@ -930,7 +932,6 @@ with tabs[2]:
             st.markdown('</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # Table 2: E-Bike Drivetrain Positioning
         st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
         col_table2, col_viz2 = st.columns([2, 1])
         with col_table2:
@@ -944,7 +945,6 @@ with tabs[2]:
             st.markdown('</div>', unsafe_allow_html=True)
         with col_viz2:
             st.markdown('<div class="viz-container">', unsafe_allow_html=True)
-            # Grouped bar chart for E-Bike Drivetrain Positioning, excluding Average Price
             labels = [label for label in df_pos.index.tolist() if label != "Average Price"]
             categories = df_pos.columns.tolist()
 
@@ -960,7 +960,7 @@ with tabs[2]:
                 values = [value_map.get(str(df_pos.loc[attr, cat]), 1) for attr in labels]
                 data.append(values)
 
-            fig, ax = plt.subplots(figsize=(6, 3.5))  # Adjusted size for better layout
+            fig, ax = plt.subplots(figsize=(6, 3.5))
             fig.patch.set_facecolor('none')
             ax.set_facecolor('none')
 
@@ -976,14 +976,12 @@ with tabs[2]:
             ax.set_yticks([1, 2, 3])
             ax.set_yticklabels(['Low', 'Medium', 'High'], fontsize=10, color='#e0e0e0')
             ax.set_title('Drivetrain Comparison', fontsize=12, color='#e0e0e0')
-            # Removed ax.legend() to avoid overlap
             ax.spines['top'].set_visible(False)
             ax.spines['right'].set_visible(False)
             ax.spines['left'].set_color('#e0e0e0')
             ax.spines['bottom'].set_color('#e0e0e0')
             plt.tight_layout(pad=0.5)
 
-            # Add custom legend above the graph
             st.markdown(
                 """
                 <div style='display: flex; justify-content: center; gap: 20px; margin-bottom: 10px;'>
@@ -1016,7 +1014,6 @@ with tabs[2]:
             st.markdown('</div>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # Table 3: PowerPedal’s Market Positioning
         st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
         col_table3, col_viz3 = st.columns([2, 1])
         with col_table3:
@@ -1069,7 +1066,6 @@ with tabs[2]:
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # Final caption with CSS styling
     st.markdown(
         """
         <style>
@@ -1084,17 +1080,10 @@ with tabs[2]:
         """,
         unsafe_allow_html=True
     )
-import streamlit as st
-
-# Assuming tabs are defined earlier, e.g.:
-# tabs = st.tabs(["Home", "Pricing", "Team", "Product", "Videos"])
-
 with tabs[3]:
-    # --- CSS for styling the layouts only, without affecting the main background ---
     st.markdown(
         """
         <style>
-        /* Headers */
         h1, h2, h3 {
             color: #78C841;
             text-align: center;
@@ -1104,8 +1093,7 @@ with tabs[3]:
             font-size: 16px;
             text-align: center;
         }
-    
-        /* Individual Product Component Cards */
+        
         .component-card {
             padding: 20px;
             margin-bottom: 25px;
@@ -1135,7 +1123,6 @@ with tabs[3]:
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
         
-        /* --- Mobile App Section (Play Store Style) --- */
         .app-screenshots-container {
             display: flex;
             overflow-x: auto;
@@ -1183,7 +1170,6 @@ with tabs[3]:
             line-height: 1.3;
         }
         
-        /* Test Lab & Videos Section */
         .test-lab {
             margin: 20px auto;
             padding: 20px;
@@ -1266,11 +1252,9 @@ with tabs[3]:
         unsafe_allow_html=True
     )
 
-    # ---- Main Product Page Layout ----
     st.header("Meet PowerPedal")
     st.caption("The Smart, Affordable, and High-Performance eBike Drive System")
     
-    # Banner with Main Picture - Centered
     col1_main, col2_main, col3_main = st.columns([1, 4, 1])
     with col2_main:
         st.image("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/product.png", use_container_width=True)
@@ -1279,7 +1263,6 @@ with tabs[3]:
             unsafe_allow_html=True
         )
     
-    # Overview Section
     col1_ov, col2_ov, col3_ov = st.columns([1, 4, 1])
     with col2_ov:
         st.markdown('<div class="overview">', unsafe_allow_html=True)
@@ -1293,10 +1276,8 @@ with tabs[3]:
     
     st.divider()
     
-    # --- Product Components Section ---
     st.header("Product Components")
     
-    # Power Sensor Card
     col_ps1, col_ps2, col_ps3 = st.columns([1, 4, 1])
     with col_ps2:
         st.markdown('<div class="component-card">', unsafe_allow_html=True)
@@ -1305,7 +1286,6 @@ with tabs[3]:
         st.markdown('<p>Picture a clever little device tucked inside the rider’s pedal system—the PowerPedal Power Sensor—measuring every bit of force applied with stunning ±2% accuracy. In less than 10 milliseconds, it whisks this data to the controller, painting a vivid picture of the rider’s journey. Unlike basic cadence-based systems that merely tally pedal spins, this sensor knows whether the rider is gliding effortlessly or conquering a steep hill, ensuring the motor responds instantly with just the right boost. Say goodbye to jerky starts or wasted battery—every ride becomes a smooth, natural dance with the road!</p>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
     
-    # Controller Card
     col_c1, col_c2, col_c3 = st.columns([1, 4, 1])
     with col_c2:
         st.markdown('<div class="component-card">', unsafe_allow_html=True)
@@ -1314,7 +1294,6 @@ with tabs[3]:
         st.markdown('<p>Step into the mind of the rider’s eBike with the Controller—a brilliant brain processing live data from the power sensor, battery, and motor hundreds of times per second. It calculates torque, speed, and efficiency, delivering a power-packed 250W to 350W of assistance with a 1:1 to 3:1 ratio—meaning it can amplify the rider’s effort up to three times! Hills and headwinds melt away, doubling the rider’s range on a single charge. This versatile genius works with nearly any eBike motor, hub or mid-drive, and its remote diagnostics let the support team troubleshoot or fix issues online.</p>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
     
-    # HMI Control Unit Card
     col_h1, col_h2, col_h3 = st.columns([1, 4, 1])
     with col_h2:
         st.markdown('<div class="component-card">', unsafe_allow_html=True)
@@ -1323,13 +1302,11 @@ with tabs[3]:
         st.markdown('<p>Meet the HMI, the rider’s sleek handlebar command center that puts control in their hands. Twist the throttle for 0–100% variable control—though OEM-set speed limits keep it safe—and flip the assist level selector from eco cruising to a full-power boost. A battery State of Charge indicator, accurate to ±1%, reveals the rider’s range at a glance, while the horn switch delivers quick safety alerts in traffic. Plus, the built-in USB port powers the rider’s lights or charges their phone mid-ride—it’s a multitasking marvel!</p>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
     
-    # Mobile App Section
     col_ma1, col_ma2, col_ma3 = st.columns([1, 4, 1])
     with col_ma2:
         st.markdown('<div class="component-card">', unsafe_allow_html=True)
         st.markdown('<h3>PowerPedal Mobile App – Your eBike Companion</h3>', unsafe_allow_html=True)
     
-        # Use Streamlit columns for the horizontal gallery
         cols = st.columns(4)
         app_screenshots = [
             ("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_live.jpg", "Ride Dashboard: Live stats and real-time feedback."),
@@ -1354,11 +1331,9 @@ with tabs[3]:
     
     st.divider()
     
-    # --- Testing & Performance Section ---
     st.header("Testing & Performance")
     st.caption("Putting PowerPedal to the Test")
     
-    # Test Lab Section
     col_tl1, col_tl2, col_tl3 = st.columns([1, 2, 1])
     with col_tl2:
         st.markdown(
@@ -1366,13 +1341,12 @@ with tabs[3]:
             <div class="test-lab">
                 <h3>Test Lab</h3>
                 <a href="https://powerpedaltestdashboard-4tmrensx9crg9j7ezjytog.streamlit.app/" 
-                   target="_blank" class="test-lab-link">Visit PowerPedal Test Dashboard</a>
+                    target="_blank" class="test-lab-link">Visit PowerPedal Test Dashboard</a>
             </div>
             """,
             unsafe_allow_html=True
         )
     
-    # Test Videos Section
     col_v1, col_v2 = st.columns(2)
     with col_v1:
         st.video("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/videos/powerpedal_efficiency_testing.mp4")
@@ -1382,12 +1356,8 @@ with tabs[3]:
         st.video("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/videos/powerpedal_terrain_testing.mp4")
         st.markdown('<h4>Terrain Testing</h4>', unsafe_allow_html=True)
         st.markdown('<p>Witness PowerPedal’s performance across diverse terrains, from steep hills to rough trails, proving its versatility and durability.</p>', unsafe_allow_html=True)
-import streamlit as st
-
-# Assuming tabs[4] is defined earlier in your script, e.g., tabs = st.tabs(...)
 
 with tabs[4]:
-    # Top Section: Title & Tagline
     st.markdown(
         """
         <div class="business-model-header">
@@ -1398,8 +1368,6 @@ with tabs[4]:
         unsafe_allow_html=True
     )
 
-    # Only include the CSS for the custom header and tagline.
-    # The CSS for expanders is completely removed.
     st.markdown(
         """
         <style>
@@ -1436,11 +1404,9 @@ with tabs[4]:
         unsafe_allow_html=True
     )
 
-    # Use st.columns for proper, independent spacing.
     col1, col2 = st.columns(2)
 
     with col1:
-        # Expander 1: Hardware Sales
         with st.expander("Hardware Sales 💰", expanded=False):
             st.markdown("### Hardware Sales")
             st.markdown("🛠 Sold in bulk to OEMs as the core revenue driver.")
@@ -1456,7 +1422,6 @@ with tabs[4]:
             )
 
     with col2:
-        # Expander 2: AI Diagnostics Subscription
         with st.expander("AI Diagnostics Subscription 📈", expanded=False):
             st.markdown("### AI Diagnostics Subscription")
             st.markdown("🤖 Remote monitoring, predictive maintenance, and troubleshooting.")
@@ -1471,7 +1436,6 @@ with tabs[4]:
                 """
             )
 
-    # Bottom Section
     st.markdown(
         """
         <div class="impact-statement">
@@ -1481,9 +1445,7 @@ with tabs[4]:
         unsafe_allow_html=True
     )
 
-# ---- TAB 5: Go-to-Market Strategy ----
 with tabs[5]:
-    # Minimal CSS for Go-to-Market Tab
     st.markdown(
         """
         <style>
@@ -1600,7 +1562,6 @@ with tabs[5]:
     )
 
     def load_image(image_url):
-        """Load remote image as PIL Image or return None if fails."""
         try:
             response = requests.get(image_url)
             response.raise_for_status()
@@ -1609,15 +1570,13 @@ with tabs[5]:
         except Exception:
             return None
 
-    # Hero Section (Image Removed)
     st.markdown('<div class="gtm-tab">', unsafe_allow_html=True)
     st.markdown('<div class="hero-container">', unsafe_allow_html=True)
     st.markdown('<h2 class="hero-title">Go-to-Market Story (2025–2030)</h2>', unsafe_allow_html=True)
     st.markdown('<p class="hero-tagline">From pilot programs in India → to global category leadership.</p>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Year Data
-    years = [
+    years_data = [
         {
             "year": "2025",
             "theme": "The Beginning",
@@ -1684,11 +1643,9 @@ with tabs[5]:
         }
     ]
 
-    # Year Selector
-    selected_year = st.selectbox("Select Year", [year_data["year"] for year_data in years], key="year_selector")
+    selected_year = st.selectbox("Select Year", [year_data["year"] for year_data in years_data], key="year_selector")
 
-    # Display Selected Year's Content
-    year_data = next(year_data for year_data in years if year_data["year"] == selected_year)
+    year_data = next(year_data for year_data in years_data if year_data["year"] == selected_year)
     col1, col2 = st.columns([1, 2])
     with col1:
         image_path = load_image(year_data["image"])
@@ -1726,17 +1683,15 @@ with tabs[6]:
     st.caption("From 1,000 units in 2025 → 1 Million units by 2030")
     st.markdown("**Revenue grows from ₹0.85 Cr in 2025 to ₹1,467.5 Cr in 2030, driven by PowerPedal adoption in India and Europe.**")
 
-    # Initialize Session State
     if 'financials' not in st.session_state:
         st.session_state.financials = {
             'scenario': 'Base Case',
-            'asp_powerpedal': 10000,  # Default ₹10,000
-            'cogs_powerpedal': 6000,  # Default ₹6,000
-            'opex_percent': 0.15,     # Default 0.15
-            'fixed_costs': 2.4e7      # ₹2.4 Cr
+            'asp_powerpedal': 10000,
+            'cogs_powerpedal': 6000,
+            'opex_percent': 0.15,
+            'fixed_costs': 2.4e7
         }
 
-    # Simplified CSS for Key Elements
     st.markdown(
         """
         <style>
@@ -1880,7 +1835,6 @@ with tabs[6]:
 
     st.markdown('<div class="financial-tab">', unsafe_allow_html=True)
 
-    # Image in Centered Column
     _, col_img, _ = st.columns([1, 4, 1])
     with col_img:
         image_path = os.path.abspath("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/financial.png")
@@ -1897,13 +1851,11 @@ with tabs[6]:
                 unsafe_allow_html=True
             )
 
-    # Define Global Variables
     unit_sales_base = [1000, 10000, 100000, 200000, 500000, 1000000]
     revenue_base = [0.85e7, 8.5e7, 124e7, 237.45e7, 654e7, 1467.5e7]
     years = [2025, 2026, 2027, 2028, 2029, 2030]
-    fixed_cogs_2025 = 8500  # Fixed COGS for 2025
+    fixed_cogs_2025 = 8500
 
-    # Financial Calculations
     def calculate_financials(scenario, asp_powerpedal, cogs_powerpedal, opex_percent, fixed_costs):
         unit_sales = unit_sales_base
         if scenario == 'Conservative':
@@ -1929,7 +1881,6 @@ with tabs[6]:
         net_income = [e * (1 - tr) for e, tr in zip(ebitda, tax_rate)]
         return unit_sales, revenue, cogs_powerpedal_list, gross_profit, opex, ebitda, net_income
 
-    # Calculate Financials
     try:
         unit_sales, revenue, cogs_powerpedal_list, gross_profit, opex, ebitda, net_income = calculate_financials(
             st.session_state.financials['scenario'],
@@ -1942,7 +1893,6 @@ with tabs[6]:
         st.error(f"Error in financial calculations: {e}")
         st.stop()
 
-    # Headline Metrics
     with st.container():
         st.markdown(
             f'<div class="scenario-highlight">'
@@ -1999,7 +1949,6 @@ with tabs[6]:
             except Exception as e:
                 st.error(f"Break-even Year: {e}")
 
-    # Sliders and Table
     col_vars, col_table = st.columns([1, 3])
 
     with col_vars:
@@ -2025,7 +1974,6 @@ with tabs[6]:
         )
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Table
     with col_table:
         st.markdown('<div class="data-table-container">', unsafe_allow_html=True)
         try:
@@ -2039,7 +1987,7 @@ with tabs[6]:
                 'EBITDA (₹ Cr)': [round(e / 1e7, 2) for e in ebitda],
                 'Net Income (₹ Cr)': [f'<span class="highlight">{round(ni / 1e7, 2)}</span>' for ni in net_income],
                 'EBITDA Margin (%)': [f'<span class="highlight">{round((e / r) * 100, 1)}</span>' if r > 0 else '0.0'
-                                      for e, r in zip(ebitda, revenue)]
+                                         for e, r in zip(ebitda, revenue)]
             })
             headers = df.columns.tolist()
             html = '<table class="data-table">'
@@ -2065,7 +2013,6 @@ with tabs[6]:
             st.error(f"Error rendering table: {e}")
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Scenario Comparison
     col_sc1, col_sc2, col_sc3 = st.columns(3)
     scenarios = ['Conservative', 'Base Case', 'Aggressive']
     scenario_units = {
@@ -2121,7 +2068,6 @@ with tabs[6]:
         except Exception as e:
             st.error(f"Aggressive scenario: {e}")
 
-    # Charts
     st.markdown('<div class="charts-section">', unsafe_allow_html=True)
     col_chart1, col_chart2, col_chart3 = st.columns(3)
 
@@ -2140,7 +2086,7 @@ with tabs[6]:
             ax1.set_ylim(0, max([r / 1e7 for r in revenue]) * 1.2)
             ax1.set_title('Revenue (₹ Cr)', color='#FFFFFF', fontsize=10)
             ax1.legend(fontsize=7, frameon=False, labelcolor='#FFFFFF')
-            ax1.set_ylabel('Revenue (₹ Cr)', color='#FFFFFF', fontsize=8)
+            ax1.set_ylabel('₹ Cr', color='#FFFFFF', fontsize=8)
             plt.tight_layout(pad=1.0)
             st.pyplot(fig1)
         except Exception as e:
@@ -2180,7 +2126,7 @@ with tabs[6]:
             ax3.tick_params(colors='#FFFFFF', labelsize=8)
             ax3.bar(years, [gp / 1e7 for gp in gross_profit], color='#FFD6BA', label='Gross Profit')
             ax3.bar(years, [o / 1e7 for o in opex], bottom=[gp / 1e7 for gp in gross_profit],
-                    color='#EE791F', label='Opex')
+                     color='#EE791F', label='Opex')
             ax3.plot(years, [e / 1e7 for e in ebitda], color='#FFF9BD', linewidth=2, label='EBITDA')
             ax3.plot(years, [ni / 1e7 for ni in net_income], color='#9CAFAA', linewidth=2, label='Net Income')
             ax3.set_xlabel('Year', color='#FFFFFF', fontsize=8)
@@ -2195,7 +2141,6 @@ with tabs[6]:
         st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Key Investor Highlights
     st.markdown('<div class="highlights-section">', unsafe_allow_html=True)
     with st.container():
         st.markdown(
@@ -2235,48 +2180,40 @@ with tabs[6]:
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
-import streamlit as st
-import os
-
 with tabs[7]:
-    # --- Styles specific to this storytelling timeline ---
     st.markdown("""
     <style>
-        /* Reset Streamlit default margins and padding */
         .st-emotion-cache-1wmy9hl, .st-emotion-cache-0, .st-emotion-cache-1r4s1nx, .st-emotion-cache-12fmjuu {
             margin: 0 !important;
             padding: 0 !important;
         }
 
-        /* Main container for the timeline */
         .timeline-container {
             margin: 0 !important;
             padding: 0 !important;
             width: 100% !important;
         }
 
-        /* Container for each timeline entry */
         .timeline-entry {
             display: flex;
             justify-content: space-between;
             align-items: stretch;
-            margin: 0 !important; /* Reduced from 0px */
-            min-height: 30px; /* Reduced from 40px */
+            margin: 0 !important;
+            min-height: 30px;
         }
 
         .timeline-content-left {
             text-align: right;
-            padding: 0 !important; /* Set to 0px */
-            margin-right: -5px; /* Negative margin to pull closer */
+            padding: 0 !important;
+            margin-right: -5px;
         }
 
         .timeline-content-right {
             text-align: left;
-            padding: 0 !important; /* Set to 0px */
-            margin-left: -5px; /* Negative margin to pull closer */
+            padding: 0 !important;
+            margin-left: -5px;
         }
 
-        /* Styling for Product expanders */
         .expander-product div[data-testid="stExpander"] {
             background: #1A3636 !important;
             border: none !important;
@@ -2286,7 +2223,6 @@ with tabs[7]:
             height: 100% !important;
         }
 
-        /* Styling for Funding expanders */
         .expander-funding div[data-testid="stExpander"] {
             background: #40534C !important;
             border: none !important;
@@ -2310,7 +2246,6 @@ with tabs[7]:
             padding: 8px !important;
         }
 
-        /* Media styling for images */
         .timeline-media img {
             max-width: 100% !important;
             border-radius: 8px !important;
@@ -2318,7 +2253,6 @@ with tabs[7]:
             border: 1px solid #78C841 !important;
         }
 
-        /* Video styling */
         .timeline-media video {
             max-width: 100% !important;
             border-radius: 8px !important;
@@ -2326,7 +2260,6 @@ with tabs[7]:
             border: 1px solid #78C841 !important;
         }
 
-        /* Story section styling */
         .story-section {
             background: linear-gradient(135deg, #1B3C53, #2e2e2e) !important;
             border: 2px solid #78C841 !important;
@@ -2352,7 +2285,6 @@ with tabs[7]:
     </style>
     """, unsafe_allow_html=True)
 
-    # --- JavaScript to ensure background colors ---
     st.components.v1.html("""
     <script>
         function applyExpanderColors() {
@@ -2376,28 +2308,22 @@ with tabs[7]:
             });
         }
 
-        // Run on page load
         window.addEventListener('load', applyExpanderColors);
-
-        // Run periodically for dynamic rendering
         setInterval(applyExpanderColors, 100);
     </script>
     """, height=0)
 
-    # --- Tab Content ---
     st.header("📍 Our Journey of Traction & Milestones")
     st.markdown("---")
 
-    # --- High-level Visual Summary ---
     col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
     with col_img2:
-        timeline_image_path = r"https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images\timeline.png"
+        timeline_image_path = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/timeline.png"
         if os.path.exists(timeline_image_path):
             st.image(timeline_image_path, caption="A visual summary of our progress.", use_container_width=True)
         else:
             st.error(f"Image not found at {timeline_image_path}. Please verify the file exists.")
 
-    # --- Enhanced Story Section ---
     st.markdown('<div class="story-section">', unsafe_allow_html=True)
     st.markdown('<h3>The Spark That Started It All</h3>', unsafe_allow_html=True)
     st.markdown("""
@@ -2412,7 +2338,6 @@ with tabs[7]:
         help="Product milestones are highlighted with dark teal expanders (#1A3636), while funding milestones have dark gray-green expanders (#40534C) for clear differentiation."
     )
 
-    # --- Data for Milestones (with media only for Product milestones) ---
     milestones_data = [
         {
             "name": "Concept Validation",
@@ -2488,20 +2413,17 @@ with tabs[7]:
         }
     ]
 
-    # --- Building the Vertical Timeline ---
     try:
         st.markdown('<div class="timeline-container">', unsafe_allow_html=True)
         
         for index, milestone in enumerate(milestones_data):
             st.markdown('<div class="timeline-entry">', unsafe_allow_html=True)
-            col_left, col_center, col_right = st.columns([5, 0.01, 5])  # Minimized center column width
+            col_left, col_center, col_right = st.columns([5, 0.01, 5])
             
-            # Format the expander title
             title = f"{milestone['icon']} **{milestone['name']}**"
             if milestone['value'] != 'N/A':
                 title += f" — *{milestone['value']}*"
             
-            # Assign unique class based on milestone type
             class_name = "expander-product" if milestone["type"] == "Product" else "expander-funding"
             
             if milestone["type"] == "Product":
@@ -2512,19 +2434,19 @@ with tabs[7]:
                             st.markdown(f'<div class="{class_name}">', unsafe_allow_html=True)
                             st.write(milestone['details'])
                             if milestone['media']:
-                                media_path = r"C:\Users\ranji\OneDrive - Switch\Switch\Dashboards\Pitch Dashboard\{}".format(milestone['media'])
-                                if os.path.exists(media_path):
+                                media_path = milestone['media']
+                                if media_path.startswith("http"):
                                     st.markdown('<div class="timeline-media">', unsafe_allow_html=True)
-                                    if milestone['media'].endswith(('.png', '.jpg', '.jpeg')):
+                                    if media_path.endswith(('.png', '.jpg', '.jpeg')):
                                         st.image(media_path, caption=milestone['name'], use_container_width=True)
-                                    elif milestone['media'].endswith('.mp4'):
+                                    elif media_path.endswith('.mp4'):
                                         st.video(media_path)
                                     st.markdown('</div>', unsafe_allow_html=True)
                                 else:
                                     st.error(f"Media not found at {media_path}. Please verify the file exists.")
                             st.markdown('</div>', unsafe_allow_html=True)
                     st.markdown('</div>', unsafe_allow_html=True)
-            else:  # Funding milestones
+            else:
                 with col_right:
                     st.markdown('<div class="timeline-content-right">', unsafe_allow_html=True)
                     with st.container():
@@ -2540,241 +2462,14 @@ with tabs[7]:
     except Exception as e:
         st.error(f"An error occurred while rendering the timeline: {str(e)}")
 
-
-import streamlit as st
-import os
-from pathlib import Path
-import base64
-import time
-
-# Disable all Streamlit caching
-st.set_page_config(page_title="PowerPedal Pitch Deck", layout="wide")
-st.cache_data.clear()
-st.cache_resource.clear()
-try:
-    st.experimental_memo.clear()
-    st.experimental_singleton.clear()
-except AttributeError:
-    pass  # Handle older Streamlit versions
-
-import streamlit as st
-import time
-import base64
-from pathlib import Path
-import os
-import requests
-from io import BytesIO
-
-# ---- TAB 8: Team & Advisors ----
 with tabs[8]:
-    st.header("🧑‍🤝‍🧑 Team & Advisors", anchor=False)
-    st.caption("Meet the Visionaries Powering Our Mission")
-
-    # --- CSS (Updated for profile-image fit) ---
-    st.markdown(
-        f"""
-        <style>
-        .team-advisors-tab {{
-            font-family: 'Figtree', sans-serif;
-        }}
-        .team-advisors-tab .profile-container {{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #2e2e2e, #1B3C53);
-            border: 3px solid #00FF7F;
-            border-radius: 8px;
-            padding: 15px !important;
-            margin: 15px;
-            max-width: 250px !important;
-            width: 100%;
-            box-sizing: border-box;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            text-align: center;
-            text-decoration: none; /* Ensure no underline on link */
-        }}
-        .team-advisors-tab .profile-container:hover {{
-            transform: scale(1.07);
-            box-shadow: 0 0 15px rgba(0, 255, 127, 0.7);
-        }}
-        .team-advisors-tab .profile-image {{
-            width: 120px !important;
-            height: 120px !important;
-            border-radius: 50%;
-            object-fit: cover; /* Changed to cover for consistent fill */
-            border: 2px solid #A8F1FF;
-            padding: 2px;
-            background: #FFFFFF;
-            display: block;
-            margin: 0 auto;
-        }}
-        .team-advisors-tab .profile-name {{
-            color: #00FF7F;
-            font-size: 18px;
-            font-weight: 600;
-            margin: 10px 0 5px 0;
-            text-align: center;
-            width: 100%;
-        }}
-        .team-advisors-tab .profile-role {{
-            color: #A8F1FF;
-            font-size: 14px;
-            margin: 0;
-            text-align: center;
-            width: 100%;
-        }}
-        .team-advisors-tab .profile-details {{
-            color: #FFF5F2;
-            font-size: 12px;
-        }}
-        .team-advisors-tab .collage-grid {{
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: linear-gradient(135deg, #1B3C53, #00FF7F);
-            border: 3px solid #00FF7F;
-            border-radius: 8px;
-            margin: 50px auto;
-            max-width: 800px;
-        }}
-        .team-advisors-tab .collage-image {{
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 2px solid #A8F1FF;
-        }}
-        .team-advisors-tab .supported-by-section {{
-            background: #FFFFFF;
-            border: 3px solid #00FF7F;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 50px 0;
-            text-align: center;
-        }}
-        .team-advisors-tab .supported-by-section .section-title {{
-            color: #1B3C53;
-        }}
-        .team-advisors-tab .institutions-grid {{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 40px;
-            margin-top: 20px;
-        }}
-        .team-advisors-tab .institution-logo-img {{
-            height: 60px;
-            max-width: 150px;
-            object-fit: contain;
-        }}
-        .team-advisors-tab .summary-text {{
-            color: #A8F1FF;
-            text-align: center;
-            max-width: 500px;
-            margin: 20px auto;
-        }}
-        .team-advisors-tab .supported-by-section .summary-text {{
-            color: #555555;
-        }}
-        .team-advisors-tab .section-divider {{
-            border: 3px solid #00FF7F;
-            margin: 50px 0;
-        }}
-        .team-advisors-tab .media-container {{
-            background: #1B3C53;
-            border: 3px solid #00FF7F;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 50px 0;
-            text-align: center;
-            box-sizing: border-box;
-        }}
-        .team-advisors-tab .media-section .section-title {{
-            color: #FFFFFF;
-        }}
-        .team-advisors-tab .article-item {{
-            margin: 15px 0;
-            text-align: left;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            padding: 10px;
-            border-radius: 5px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }}
-        .team-advisors-tab .article-item:hover {{
-            transform: scale(1.02);
-            box-shadow: 0 0 10px rgba(0, 255, 127, 0.7);
-        }}
-        .team-advisors-tab .article-title {{
-            color: #00FF7F;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            display: block;
-        }}
-        .team-advisors-tab .article-title:hover {{
-            color: #A8F1FF;
-        }}
-        .team-advisors-tab .connect-container {{
-            background: #1B3C53;
-            border: 3px solid #00FF7F;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 50px 0;
-            text-align: center;
-            box-sizing: border-box;
-        }}
-        .team-advisors-tab .connect-section .section-title {{
-            color: #FFFFFF;
-        }}
-        .team-advisors-tab .connect-links {{
-            display: flex;
-            justify-content: center;
-            gap: 70px;
-            margin-top: 15px;
-        }}
-        .team-advisors-tab .connect-button {{
-            background: #00FF7F;
-            color: #1B3C53;
-            border: none;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: background 0.3s ease, transform 0.3s ease;
-        }}
-        .team-advisors-tab .connect-button:hover {{
-            background: #A8F1FF;
-            transform: scale(1.05);
-        }}
-        .team-advisors-tab .connect-icon {{
-            font-size: 16px;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # Cache image loading with base64 encoding for both local files and URLs
     @st.cache_data
     def load_image(image_name):
-        # Check if the image_name is a URL
         if image_name.startswith("http"):
             try:
                 response = requests.get(image_name)
                 if response.status_code == 200:
                     encoded = base64.b64encode(response.content).decode()
-                    # Determine MIME type based on file extension
                     ext = image_name.lower().split('.')[-1]
                     mime_type = "image/jpeg" if ext in ["jpg", "jpeg"] else "image/png"
                     return f"data:{mime_type};base64,{encoded}"
@@ -2785,14 +2480,13 @@ with tabs[8]:
                 st.error(f"Error loading image {image_name}: {str(e)}")
                 return "https://via.placeholder.com/200"
         else:
-            # Handle local files
             base_path = r"C:\Users\ranji\OneDrive - Switch\Switch\Dashboards\Pitch Dashboard"
-            image_path = Path(base_path) / image_name
+            image_path = os.path.join(base_path, image_name)
             try:
-                if image_path.is_file():
+                if os.path.exists(image_path):
                     with open(image_path, "rb") as f:
                         encoded = base64.b64encode(f.read()).decode()
-                    ext = image_path.suffix.lower()
+                    ext = os.path.splitext(image_path)[1].lower()
                     mime_type = "image/jpeg" if ext in [".jpg", ".jpeg"] else "image/png"
                     return f"data:{mime_type};base64,{encoded}"
                 else:
@@ -2802,7 +2496,6 @@ with tabs[8]:
                 st.error(f"Error loading image {image_name}: {e}")
                 return "https://via.placeholder.com/200"
 
-    # --- Core Team Section ---
     st.markdown('<div class="team-advisors-tab"><h2 class="section-title" style="text-align:center;">Core Team</h2></div>', unsafe_allow_html=True)
     team_members = [
         {"name": "Vineeth Muthanna", "role": "Technical Head", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Vineeth.png", "linkedin": "https://linkedin.com/in/vineethmuthanna", "bio": "Vineeth leads product development..."},
@@ -2830,7 +2523,6 @@ with tabs[8]:
 
     st.markdown('<div class="team-advisors-tab summary-text">Our core team drives innovation and execution to lead our e-mobility revolution.</div>', unsafe_allow_html=True)
 
-    # --- Team Collaboration Section ---
     team_images = ["https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/team1.jpg", "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/team2.jpg", "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/team3.jpg", "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/team4.jpg", "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/team5.jpg"]
     images_html = ""
     for img_file in team_images:
@@ -2849,7 +2541,6 @@ with tabs[8]:
     )
     st.markdown('<hr class="team-advisors-tab section-divider">', unsafe_allow_html=True)
 
-    # --- Advisory Board Section ---
     st.markdown('<div class="team-advisors-tab"><h2 class="section-title" style="text-align:center;">Advisory Board</h2></div>', unsafe_allow_html=True)
     advisors = [
         {"name": "Supria Dhanda", "role": "CEO, WYSER", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Supria.jpeg", "linkedin": "https://linkedin.com/in/supriadhanda", "bio": "Supria brings expertise in AI..."},
@@ -2877,7 +2568,6 @@ with tabs[8]:
     st.markdown('<div class="team-advisors-tab summary-text">Our advisors bring world-class expertise to propel our global impact.</div>', unsafe_allow_html=True)
     st.markdown('<hr class="team-advisors-tab section-divider">', unsafe_allow_html=True)
 
-    # --- Supported By Section ---
     institutions = [
         {"name": "Indian Institute of Science (IISc)", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/iisc.jpg"},
         {"name": "NSRCEL (IIM Bangalore)", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Nsrcel.jpg"},
@@ -2904,7 +2594,6 @@ with tabs[8]:
     )
     st.markdown('<hr class="team-advisors-tab section-divider">', unsafe_allow_html=True)
 
-    # --- Media Coverage Section ---
     st.markdown(
         '<div class="team-advisors-tab media-container"><h2 class="section-title">Media Coverage</h2></div>',
         unsafe_allow_html=True
@@ -2930,7 +2619,6 @@ with tabs[8]:
         )
     st.markdown('<hr class="team-advisors-tab section-divider">', unsafe_allow_html=True)
 
-    # --- Connect With Us Section ---
     st.markdown(
         '<div class="team-advisors-tab connect-container"><h2 class="section-title">Connect With Us</h2></div>',
         unsafe_allow_html=True
@@ -2950,11 +2638,9 @@ with tabs[9]:
     import plotly.graph_objects as go
     import pandas as pd
 
-    # --- Header ---
     st.header("💰 Funding Ask & Use", anchor=False)
     st.caption("Our Strategic Roadmap for Investment and Growth")
 
-    # --- Data Preparation ---
     year1_data = [
         {"milestone": "Functional Version 1 Development", "timeline": "Month 1-2", "cost_lakh": 26.2, "category": "R&D"},
         {"milestone": "System Integration & Testing", "timeline": "Month 3-4", "cost_lakh": 18.5, "category": "R&D"},
@@ -2975,7 +2661,6 @@ with tabs[9]:
     all_data = year1_data + year2_data
     df = pd.DataFrame(all_data)
 
-    # --- CSS for Styling ---
     st.markdown(
         """
         <style>
@@ -3023,7 +2708,7 @@ with tabs[9]:
             align-items: center;
             margin-bottom: 12px;
         }
-        .funding-tab .st-emotion-cache-1r6slb0 { /* Expander header color */
+        .funding-tab .st-emotion-cache-1r6slb0 {
             color: #A8F1FF !important;
         }
         </style>
@@ -3031,7 +2716,6 @@ with tabs[9]:
         unsafe_allow_html=True
     )
 
-    # --- 1. Top-Line Metrics ---
     with st.container():
         st.markdown('<div class="funding-tab">', unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
@@ -3042,14 +2726,11 @@ with tabs[9]:
 
     st.markdown("---")
 
-    # --- 2. Visual Breakdown ---
     st.subheader("Visual Use of Proceeds")
 
-    # Aggregate data for the donut chart
     category_costs = df.groupby('category')['cost_lakh'].sum().reset_index()
     category_costs['cost_crore'] = category_costs['cost_lakh'] / 100
 
-    # Create the donut chart
     fig = go.Figure(data=[go.Pie(
         labels=category_costs['category'],
         values=category_costs['cost_lakh'],
@@ -3073,10 +2754,8 @@ with tabs[9]:
 
     st.markdown("---")
 
-    # --- 3. Interactive Timeline ---
     st.subheader("Milestone-Based Allocation")
 
-    # Create tabs for Year 1 and Year 2
     tab1, tab2 = st.tabs(["🗓️ Year 1 Plan (Total: ₹ 1.2 Cr)", "🗓️ Year 2 Plan (Total: ₹ 2.8 Cr)"])
 
     with tab1:
@@ -3117,12 +2796,10 @@ with tabs[9]:
             )
         st.markdown('</div>', unsafe_allow_html=True)
 
-
 with tabs[10]:
     st.header("🚀 Future Technology", anchor=False)
     st.caption("Our Strategic Roadmap for Innovation and Growth")
 
-    # --- Data Preparation ---
     future_tech_data = {
         "Drive & Control": {
             "icon": "⚙️",
@@ -3166,7 +2843,6 @@ with tabs[10]:
         }
     }
 
-    # --- CSS for the Detail Boxes ---
     st.markdown(
         """
         <style>
@@ -3182,7 +2858,7 @@ with tabs[10]:
             padding: 25px;
             margin-top: 20px;
             box-shadow: 0 0 15px rgba(0, 255, 127, 0.2);
-            height: 100%; /* Make boxes in a row the same height */
+            height: 100%;
         }
         .future-tech-tab .detail-box h3 {
             color: #00FF7F;
@@ -3211,16 +2887,11 @@ with tabs[10]:
         unsafe_allow_html=True
     )
 
-    # --- Display All Categories in a 2x2 Grid ---
-    # Create two columns for the top row
     col1, col2 = st.columns(2)
 
-    # Data for the top row
     top_row_keys = ["Drive & Control", "Business"]
-    # Data for the bottom row
     bottom_row_keys = ["Energy Management", "Mobility Ecosystem Technology"]
 
-    # Populate the top row
     with col1:
         key = top_row_keys[0]
         data = future_tech_data[key]
@@ -3253,10 +2924,8 @@ with tabs[10]:
             unsafe_allow_html=True
         )
 
-    # Create two columns for the bottom row
     col3, col4 = st.columns(2)
 
-    # Populate the bottom row
     with col3:
         key = bottom_row_keys[0]
         data = future_tech_data[key]
@@ -3290,13 +2959,9 @@ with tabs[10]:
         )
 
 with tabs[11]:
-    import streamlit as st
-    from pathlib import Path
-
     st.header("🎙️ Audio Pitch", anchor=False)
     st.caption("Listen to Our Vision for the Future of E-Mobility")
 
-    # --- CSS for Audio Pitch ---
     st.markdown(
         """
         <style>
@@ -3332,15 +2997,8 @@ with tabs[11]:
         unsafe_allow_html=True
     )
 
-    # --- Load and Display Audio ---
-    audio_path = Path(r"https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/audio/powerpedal_audio_pitch.mp3")
-    try:
-        if audio_path.is_file():
-            st.markdown('<div class="audio-pitch-tab audio-container">', unsafe_allow_html=True)
-            st.audio(str(audio_path), format="audio/mp3")
-            st.markdown('</div>', unsafe_allow_html=True)
-            st.markdown('<div class="audio-pitch-tab summary-text">Hear our pitch to discover how we’re revolutionizing e-mobility.</div>', unsafe_allow_html=True)
-        else:
-            st.warning("Audio file 'powerpedal_audio_pitch.mp3' not found. Please ensure the file is in the correct directory.")
-    except Exception as e:
-        st.error(f"Error loading audio file: {e}")
+    audio_path = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/audio/powerpedal_audio_pitch.mp3"
+    st.markdown('<div class="audio-pitch-tab audio-container">', unsafe_allow_html=True)
+    st.audio(audio_path, format="audio/mp3")
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('<div class="audio-pitch-tab summary-text">Hear our pitch to discover how we’re revolutionizing e-mobility.</div>', unsafe_allow_html=True)

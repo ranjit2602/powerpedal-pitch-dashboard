@@ -251,8 +251,28 @@ st.markdown(
         .details-card .expander-content-body ul {
             padding-left: 20px;
         }
+
+        /* Styles for the Vision & Mission and Problem cards */
+        .info-card {
+            border: 1px solid #1B3C53;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #1B3C53;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .info-card h3 {
+            color: #78C841;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .info-card p {
+            font-size: 20px;
+            font-style: italic;
+            color: #FFF5F2;
+            margin-bottom: 0;
+        }
         
-        /* New CSS for the static container in the Problem tab */
         .problem-card-static {
             background: linear-gradient(135deg, #1B3C53, #2e2e2e);
             border: 2px solid #78C841;
@@ -420,16 +440,16 @@ with tabs[1]:
         unsafe_allow_html=True
     )
 
-    # Challenge data with full, markdown-formatted descriptions
+    # Challenge data with proper Markdown formatting
     challenges = [
         {
             "icon": "🚲",
             "title": "Inefficient Ride",
             "detailed_desc": """
-                **Poor cadence sensors, expensive torque sensors**
+                ### Poor cadence sensors, expensive torque sensors
 
                 In many low-cost Chinese drive systems, cadence-based pedal assist dominates. Cadence sensors only detect if the pedals are turning — they don’t measure how hard the rider is pedaling.
-                
+
                 - This results in delayed motor activation, abrupt surges, and assistance that feels disconnected from rider effort.
                 - While torque sensors provide a much smoother and more natural ride by measuring actual pedaling force, they are significantly more expensive, which pushes up system cost.
                 - In practice, OEMs often opt for cadence sensors to keep prices low, sacrificing efficiency and ride quality.
@@ -439,10 +459,10 @@ with tabs[1]:
             "icon": "💰",
             "title": "High Costs",
             "detailed_desc": """
-                **Japanese and European systems are too expensive**
+                ### Japanese and European systems are too expensive
 
                 Japanese and European drive systems deliver top-tier refinement, reliability, and performance — but at a price that’s out of reach for many OEMs in emerging markets.
-                
+
                 - The drive unit cost alone can make up 30–50% of an eBike’s retail price.
                 - This pricing model locks out small to mid-size manufacturers and limits the spread of high-performance eBikes in cost-sensitive regions.
             """
@@ -451,7 +471,7 @@ with tabs[1]:
             "icon": "⚙️⚙️",
             "title": "Integration Issues",
             "detailed_desc": """
-                **Lack of interoperability, difficult to integrate, no diagnostics, causing downtime**
+                ### Lack of interoperability, difficult to integrate, no diagnostics, causing downtime
 
                 - Many existing systems are closed ecosystems, making them hard to integrate with third-party components.
                 - Limited compatibility with different displays, batteries, and controllers forces OEMs into vendor lock-in.
@@ -463,7 +483,7 @@ with tabs[1]:
             "icon": "📉",
             "title": "Limited Features",
             "detailed_desc": """
-                **Lack of affordable remote diagnostics and smart analytics**
+                ### Lack of affordable remote diagnostics and smart analytics
 
                 While premium systems offer connected apps, cloud analytics, and remote troubleshooting, affordable drive systems rarely include these features.
                 

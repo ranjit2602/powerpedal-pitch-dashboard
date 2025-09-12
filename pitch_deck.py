@@ -111,10 +111,10 @@ st.markdown(
         
         /* --- Mobile-specific styles (on screens <= 768px) --- */
         @media (max-width: 768px) {
-            .st-emotion-cache-1dumvfu { /* The main app container class */
+            .st-emotion-cache-1dumvfu {
                 padding-top: 0.5rem !important;
             }
-            .st-emotion-cache-z5in97 { /* A common header container class */
+            .st-emotion-cache-z5in97 {
                 margin-top: -20px !important; 
             }
             .main-title {
@@ -122,7 +122,7 @@ st.markdown(
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
-                font-size: 5vw !important; /* Dynamically scales with viewport width */
+                font-size: 8vw !important; /* Doubled from 4vw */
             }
             .main-title-logo-container {
                 display: flex;
@@ -131,12 +131,12 @@ st.markdown(
                 white-space: nowrap; /* Keep logo and 'powerpedal' on one line */
             }
             .main-title-logo-container img {
-                height: 4.5vw !important; /* Adjusted to better align with the 'p' */
+                height: 8vw !important; /* Doubled from 4.5vw */
                 vertical-align: text-bottom !important;
             }
             .powerpedal-wordmark {
-                font-size: 1.2em !important; /* Increased wordmark size */
-                transform: translateY(-2px) !important; /* Pushes the text up for better alignment */
+                font-size: 1.2em !important; /* Relative to h1, ensures it scales with h1 */
+                transform: translateY(-2px) !important; /* Aligns the text with the logo */
             }
             .main-title-tagline {
                 font-size: 0.6em !important; /* Relative to the h1 font size */

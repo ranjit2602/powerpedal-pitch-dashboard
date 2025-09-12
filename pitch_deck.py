@@ -122,7 +122,7 @@ st.markdown(
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
-                font-size: 6vw !important; /* Dynamically scales with viewport width */
+                font-size: 7vw !important; /* Increased font size */
             }
             .main-title-logo-container {
                 display: flex;
@@ -131,12 +131,12 @@ st.markdown(
                 white-space: nowrap; /* Keep logo and 'powerpedal' on one line */
             }
             .main-title-logo-container img {
-                height: 5.5vw !important; /* Adjusted to better align with the 'p' */
+                height: 6.5vw !important; /* Increased logo size */
                 vertical-align: text-bottom !important;
             }
             .powerpedal-wordmark {
-                font-size: 1.3em !important; /* Increased wordmark size */
-                transform: translateY(-6px) !important; /* Pushes the text up for better alignment */
+                font-size: 1.4em !important; /* Increased wordmark size */
+                transform: translateY(-8px) !important; /* Pushes the text up for better alignment */
             }
             .main-title-tagline {
                 font-size: 0.6em !important; /* Relative to the h1 font size */
@@ -157,6 +157,10 @@ st.markdown(
             }
             summary {
                 font-size: 8px !important; /* Reduced to half size on mobile */
+            }
+            /* Sets the content inside the details tag to the same size as the summary */
+            details div p, details div h4, details div ul, details div li {
+                font-size: 8px !important;
             }
         }
         /* --- End of mobile styles --- */

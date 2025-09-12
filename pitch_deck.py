@@ -1670,15 +1670,33 @@ with tabs[6]:
         }
         .zoomable-image-container {
             width: 100%;
-            height: auto;
-            overflow: scroll;
+            overflow-x: scroll;
+            overflow-y: scroll;
             -webkit-overflow-scrolling: touch;
-            touch-action: pan-x pan-y;
             text-align: center;
         }
         .zoomable-image {
+            max-width: none;
+            height: auto;
+            width: 1500px;
+        }
+        .magnify-container {
+            position: relative;
+            cursor: zoom-in;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        .magnify-container img {
+            display: block;
             max-width: 100%;
             height: auto;
+            transition: transform 0.2s ease-out;
+        }
+        .magnify-container:hover img {
+            transform: scale(2); /* Adjust zoom level here */
+        }
+        .magnify-container:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         </style>
         """,
@@ -1692,9 +1710,17 @@ with tabs[6]:
     with col_img:
         image_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/financial.png"
         try:
+            # Desktop magnify effect
             st.markdown(
-                f'<div class="zoomable-image-container">'
-                f'<img src="{image_url}" class="zoomable-image" alt="PowerPedal Growth Vision" style="width: 1500px;">'
+                f'<div class="magnify-container">'
+                f'<img src="{image_url}" alt="PowerPedal Growth Vision">'
+                f'</div>',
+                unsafe_allow_html=True
+            )
+            # Mobile zoomable image
+            st.markdown(
+                f'<div class="zoomable-image-container" style="display: none; @media only screen and (max-width: 768px) {{ display: block; }}">'
+                f'<img src="{image_url}" class="zoomable-image" alt="PowerPedal Growth Vision">'
                 f'</div>',
                 unsafe_allow_html=True
             )

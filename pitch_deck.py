@@ -2003,6 +2003,12 @@ with tabs[7]:
             line-height: 1.6 !important;
             margin: 0 0 10px 0 !important;
         }
+
+        /* Hide the native help tooltips */
+        button[title="Help button"] {
+            display: none !important;
+        }
+
     </style>
     """, unsafe_allow_html=True)
 
@@ -2060,7 +2066,6 @@ with tabs[7]:
     st.subheader("Our Journey, Step by Step")
     st.markdown(
         "From a bold idea to a production-ready eBike drive system, our path combines cutting-edge innovation with strategic funding. Explore our milestones below, with product breakthroughs on the left (dark teal expanders) and funding achievements on the right (dark gray-green expanders)."
-        # Removed the 'help' parameter to prevent overlapping text
     )
 
     # --- Data for Milestones (with media only for Product milestones) ---

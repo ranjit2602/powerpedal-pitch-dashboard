@@ -1892,6 +1892,32 @@ with tabs[6]:
 
     st.markdown('</div>', unsafe_allow_html=True)
 
+import streamlit as st
+import base64
+import os
+from pathlib import Path
+
+# --- Function to get base64 encoded video ---
+def get_base64_of_bin_file(bin_file):
+    try:
+        with open(bin_file, 'rb') as f:
+            data = f.read()
+        return base64.b64encode(data).decode('utf-8')
+    except FileNotFoundError:
+        st.error(f"Error: The video file '{bin_file}' was not found. Please ensure it is in the same folder as your app.")
+        return None
+
+# --- Get encoded video data for embedding ---
+VIDEO_PATH = "design_clinic.mp4"
+if os.path.exists(VIDEO_PATH):
+    EMBEDDED_VIDEO_HTML = f"""
+        <video width="100%" controls>
+            <source src="data:video/mp4;base64,{get_base64_of_bin_file(VIDEO_PATH)}" type="video/mp4">
+        </video>
+    """
+else:
+    EMBEDDED_VIDEO_HTML = "Video file not found."
+
 with tabs[7]:
     # --- Styles specific to this storytelling timeline ---
     st.markdown("""
@@ -2004,7 +2030,7 @@ with tabs[7]:
             margin: 0 0 10px 0 !important;
         }
 
-        /* Hides the native help button/tooltip */
+        /* This rule hides the native help button/tooltip */
         button[title="Help button"] {
             display: none !important;
         }
@@ -2100,7 +2126,10 @@ with tabs[7]:
             "value": "N/A",
             "icon": "🛠️",
             "details": "Built our first functional prototype with custom electronics and motor control algorithms, achieving a seamless, natural ride experience, supported by the Indian Institute of Science's Design Clinic Scheme.",
-            "media": "https://www.dropbox.com/scl/fi/nxb6h4r0d4vntdd9zp87a/design_clinic.mp4?rlkey=lcy831kcxq51jwh4hyfz3w43t&st=k8mimdkc&dl=1"
+            "media": {
+                "type": "embedded_video",
+                "path": "design_clinic.mp4"
+            }
         },
         {
             "name": "Design Clinic Scheme",
@@ -2175,8 +2204,10 @@ with tabs[7]:
                         st.write(milestone['details'])
                         if milestone['media']:
                             st.markdown('<div class="timeline-media">', unsafe_allow_html=True)
+                            if isinstance(milestone['media'], dict) and milestone['media'].get("type") == "embedded_video":
+                                st.markdown(EMBEDDED_VIDEO_HTML, unsafe_allow_html=True)
                             # Handle a single media item
-                            if isinstance(milestone['media'], str):
+                            elif isinstance(milestone['media'], str):
                                 if milestone['media'].endswith(('.png', '.jpg', '.jpeg')):
                                     st.image(milestone['media'], caption=milestone['name'], use_container_width=True)
                                 elif milestone['media'].endswith('.mp4') or "drive.google.com" in milestone['media'] or "dropbox.com" in milestone['media']:

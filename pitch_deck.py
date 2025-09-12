@@ -122,7 +122,7 @@ st.markdown(
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
-                font-size: 8vw !important; /* Doubled from 4vw */
+                font-size: 5vw !important; /* Dynamically scales with viewport width */
             }
             .main-title-logo-container {
                 display: flex;
@@ -131,12 +131,12 @@ st.markdown(
                 white-space: nowrap; /* Keep logo and 'powerpedal' on one line */
             }
             .main-title-logo-container img {
-                height: 8vw !important; /* Doubled from 4.5vw */
+                height: 4.5vw !important; /* Adjusted to better align with the 'p' */
                 vertical-align: text-bottom !important;
             }
             .powerpedal-wordmark {
-                font-size: 1.2em !important; /* Relative to h1, ensures it scales with h1 */
-                transform: translateY(-2px) !important; /* Aligns the text with the logo */
+                font-size: 1.2em !important; /* Increased wordmark size */
+                transform: translateY(-5px) !important; /* Pushes the text up for better alignment */
             }
             .main-title-tagline {
                 font-size: 0.6em !important; /* Relative to the h1 font size */
@@ -155,8 +155,9 @@ st.markdown(
             .stTabs [data-baseweb="tab"] > div {
                 font-size: 8px !important;
             }
+            /* This is the reliable fix for the welcome message font size on mobile */
             summary {
-                font-size: 14px !important;
+                font-size: 8px !important; /* Reduced to half size on mobile */
             }
         }
         /* --- End of mobile styles --- */

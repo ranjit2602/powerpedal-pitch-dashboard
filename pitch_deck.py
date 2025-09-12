@@ -1697,7 +1697,13 @@ with tabs[6]:
         image_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/financial.png"
         try:
             st.image(image_url, caption="PowerPedal Growth Vision", use_container_width=True)
-            st.markdown(f'<a href="{image_url}" target="_blank">View Full-Size Image</a>', unsafe_allow_html=True)
+            # Link to open image in new tab with black background
+            st.markdown(
+                f'<a href="{image_url}" target="_blank" style="color: #FFFFFF; text-decoration: none;">'
+                f'<button style="background-color: #2E2E2E; color: #FFFFFF; border: none; padding: 10px 20px; border-radius: 5px;">'
+                f'View Full-Size Image</button></a>',
+                unsafe_allow_html=True
+            )
         except Exception:
             st.warning("Image file not found at: " + image_url)
             st.markdown(
@@ -1839,7 +1845,7 @@ with tabs[6]:
         hovermode='x unified',
         height=400
     )
-    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    st.plotly_chart(fig, use_container_width=True, config={'staticPlot': True})
 
     st.markdown('---')
     st.subheader(f"Detailed Financial Table for {selected_scenario}")

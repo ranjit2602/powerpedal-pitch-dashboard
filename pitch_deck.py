@@ -35,27 +35,20 @@ st.markdown(
     """
     <details>
       <summary style="font-size:16px; font-weight:bold; cursor:pointer;">
-        👋 Welcome! Read this for a detailed guide on navigating the deck.
+        👋 Welcome! A Quick Guide to Navigating Our Dashboard
       </summary>
       <div style="margin-top:10px;">
         <p>
-        This interactive deck is designed for deep exploration. Here’s a detailed guide to each section to help you get the most out of our presentation.
+        This isn't a traditional static presentation. This interactive pitch deck is designed for you to explore our vision and business in depth, at your own pace.
         </p>
-        <h4>A Tab-by-Tab Guide</h4>
-        <ul>
-          <li><b>🌍 Vision & Mission:</b> Start here to understand our core purpose and long-term goal.</li>
-          <li><b>⚠️ Problem:</b> Learn about the critical challenges in the current e-bike market.</li>
-          <li><b>🌏 Market Opportunity:</b> See our analysis of the market size and target.</li>
-          <li><b>⚙️ PowerPedal – The Product:</b> Discover our hardware + software solution.</li>
-          <li><b>💼 Business Model:</b> Understand our revenue streams.</li>
-          <li><b>🚀 Go-to-Market Strategy:</b> Explore our actionable plan.</li>
-          <li><b>📊 Financial Projections:</b> Review key financial forecasts.</li>
-          <li><b>📍 Milestones & Traction:</b> See the tangible progress we’ve already made.</li>
-          <li><b>🧑‍🤝‍🧑 Team & Advisors:</b> Meet the experienced team driving PowerPedal.</li>
-          <li><b>💰 Funding Ask & Use:</b> Find the details of our funding round.</li>
-          <li><b>🔮 Future Tech & Expansion:</b> Look ahead at our roadmap and R&D.</li>
-          <li><b>🎙️ Audio Pitch:</b> Listen to our narrated pitch for a quick summary.</li>
-        </ul>
+        <h4>Here’s how to get the most out of it:</h4>
+        <ol>
+          <li><b>Navigate with the Tabs:</b> The tabs at the top of the page act as your table of contents. Click on any tab to jump to a specific section of our pitch, from our <b>Vision</b> to our <b>Financials</b>.</li>
+          <li><b>Look for Interactive Elements:</b> Many sections contain interactive charts, sliders, and dropdown menus. These tools allow you to dive deeper into our market analysis, play with our financial projections, and see our data in real-time.</li>
+          <li><b>Explore the Problem:</b> Don't miss our detailed breakdown of the market challenges. You can click on each challenge to see our specific solutions and how they directly address the pain points.</li>
+          <li><b>Listen to the Audio Pitch:</b> For a quick, narrated summary of our entire presentation, click on the <b>Audio Pitch</b> tab at any time.</li>
+        </ol>
+        <p>Enjoy the presentation! We're excited to show you the future of smart urban mobility.</p>
       </div>
     </details>
     """,
@@ -438,171 +431,99 @@ from io import BytesIO
 # ---- TAB 2: Problem ----
 with tabs[1]:
     st.header("⚠️ Problem")
-    
-    # Add problem-tab class to wrap sub-tabs
-    st.markdown('<div class="problem-tab">', unsafe_allow_html=True)
 
-    # Challenges Infographic
+    # Display problem.png (centered and smaller)
+    problem_image_path = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/problem.png"
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.image(problem_image_path, use_container_width=True, width=700)
+
     st.markdown(
         """
         <p class='problem-text' style='font-size: 18px; color: #e0e0e0; text-align: center; margin: 20px 0;'>
-            Current e-bike drive systems face significant hurdles that limit performance, affordability, and scalability.
+            Current e-bike drive systems face significant hurdles that limit performance, affordability, and scalability. Click on any of the challenges below to learn more.
         </p>
         """,
         unsafe_allow_html=True
     )
 
-    # Display problem.png (centered)
-    problem_image_path = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/problem.png"
-    image_class = "problem-image-container faded" if st.session_state.get('selected_challenge') else "problem-image-container"
-    st.markdown(f'<div class="{image_class}">', unsafe_allow_html=True)
-    try:
-        # Fetch the image from the URL
-        response = requests.get(problem_image_path)
-        if response.status_code == 200:
-            img = BytesIO(response.content)
-            col1, col2, col3 = st.columns([1, 2, 1])
-            with col2:
-                st.image(img, use_container_width=False, width=1500, output_format="auto", channels="RGB")
-        else:
-            st.error(f"Failed to load image from {problem_image_path}. Status code: {response.status_code}")
-            st.markdown(
-                """
-                <div style="text-align: center; border: 1px solid #e6e6e6; border-radius: 10px; padding: 20px; background-color: #f0f0f0;">
-                    <p style="color: #555;">Placeholder: No image available for problem.png</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-    except Exception as e:
-        st.error(f"Failed to display image at {problem_image_path}. Error: {str(e)}")
-        st.markdown(
-            """
-            <div style="text-align: center; border: 1px solid #e6e6e6; border-radius: 10px; padding: 20px; background-color: #f0f0f0;">
-                <p style="color: #555;">Placeholder: No image available for problem.png</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-    st.markdown('</div>', unsafe_allow_html=True)
     # Challenge data
     challenges = [
         {
             "icon": "🚲",
             "title": "Inefficient Ride",
             "detailed_desc": """
-                Poor cadence sensors, expensive torque sensors<br>
-                In many low-cost Chinese drive systems, cadence-based pedal assist dominates. Cadence sensors only detect if the pedals are turning — they don’t measure how hard the rider is pedaling.<br>
-                • This results in delayed motor activation, abrupt surges, and assistance that feels disconnected from rider effort.<br>
-                • While torque sensors provide a much smoother and more natural ride by measuring actual pedaling force, they are significantly more expensive, which pushes up system cost.<br>
-                • In practice, OEMs often opt for cadence sensors to keep prices low, sacrificing efficiency and ride quality.
+                <div class="expander-content-body">
+                    <h3>Poor cadence sensors, expensive torque sensors</h3>
+                    <p>
+                    In many low-cost Chinese drive systems, cadence-based pedal assist dominates. Cadence sensors only detect if the pedals are turning — they don’t measure how hard the rider is pedaling.
+                    </p>
+                    <ul>
+                        <li>This results in delayed motor activation, abrupt surges, and assistance that feels disconnected from rider effort.</li>
+                        <li>While torque sensors provide a much smoother and more natural ride by measuring actual pedaling force, they are significantly more expensive, which pushes up system cost.</li>
+                        <li>In practice, OEMs often opt for cadence sensors to keep prices low, sacrificing efficiency and ride quality.</li>
+                    </ul>
+                </div>
             """
         },
         {
             "icon": "💰",
             "title": "High Costs",
             "detailed_desc": """
-                Japanese and European systems are too expensive<br>
-                Japanese and European drive systems deliver top-tier refinement, reliability, and performance — but at a price that’s out of reach for many OEMs in emerging markets.<br>
-                • The drive unit cost alone can make up 30–50% of an eBike’s retail price.<br>
-                • This pricing model locks out small to mid-size manufacturers and limits the spread of high-performance eBikes in cost-sensitive regions.
+                <div class="expander-content-body">
+                    <h3>Japanese and European systems are too expensive</h3>
+                    <p>
+                    Japanese and European drive systems deliver top-tier refinement, reliability, and performance — but at a price that’s out of reach for many OEMs in emerging markets.
+                    </p>
+                    <ul>
+                        <li>The drive unit cost alone can make up 30–50% of an eBike’s retail price.</li>
+                        <li>This pricing model locks out small to mid-size manufacturers and limits the spread of high-performance eBikes in cost-sensitive regions.</li>
+                    </ul>
+                </div>
             """
         },
         {
             "icon": "⚙️⚙️",
             "title": "Integration Issues",
             "detailed_desc": """
-                Lack of interoperability, difficult to integrate, no diagnostics, causing downtime<br>
-                • Many existing systems are closed ecosystems, making them hard to integrate with third-party components.<br>
-                • Limited compatibility with different displays, batteries, and controllers forces OEMs into vendor lock-in.<br>
-                • Integration can require custom wiring harnesses, firmware changes, and long trial-and-error cycles.<br>
-                • The absence of built-in self-diagnostics means even small issues require manual troubleshooting, increasing downtime and service costs.
+                <div class="expander-content-body">
+                    <h3>Lack of interoperability, difficult to integrate, no diagnostics, causing downtime</h3>
+                    <ul>
+                        <li>Many existing systems are closed ecosystems, making them hard to integrate with third-party components.</li>
+                        <li>Limited compatibility with different displays, batteries, and controllers forces OEMs into vendor lock-in.</li>
+                        <li>Integration can require custom wiring harnesses, firmware changes, and long trial-and-error cycles.</li>
+                        <li>The absence of built-in self-diagnostics means even small issues require manual troubleshooting, increasing downtime and service costs.</li>
+                    </ul>
+                </div>
             """
         },
         {
             "icon": "📉",
             "title": "Limited Features",
             "detailed_desc": """
-                Lack of affordable remote diagnostics and smart analytics<br>
-                While premium systems offer connected apps, cloud analytics, and remote troubleshooting, affordable drive systems rarely include these features.<br>
-                • Without remote diagnostics, problems are identified only after a manual inspection, delaying repairs.<br>
-                • The absence of usage analytics means there’s no visibility into rider behavior, battery health trends, or early signs of failure.<br>
-                • This results in reactive maintenance, higher operational costs, and missed opportunities to improve performance over time.
+                <div class="expander-content-body">
+                    <h3>Lack of affordable remote diagnostics and smart analytics</h3>
+                    <p>
+                    While premium systems offer connected apps, cloud analytics, and remote troubleshooting, affordable drive systems rarely include these features.
+                    </p>
+                    <ul>
+                        <li>Without remote diagnostics, problems are identified only after a manual inspection, delaying repairs.</li>
+                        <li>The absence of usage analytics means there’s no visibility into rider behavior, battery health trends, or early signs of failure.</li>
+                        <li>This results in reactive maintenance, higher operational costs, and missed opportunities to improve performance over time.</li>
+                    </ul>
+                </div>
             """
         }
     ]
 
-    # Sub-tabs for challenges (including Overview)
-    sub_tab_titles = ["Overview"] + [f"{challenge['icon']} {challenge['title']}" for challenge in challenges]
-    sub_tabs = st.tabs(sub_tab_titles)
-
-    # Overview tab: show all challenge icons and titles in a grid
-    with sub_tabs[0]:
-        st.session_state.selected_challenge = None
-        st.markdown(
-            """
-            <div class='challenge-grid'>
-            """,
-            unsafe_allow_html=True
-        )
-        for challenge in challenges:
-            st.markdown(
-                f"""
-                <div class='challenge-container' style='position: relative;'>
-                    <div style='font-size: 40px;'>{challenge['icon']}</div>
-                    <h4 style='color: #78C841; margin: 10px 0 5px 0;'>{challenge['title']}</h4>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-        st.markdown(
-            """
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    # Individual challenge tabs
-    for i, challenge in enumerate(challenges):
-        with sub_tabs[i + 1]:
-            st.session_state.selected_challenge = challenge["title"]
-            st.markdown(
-                f"""
-                <div class='challenge-container active' style='position: relative;'>
-                    <div style='font-size: 40px;'>{challenge['icon']}</div>
-                    <h4 style='color: #78C841; margin: 10px 0 5px 0;'>{challenge['title']}</h4>
-                    <p>{challenge['detailed_desc']}</p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-    # Close problem-tab div
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# Helper function to load Excel data with proper URL handling
-def load_excel_data(url, expected_columns, fallback_data, transpose=True):
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        df = pd.read_excel(BytesIO(response.content))
-        if not all(col in df.columns for col in expected_columns):
-            st.warning(f"Expected columns {expected_columns} not found in {url}. Using fallback data.")
-            if transpose and isinstance(fallback_data, pd.DataFrame):
-                return fallback_data, f"Column mismatch in {url}"
-            elif not transpose and isinstance(fallback_data, pd.DataFrame):
-                return fallback_data, f"Column mismatch in {url}"
-            else:
-                return pd.DataFrame(fallback_data), f"Column mismatch in {url}"
-        return df, None
-    except Exception as e:
-        st.warning(f"Error loading {url}: {str(e)}. Using fallback data.")
-        if transpose and isinstance(fallback_data, pd.DataFrame):
-            return fallback_data, str(e)
-        elif not transpose and isinstance(fallback_data, pd.DataFrame):
-            return fallback_data, str(e)
-        else:
-            return pd.DataFrame(fallback_data), str(e)
+    # Display each problem in a collapsible expander
+    for challenge in challenges:
+        with st.expander(
+            label=f"&nbsp;&nbsp;{challenge['icon']} &nbsp;&nbsp;{challenge['title']}",
+            expanded=False
+        ):
+            st.markdown(challenge['detailed_desc'], unsafe_allow_html=True)
 
 # ---- TAB 3: Market Opportunity ----
 with tabs[2]:

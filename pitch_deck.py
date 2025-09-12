@@ -623,7 +623,7 @@ with tabs[2]:
         "Performance": ["Poor performance", "Amazing performance", "Amazing performance"],
         "Efficiency": ["Low efficiency", "High efficiency", "High efficiency"],
         "Features": ["No Features", "Usually feature rich", "Feature rich"],
-        "Average Price": ["Average price ~ €1,200-1,500", "Average price ~ €3,000-3,500", "Average price ~ €1,400-2,000"]
+        "Average Price": ["Average price ~ €1,200-1,500", "Average price ~ €3,000-3-500", "Average price ~ €1,400-2-000"]
     }
     df_pos_fallback = pd.DataFrame(fallback_data_pos).T
     df_pos_fallback.index.name = "Attribute"
@@ -700,12 +700,6 @@ with tabs[2]:
                 margin: 0 !important;
                 padding: 0 !important;
             }
-            .market-opportunity-tab .custom-caption {
-                font-size: 12px;
-                color: #999999;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
             .market-opportunity-tab .table-viz-container {
                 display: flex;
                 align-items: flex-start;
@@ -766,25 +760,27 @@ with tabs[2]:
     # Content below image in a single container
     with st.container():
         st.markdown("<div style='margin: 0; padding: 0; margin-bottom: -25px;'>", unsafe_allow_html=True)
-        col1, col2 = st.columns([1, 1])
-        with col1:
+        
+        # New layout for SVG and Selectbox
+        col_svg, col_select = st.columns([1, 1])
+        with col_svg:
             st.markdown(
                 """
-                <div style="display: flex; justify-content: flex-start; margin: 0; padding: 0;">
-                    <div class="svg-container" style="position: relative; width: 900px; height: 600px;">
-                        <svg width="900" height="600" viewBox="-450 -300 1000 600">
-                            <circle id="pam" cx="0" cy="0" r="300" fill="#3E3F29" opacity="0.7"></circle>
-                            <circle id="tam" cx="0" cy="0" r="220" fill="#819067" opacity="0.7"></circle>
-                            <circle id="sam" cx="0" cy="0" r="140" fill="#A08963" opacity="0.7"></circle>
-                            <circle id="som" cx="0" cy="0" r="60" fill="#2E2E2E" opacity="0.7"></circle>
-                            <text x="0" y="-250" text-anchor="middle" font-size="34" fill="#e0e0e0" font-weight="bold">PAM</text>
-                            <text x="0" y="-160" text-anchor="middle" font-size="30" fill="#e0e0e0">TAM</text>
-                            <text x="0" y="-85" text-anchor="middle" font-size="26" fill="#e0e0e0">SAM</text>
-                            <text x="0" y="-20" text-anchor="middle" font-size="24" fill="#e0e0e0">SOM</text>
-                            <text x="0" y="270" text-anchor="middle" font-size="30" fill="#000000" font-weight="bold">$50.8B</text>
-                            <text x="0" y="190" text-anchor="middle" font-size="26" fill="#000000" font-weight="bold">$7.16B</text>
-                            <text x="0" y="105" text-anchor="middle" font-size="22" fill="#000000" font-weight="bold">$2.7B</text>
-                            <text x="0" y="20" text-anchor="middle" font-size="20" fill="#000000" font-weight="bold">$0.25B</text>
+                <div style="display: flex; justify-content: center; align-items: center; margin: 0; padding: 0;">
+                    <div class="svg-container" style="position: relative; width: 450px; height: 300px;">
+                        <svg width="450" height="300" viewBox="-225 -150 500 300">
+                            <circle id="pam" cx="0" cy="0" r="150" fill="#3E3F29" opacity="0.7"></circle>
+                            <circle id="tam" cx="0" cy="0" r="110" fill="#819067" opacity="0.7"></circle>
+                            <circle id="sam" cx="0" cy="0" r="70" fill="#A08963" opacity="0.7"></circle>
+                            <circle id="som" cx="0" cy="0" r="30" fill="#2E2E2E" opacity="0.7"></circle>
+                            <text x="0" y="-125" text-anchor="middle" font-size="17" fill="#e0e0e0" font-weight="bold">PAM</text>
+                            <text x="0" y="-80" text-anchor="middle" font-size="15" fill="#e0e0e0">TAM</text>
+                            <text x="0" y="-42" text-anchor="middle" font-size="13" fill="#e0e0e0">SAM</text>
+                            <text x="0" y="-10" text-anchor="middle" font-size="12" fill="#e0e0e0">SOM</text>
+                            <text x="0" y="135" text-anchor="middle" font-size="15" fill="#000000" font-weight="bold">$50.8B</text>
+                            <text x="0" y="95" text-anchor="middle" font-size="13" fill="#000000" font-weight="bold">$7.16B</text>
+                            <text x="0" y="52" text-anchor="middle" font-size="11" fill="#000000" font-weight="bold">$2.7B</text>
+                            <text x="0" y="10" text-anchor="middle" font-size="10" fill="#000000" font-weight="bold">$0.25B</text>
                         </svg>
                     </div>
                 </div>
@@ -792,7 +788,7 @@ with tabs[2]:
                 unsafe_allow_html=True
             )
 
-        with col2:
+        with col_select:
             selected_market = st.selectbox("Select Market Segment", [data["title"] for data in market_data])
             if selected_market != st.session_state.get("selected_market"):
                 st.session_state.selected_market = selected_market
@@ -813,8 +809,7 @@ with tabs[2]:
                         <div class='{container_class}' style='background-color: {market["bg_color"]}; border-radius: 10px; text-align: center; padding: 10px; margin: 0 0 2px 0;'>
                             <h4 style='color: #e0e0e0; margin: 0 0 2px 0;'>{market["title"]}</h4>
                             <p style='color: #000000; font-size: 18px; font-weight: bold; margin: 0 0 2px 0;'>{market["value"]}</p>
-                            <p style='color: #e0e0e0; font-size: 14px; margin: 0 0 2px 0;'>{market["title"]} Description</p>
-                            <p style='color: #e0e0e0; font-size: 14px; margin: 0;'>{market["full_desc"]}</p>
+                            <p style='color: #e0e0e0; font-size: 14px; margin: 0 0 2px 0;'>{market["full_desc"]}</p>
                         </div>
                         """,
                         unsafe_allow_html=True
@@ -920,7 +915,7 @@ with tabs[2]:
 
     # Tables and Visualizations Section
     
-    # 1. Ebike Drive Segmentation: Dual-Axis Bar Chart
+    # 1. Ebike Drive Segmentation: Dual Pie Charts
     st.markdown("---")
     st.subheader("1. Market Segmentation: Global vs. India")
     st.markdown(
@@ -931,54 +926,30 @@ with tabs[2]:
         """, unsafe_allow_html=True
     )
     st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
-    col_table1, col_viz1 = st.columns([2, 1])
+    col_table1, col_viz1 = st.columns([2, 1], vertical_alignment="top")
     with col_table1:
         st.markdown(create_html_table(df_seg, "E-bike Drivetrain Segmentation and Comparison"), unsafe_allow_html=True)
         if error_seg:
             st.warning(error_seg)
-
+    
     with col_viz1:
-        fig, ax1 = plt.subplots(figsize=(4, 2.5))
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(4, 2.5))
         fig.patch.set_facecolor('none')
         ax1.set_facecolor('none')
+        ax2.set_facecolor('none')
 
         labels = df_seg['Drive System']
         global_share = [clean_share(s) for s in df_seg['Global Market Share']]
         indian_share = [clean_share(s) for s in df_seg['Indian Market Share']]
-        
-        ax2 = ax1.twinx()
 
-        bar_width = 0.35
-        x = np.arange(len(labels))
-        
-        ax1.bar(x, global_share, bar_width, label='Global Market Share', color='#415A77')
-        ax2.bar(x + bar_width, indian_share, bar_width, label='Indian Market Share', color='#78C841')
-        
-        ax1.set_ylabel('Global Market Share (%)', color='#415A77', fontsize=8)
-        ax2.set_ylabel('Indian Market Share (%)', color='#78C841', fontsize=8)
-        
-        ax1.set_xticks(x + bar_width / 2)
-        ax1.set_xticklabels(labels, fontsize=8, color='#e0e0e0')
-        ax1.tick_params(axis='y', labelcolor='#415A77')
-        ax2.tick_params(axis='y', labelcolor='#78C841')
+        ax1.pie(global_share, labels=labels, colors=['#415A77', '#A08963'], autopct='%1.0f%%',
+                        textprops={'color': '#e0e0e0', 'fontsize': 6}, wedgeprops={'edgecolor': '#1e1e1e', 'linewidth': 1})
+        ax1.set_title('Global Market', fontsize=8, color='#e0e0e0')
+        ax2.pie(indian_share, labels=labels, colors=['#78C841', '#E3FF9D'], autopct='%1.0f%%',
+                        textprops={'color': '#e0e0e0', 'fontsize': 6}, wedgeprops={'edgecolor': '#1e1e1e', 'linewidth': 1})
+        ax2.set_title('Indian Market', fontsize=8, color='#e0e0e0')
 
-        ax1.set_ylim(0, 100)
-        ax2.set_ylim(0, 100)
-
-        fig.suptitle('Global vs. Indian Market Share', fontsize=10, color='#e0e0e0')
-        fig.legend(loc="upper center", bbox_to_anchor=(0.5, 1.15), ncol=2, frameon=False, labelcolor='#e0e0e0', fontsize=8)
-        
-        ax1.spines['top'].set_visible(False)
-        ax1.spines['right'].set_visible(False)
-        ax1.spines['left'].set_color('#e0e0e0')
-        ax1.spines['bottom'].set_color('#e0e0e0')
-        
-        ax2.spines['top'].set_visible(False)
-        ax2.spines['left'].set_visible(False)
-        ax2.spines['right'].set_color('#e0e0e0')
-        ax2.spines['bottom'].set_color('#e0e0e0')
-        
-        plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+        plt.tight_layout(pad=0.2)
         st.pyplot(fig)
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -994,7 +965,7 @@ with tabs[2]:
     )
 
     st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
-    col_table2, col_viz2 = st.columns([2, 1])
+    col_table2, col_viz2 = st.columns([2, 1], vertical_alignment="top")
     with col_table2:
         st.markdown(create_html_table(df_pos.T, "E-Bike Drivetrain Positioning"), unsafe_allow_html=True)
         if error_pos:
@@ -1020,33 +991,40 @@ with tabs[2]:
         }
         
         # Spider chart creation
-        fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(polar=True))
+        fig, ax = plt.subplots(figsize=(6.5, 6), subplot_kw=dict(polar=True))
         fig.patch.set_facecolor('none')
         ax.set_facecolor('none')
+
+        # Adjust subplot position to create more space for labels
+        fig.subplots_adjust(left=0.05, right=0.95, top=0.9, bottom=0.1)
 
         # Number of variables we're plotting.
         num_vars = len(categories)
         # Calculate angle for each axis.
-        angles = [n / float(num_vars) * 2 * pi for n in range(num_vars)]
+        angles = np.linspace(0, 2 * pi, num_vars, endpoint=False).tolist()
         angles += angles[:1]
         
-        colors = {'Hub driven e-bike': '#415A77', 'Mid driven e-bike': '#78C841', 'PowerPedal driven e-bike': '#156d17'}
+        # Brighter, more distinct colors
+        colors = {'Hub driven e-bike': '#FF6347', 'Mid driven e-bike': '#FFD700', 'PowerPedal driven e-bike': '#00BFFF'}
         
         for name, values in data_to_plot.items():
             values += values[:1]
             ax.plot(angles, values, color=colors[name], linewidth=2, linestyle='solid', label=name)
-            ax.fill(angles, values, color=colors[name], alpha=0.25)
+            ax.fill(angles, values, color=colors[name], alpha=0.45)
 
         # Draw axis lines and labels
         ax.set_theta_offset(pi / 2)
         ax.set_theta_direction(-1)
         ax.set_rlabel_position(0)
-        ax.set_xticks(angles[:-1])
-        ax.set_xticklabels(categories, fontsize=8, color='#e0e0e0')
+        
+        # Corrected method for setting labels and padding
+        ax.set_thetagrids(np.degrees(angles[:-1]), labels=categories, color='#e0e0e0', fontsize=9)
+        ax.tick_params(axis='x', which='both', pad=30)
+        
         ax.set_yticklabels([])
         ax.set_ylim(0, 3)
         ax.grid(color='#555555')
-        
+
         # Add a custom legend
         ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1), fontsize=8, frameon=False, labelcolor='#e0e0e0')
         
@@ -1065,7 +1043,7 @@ with tabs[2]:
         """, unsafe_allow_html=True
     )
     st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
-    col_table3, col_viz3 = st.columns([2, 1])
+    col_table3, col_viz3 = st.columns([2, 1], vertical_alignment="top")
     with col_table3:
         st.markdown(create_html_table(df_market, "PowerPedal’s Market Positioning"), unsafe_allow_html=True)
         if error_market:

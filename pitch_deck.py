@@ -509,6 +509,71 @@ with tabs[1]:
                 unsafe_allow_html=True
             )
 
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from math import pi
+
+# Helper function to load data from URL
+def load_excel_data(url, expected_columns, fallback_data, transpose=False):
+    """Loads data from a specified URL, with fallback."""
+    try:
+        df = pd.read_excel(url)
+        if transpose:
+            df = df.T
+            df.columns = df.iloc[0]
+            df = df[1:]
+        
+        # Check if the columns match the expected ones
+        if list(df.columns) != expected_columns:
+            st.warning(f"Columns in the Excel file at {url} do not match the expected structure. Using fallback data.")
+            if isinstance(fallback_data, pd.DataFrame):
+                return fallback_data, "Using fallback data due to column mismatch."
+            else:
+                return pd.DataFrame(fallback_data, columns=expected_columns), "Using fallback data due to column mismatch."
+        return df, None
+    except Exception as e:
+        st.error(f"Error loading data from {url}: {e}. Using fallback data.")
+        if isinstance(fallback_data, pd.DataFrame):
+            return fallback_data, f"Error loading data: {e}. Using fallback."
+        else:
+            return pd.DataFrame(fallback_data, columns=expected_columns), f"Error loading data: {e}. Using fallback."
+
+# Helper function to create HTML table
+def create_html_table(df, title):
+    html_output = f"<h5 style='color:#e0e0e0;'>{title}</h5>"
+    html_output += "<table style='width:100%; border-collapse: collapse;'>"
+    html_output += "<thead style='background-color: #333333; color: #ffffff;'>"
+    html_output += "<tr>"
+    for col in df.columns:
+        html_output += f"<th style='padding: 8px; border: 1px solid #444; text-align: left;'>{col}</th>"
+    html_output += "</tr>"
+    html_output += "</thead>"
+    html_output += "<tbody>"
+    for _, row in df.iterrows():
+        html_output += "<tr>"
+        for item in row:
+            html_output += f"<td style='padding: 8px; border: 1px solid #444; text-align: left; color:#e0e0e0;'>{item}</td>"
+        html_output += "</tr>"
+    html_output += "</tbody>"
+    html_output += "</table>"
+    return html_output
+
+# Helper function to clean market share values
+def clean_share(s):
+    if isinstance(s, str):
+        cleaned = s.replace('~', '').replace('%', '').replace(' ', '').strip()
+        try:
+            return float(cleaned)
+        except ValueError:
+            if "Dominant" in s:
+                return 99.0
+            elif "Emerging" in s:
+                return 1.0
+            return 0.0
+    return float(s) if isinstance(s, (int, float)) else 0.0
+
 # ---- TAB 3: Market Opportunity ----
 with tabs[2]:
     st.header("🌏 Market Opportunity")
@@ -643,7 +708,7 @@ with tabs[2]:
             }
             .market-opportunity-tab .table-viz-container {
                 display: flex;
-                align-items: flex-start; /* Changed to flex-start for top alignment */
+                align-items: flex-start;
                 justify-content: space-between;
                 margin: 0 0 -25px 0;
                 padding: 0;
@@ -668,7 +733,7 @@ with tabs[2]:
                 margin: 0;
                 display: flex;
                 flex-direction: column;
-                justify-content: flex-start; /* Changed to flex-start for top alignment */
+                justify-content: flex-start;
                 align-items: center;
                 min-height: 10px;
                 box-sizing: border-box;
@@ -812,240 +877,225 @@ with tabs[2]:
                             unsafe_allow_html=True
                         )
 
-        # Add CSS for table-visual alignment, scoped to Market Opportunity tab
+    # Add CSS for table-visual alignment, scoped to Market Opportunity tab
+    st.markdown(
+        """
+        <style>
+        .market-opportunity-tab .table-viz-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin: 0 0 -25px 0;
+            padding: 0;
+            gap: 2px;
+            width: 100%;
+            min-height: 10px;
+            box-sizing: border-box;
+        }
+        .market-opportunity-tab .table-container {
+            flex: 2;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            min-height: 10px;
+        }
+        .market-opportunity-tab .viz-container {
+            flex: 1;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 10px;
+            box-sizing: border-box;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Tables and Visualizations Section
+    
+    # 1. Ebike Drive Segmentation: Dual-Axis Bar Chart
+    st.markdown("---")
+    st.subheader("1. Market Segmentation: Global vs. India")
+    st.markdown(
+        """
+        <p style='color: #e0e0e0; font-size: 16px;'>
+        <b>Hub drives</b> dominate the global e-bike market, and their dominance is even more pronounced in India. This is a critical finding, as PowerPedal is designed to upgrade this massive, cost-sensitive segment.
+        </p>
+        """, unsafe_allow_html=True
+    )
+    st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
+    col_table1, col_viz1 = st.columns([2, 1])
+    with col_table1:
+        st.markdown(create_html_table(df_seg, "E-bike Drivetrain Segmentation and Comparison"), unsafe_allow_html=True)
+        if error_seg:
+            st.warning(error_seg)
+
+    with col_viz1:
+        fig, ax1 = plt.subplots(figsize=(4, 2.5))
+        fig.patch.set_facecolor('none')
+        ax1.set_facecolor('none')
+
+        labels = df_seg['Drive System']
+        global_share = [clean_share(s) for s in df_seg['Global Market Share']]
+        indian_share = [clean_share(s) for s in df_seg['Indian Market Share']]
+        
+        ax2 = ax1.twinx()
+
+        bar_width = 0.35
+        x = np.arange(len(labels))
+        
+        ax1.bar(x, global_share, bar_width, label='Global Market Share', color='#415A77')
+        ax2.bar(x + bar_width, indian_share, bar_width, label='Indian Market Share', color='#78C841')
+        
+        ax1.set_ylabel('Global Market Share (%)', color='#415A77', fontsize=8)
+        ax2.set_ylabel('Indian Market Share (%)', color='#78C841', fontsize=8)
+        
+        ax1.set_xticks(x + bar_width / 2)
+        ax1.set_xticklabels(labels, fontsize=8, color='#e0e0e0')
+        ax1.tick_params(axis='y', labelcolor='#415A77')
+        ax2.tick_params(axis='y', labelcolor='#78C841')
+
+        ax1.set_ylim(0, 100)
+        ax2.set_ylim(0, 100)
+
+        fig.suptitle('Global vs. Indian Market Share', fontsize=10, color='#e0e0e0')
+        fig.legend(loc="upper center", bbox_to_anchor=(0.5, 1.15), ncol=2, frameon=False, labelcolor='#e0e0e0', fontsize=8)
+        
+        ax1.spines['top'].set_visible(False)
+        ax1.spines['right'].set_visible(False)
+        ax1.spines['left'].set_color('#e0e0e0')
+        ax1.spines['bottom'].set_color('#e0e0e0')
+        
+        ax2.spines['top'].set_visible(False)
+        ax2.spines['left'].set_visible(False)
+        ax2.spines['right'].set_color('#e0e0e0')
+        ax2.spines['bottom'].set_color('#e0e0e0')
+        
+        plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+        st.pyplot(fig)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # 2. E-Bike Drivetrain Positioning: Spider Chart
+    st.markdown("---")
+    st.subheader("2. Drivetrain Positioning: Where PowerPedal Sits")
+    st.markdown(
+        """
+        <p style='color: #e0e0e0; font-size: 16px;'>
+        PowerPedal is strategically positioned as a <b>"bridge technology"</b> between the low-cost, low-performance hub drive and the expensive, high-performance mid-drive. It offers the performance and features of premium systems at a fraction of the cost.
+        </p>
+        """, unsafe_allow_html=True
+    )
+
+    st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
+    col_table2, col_viz2 = st.columns([2, 1])
+    with col_table2:
+        st.markdown(create_html_table(df_pos.T, "E-Bike Drivetrain Positioning"), unsafe_allow_html=True)
+        if error_pos:
+            st.warning(error_pos)
+
+    with col_viz2:
+        # Data for spider chart
+        categories = ['Cost', 'Performance', 'Efficiency', 'Features']
+        
+        # A mapping of qualitative values to a numerical scale
+        value_map = {
+            'Low cost': 3, 'Slight premium over hub e-bikes(€150-200)': 2, 'Expensive': 1,
+            'Poor performance': 1, 'Amazing performance': 3,
+            'Low efficiency': 1, 'High efficiency': 3,
+            'No Features': 1, 'Feature rich': 3, 'Usually feature rich': 3,
+        }
+
+        # Re-map the data for the radar chart
+        data_to_plot = {
+            'Hub driven e-bike': [value_map.get(df_pos.loc[cat, 'Hub driven e-bike'], 0) for cat in categories],
+            'Mid driven e-bike': [value_map.get(df_pos.loc[cat, 'Mid driven e-bike'], 0) for cat in categories],
+            'PowerPedal driven e-bike': [value_map.get(df_pos.loc[cat, 'PowerPedal driven e-bike'], 0) for cat in categories]
+        }
+        
+        # Spider chart creation
+        fig, ax = plt.subplots(figsize=(4, 4), subplot_kw=dict(polar=True))
+        fig.patch.set_facecolor('none')
+        ax.set_facecolor('none')
+
+        # Number of variables we're plotting.
+        num_vars = len(categories)
+        # Calculate angle for each axis.
+        angles = [n / float(num_vars) * 2 * pi for n in range(num_vars)]
+        angles += angles[:1]
+        
+        colors = {'Hub driven e-bike': '#415A77', 'Mid driven e-bike': '#78C841', 'PowerPedal driven e-bike': '#156d17'}
+        
+        for name, values in data_to_plot.items():
+            values += values[:1]
+            ax.plot(angles, values, color=colors[name], linewidth=2, linestyle='solid', label=name)
+            ax.fill(angles, values, color=colors[name], alpha=0.25)
+
+        # Draw axis lines and labels
+        ax.set_theta_offset(pi / 2)
+        ax.set_theta_direction(-1)
+        ax.set_rlabel_position(0)
+        ax.set_xticks(angles[:-1])
+        ax.set_xticklabels(categories, fontsize=8, color='#e0e0e0')
+        ax.set_yticklabels([])
+        ax.set_ylim(0, 3)
+        ax.grid(color='#555555')
+        
+        # Add a custom legend
+        ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1), fontsize=8, frameon=False, labelcolor='#e0e0e0')
+        
+        st.pyplot(fig)
+        
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # 3. PowerPedal's Market Positioning: Visual Checklist
+    st.markdown("---")
+    st.subheader("3. PowerPedal’s Core Advantages")
+    st.markdown(
+        """
+        <p style='color: #e0e0e0; font-size: 16px;'>
+        PowerPedal's unique selling points create a strong competitive advantage by targeting the largest e-bike market segment and providing superior features at an accessible price.
+        </p>
+        """, unsafe_allow_html=True
+    )
+    st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
+    col_table3, col_viz3 = st.columns([2, 1])
+    with col_table3:
+        st.markdown(create_html_table(df_market, "PowerPedal’s Market Positioning"), unsafe_allow_html=True)
+        if error_market:
+            st.warning(error_market)
+    
+    with col_viz3:
         st.markdown(
             """
-            <style>
-            .market-opportunity-tab .table-viz-container {
-                display: flex;
-                align-items: flex-start; /* Changed to flex-start for top alignment */
-                justify-content: space-between;
-                margin: 0 0 -25px 0;
-                padding: 0;
-                gap: 2px;
-                width: 100%;
-                min-height: 10px;
-                box-sizing: border-box;
-            }
-            .market-opportunity-tab .table-container {
-                flex: 2;
-                padding: 0;
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: flex-start;
-                min-height: 10px;
-            }
-            .market-opportunity-tab .viz-container {
-                flex: 1;
-                padding: 0;
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start; /* Changed to flex-start for top alignment */
-                align-items: center;
-                min-height: 10px;
-                box-sizing: border-box;
-            }
-            </style>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+                <div style="display: flex; align-items: center;">
+                    <span style="font-size: 24px; color: #78C841; margin-right: 10px;">✅</span>
+                    <h6 style="margin: 0; color: #e0e0e0;"><b>Bridging the Gap</b></h6>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="font-size: 24px; color: #78C841; margin-right: 10px;">✅</span>
+                    <h6 style="margin: 0; color: #e0e0e0;"><b>Cost-Effective</b></h6>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="font-size: 24px; color: #78C841; margin-right: 10px;">✅</span>
+                    <h6 style="margin: 0; color: #e0e0e0;"><b>High Efficiency</b></h6>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="font-size: 24px; color: #78C841; margin-right: 10px;">✅</span>
+                    <h6 style="margin: 0; color: #e0e0e0;"><b>Retrofittable</b></h6>
+                </div>
+            </div>
             """,
             unsafe_allow_html=True
         )
-
-        # Helper function to clean market share values
-        def clean_share(s):
-            if isinstance(s, str):
-                cleaned = s.replace('~', '').replace('%', '').replace(' ', '').strip()
-                try:
-                    return float(cleaned)
-                except ValueError:
-                    if "Dominant" in s:
-                        return 99.0
-                    elif "Emerging" in s:
-                        return 1.0
-                    return 0.0
-            return float(s) if isinstance(s, (int, float)) else 0.0
-
-        # Tables and Visualizations Section
-        # Table 1: Ebike Drive Segmentation and Comparison
-        st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
-        col_table1, col_viz1 = st.columns([2, 1])
-        with col_table1:
-            st.markdown('<div class="table-container">', unsafe_allow_html=True)
-            st.markdown(create_html_table(df_seg, "Ebike Drive Segmentation and Comparison"), unsafe_allow_html=True)
-            if error_seg:
-                st.warning(error_seg)
-            st.markdown('</div>', unsafe_allow_html=True)
-        with col_viz1:
-            st.markdown('<div class="viz-container">', unsafe_allow_html=True)
-            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(4, 2.5))
-            fig.patch.set_facecolor('none')
-            ax1.set_facecolor('none')
-            ax2.set_facecolor('none')
-
-            labels = df_seg['Drive System']
-            global_share = [clean_share(s) for s in df_seg['Global Market Share']]
-            indian_share = [clean_share(s) for s in df_seg['Indian Market Share']]
-
-            ax1.pie(global_share, labels=labels, colors=['#415A77', '#A08963'], autopct='%1.0f%%',
-                    textprops={'color': '#e0e0e0', 'fontsize': 6}, wedgeprops={'edgecolor': '#1e1e1e', 'linewidth': 1})
-            ax1.set_title('Global Market', fontsize=8, color='#e0e0e0')
-            ax2.pie(indian_share, labels=labels, colors=['#78C841', '#E3FF9D'], autopct='%1.0f%%',
-                    textprops={'color': '#e0e0e0', 'fontsize': 6}, wedgeprops={'edgecolor': '#1e1e1e', 'linewidth': 1})
-            ax2.set_title('Indian Market', fontsize=8, color='#e0e0e0')
-
-            plt.tight_layout(pad=0.2)
-            st.pyplot(fig)
-            st.markdown(
-                """
-                <p style='color: #78C841; font-size: 15px; text-align: center; margin: 0;'>
-                    Global and Indian market shares for Hub Drive and Mid-Drive e-bikes.
-                </p>
-                """,
-                unsafe_allow_html=True
-            )
-            st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        # Table 2: E-Bike Drivetrain Positioning
-        st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
-        col_table2, col_viz2 = st.columns([2, 1])
-        with col_table2:
-            st.markdown('<div class="table-container">', unsafe_allow_html=True)
-            if not all(col in df_pos.columns for col in expected_columns_pos):
-                st.warning(f"Missing columns in E-Bike Drivetrain Positioning: {expected_columns_pos}. Using adjusted data.")
-                df_pos = df_pos.reindex(columns=expected_columns_pos, fill_value="")
-            st.markdown(create_html_table(df_pos, "E-Bike Drivetrain Positioning"), unsafe_allow_html=True)
-            if error_pos:
-                st.warning(error_pos)
-            st.markdown('</div>', unsafe_allow_html=True)
-        with col_viz2:
-            st.markdown('<div class="viz-container">', unsafe_allow_html=True)
-            # Grouped bar chart for E-Bike Drivetrain Positioning, excluding Average Price
-            labels = [label for label in df_pos.index.tolist() if label != "Average Price"]
-            categories = df_pos.columns.tolist()
-
-            value_map = {
-                'Low cost': 1, 'Slight premium over hub e-bikes(€150-200)': 2, 'Expensive': 3,
-                'Poor performance': 1, 'Amazing performance': 3,
-                'Low efficiency': 1, 'High efficiency': 3,
-                'No Features': 1, 'Feature rich': 3, 'Usually feature rich': 3,
-            }
-
-            data = []
-            for cat in categories:
-                values = [value_map.get(str(df_pos.loc[attr, cat]), 1) for attr in labels]
-                data.append(values)
-
-            fig, ax = plt.subplots(figsize=(6, 3.5))  # Adjusted size for better layout
-            fig.patch.set_facecolor('none')
-            ax.set_facecolor('none')
-
-            bar_width = 0.25
-            x = np.arange(len(labels))
-            colors = ['#415A77', '#78C841', '#156d17']
-
-            for i, (cat_data, category, color) in enumerate(zip(data, categories, colors)):
-                ax.bar(x + i * bar_width, cat_data, bar_width, color=color, edgecolor='#1e1e1e')
-
-            ax.set_xticks(x + bar_width)
-            ax.set_xticklabels(labels, fontsize=10, color='#e0e0e0', rotation=45, ha='right')
-            ax.set_yticks([1, 2, 3])
-            ax.set_yticklabels(['Low', 'Medium', 'High'], fontsize=10, color='#e0e0e0')
-            ax.set_title('Drivetrain Comparison', fontsize=12, color='#e0e0e0')
-            # Removed ax.legend() to avoid overlap
-            ax.spines['top'].set_visible(False)
-            ax.spines['right'].set_visible(False)
-            ax.spines['left'].set_color('#e0e0e0')
-            ax.spines['bottom'].set_color('#e0e0e0')
-            plt.tight_layout(pad=0.5)
-
-            # Add custom legend above the graph
-            st.markdown(
-                """
-                <div style='display: flex; justify-content: center; gap: 20px; margin-bottom: 10px;'>
-                    <div style='display: flex; align-items: center;'>
-                        <div style='width: 12px; height: 12px; background-color: #415A77; margin-right: 5px;'></div>
-                        <span style='color: #e0e0e0; font-size: 12px;'>Hub driven e-bike</span>
-                    </div>
-                    <div style='display: flex; align-items: center;'>
-                        <div style='width: 12px; height: 12px; background-color: #78C841; margin-right: 5px;'></div>
-                        <span style='color: #e0e0e0; font-size: 12px;'>Mid driven e-bike</span>
-                    </div>
-                    <div style='display: flex; align-items: center;'>
-                        <div style='width: 12px; height: 12px; background-color: #156d17; margin-right: 5px;'></div>
-                        <span style='color: #e0e0e0; font-size: 12px;'>PowerPedal driven e-bike</span>
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-            st.pyplot(fig)
-            st.markdown(
-                """
-                <p style='color: #78C841; font-size: 15px; text-align: center; margin: 0;'>
-                    Comparison of drivetrain attributes across Hub, Mid, and PowerPedal systems.
-                </p>
-                """,
-                unsafe_allow_html=True
-            )
-            st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        # Table 3: PowerPedal’s Market Positioning
-        st.markdown('<div class="table-viz-container">', unsafe_allow_html=True)
-        col_table3, col_viz3 = st.columns([2, 1])
-        with col_table3:
-            st.markdown('<div class="table-container">', unsafe_allow_html=True)
-            st.markdown(create_html_table(df_market, "PowerPedal’s Market Positioning"), unsafe_allow_html=True)
-            if error_market:
-                st.warning(error_market)
-            st.markdown('</div>', unsafe_allow_html=True)
-        with col_viz3:
-            st.markdown('<div class="viz-container">', unsafe_allow_html=True)
-            fig, ax = plt.subplots(figsize=(4, 2.5))
-            fig.patch.set_facecolor('none')
-            ax.set_facecolor('none')
-
-            features = df_market['Feature']
-            scores = [5, 4, 3, 3]
-            max_score = 5
-            y_pos = np.arange(len(features))
-            colors = ['#78C841', '#156d17', '#A08963', '#415A77']
-
-            bars = ax.barh(y_pos, scores, color=colors, edgecolor='#1e1e1e', height=0.4)
-            ax.barh(y_pos, max_score, color='#e0e0e0', alpha=0.2, height=0.4, zorder=-1)
-
-            for bar, score in zip(bars, scores):
-                ax.text(score + 0.1, bar.get_y() + bar.get_height() / 2, f'{score}',
-                        va='center', ha='left', color='#e0e0e0', fontsize=8)
-
-            ax.set_yticks(y_pos)
-            ax.set_yticklabels(features, fontsize=8, color='#e0e0e0')
-            ax.set_xticks([0, 1, 3, 5])
-            ax.set_xticklabels(['', 'Low', 'Medium', 'High'], fontsize=8, color='#e0e0e0')
-            ax.set_xlim(0, max_score + 0.5)
-            ax.set_title('PowerPedal Feature Strengths', fontsize=10, color='#e0e0e0')
-            ax.spines['top'].set_visible(False)
-            ax.spines['right'].set_visible(False)
-            ax.spines['left'].set_color('#e0e0e0')
-            ax.spines['bottom'].set_color('#e0e0e0')
-            plt.tight_layout(pad=0.2)
-            st.pyplot(fig)
-            st.markdown(
-                """
-                <p style='color: #78C841; font-size: 15px; text-align: center; margin: 0;'>
-                    PowerPedal’s feature strengths compared to an ideal score of 5.
-                </p>
-                """,
-                unsafe_allow_html=True
-            )
-            st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # Final caption with CSS styling
     st.markdown(
@@ -1062,11 +1112,6 @@ with tabs[2]:
         """,
         unsafe_allow_html=True
     )
-import streamlit as st
-
-# Assuming tabs are defined earlier, e.g.:
-# tabs = st.tabs(["Home", "Pricing", "Team", "Product", "Videos"])
-import streamlit as st
 
 with tabs[3]:
     # ---- Main Product Page Layout ----

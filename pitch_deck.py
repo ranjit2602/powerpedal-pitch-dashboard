@@ -35,7 +35,7 @@ st.markdown(
     """
     <details>
       <summary style="font-size:16px; font-weight:bold; cursor:pointer;">
-        👋 Welcome! A Quick Guide to Navigating Our Dashboard
+        👋 A Quick Guide to Navigating Our Dashboard
       </summary>
       <div style="margin-top:10px;">
         <p>
@@ -155,6 +155,24 @@ st.markdown(
             details div p, details div h4, details div ul, details div li {
                 font-size: 8px !important;
             }
+            .challenge-button-card {
+                padding: 10px;
+                border-radius: 10px;
+                text-align: center;
+                color: #E0E0E0;
+                background-color: #1B3C53;
+                border: 2px solid #1B3C53;
+                cursor: pointer;
+                transition: all 0.3s;
+                margin-bottom: 10px;
+            }
+            .challenge-button-card:hover {
+                border-color: #A8F1FF;
+            }
+            .challenge-button-card.active {
+                border-color: #78C841;
+                transform: scale(1.05);
+            }
         }
         /* --- End of mobile styles --- */
 
@@ -194,112 +212,66 @@ st.markdown(
             bottom: 0;
             left: 0;
         }
-        /* Separate CSS for Problem tab sub-tabs */
-        .problem-tab .stTabs [data-baseweb="tab-list"] .stTabs [data-baseweb="tab"] {
-            flex: 0 0 40% !important;
-            padding: 56px 80px !important;
-            font-size: 120px !important;
-            font-weight: 800 !important;
-            background-color: #1B3C53;
-            color: #e0e0e0 !important;
-            border-radius: 20px !important;
-            margin: 10px 0 !important;
-        }
-        .problem-tab .stTabs [data-baseweb="tab-list"] .stTabs [data-baseweb="tab"][aria-selected="true"] {
-            background-color: #2e2e2e !important;
-            color: #4caf50 !important;
-        }
-        .problem-tab .stTabs [data-baseweb="tab-list"] .stTabs [data-baseweb="tab"]:hover {
-            background-color: #262626 !important;
-        }
-        .challenge-container {
-            border: 1px solid #1B3C53;
-            border-radius: 10px;
-            padding: 20px;
-            background-color: #1B3C53;
-            min-height: 120px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            transition: background-color 0.3s, transform 0.2s, border-color 0.3s, opacity 0.3s;
-            margin: 10px;
-        }
-        .challenge-container.active {
-            background-color: #1B3C53;
+        
+        /* New CSS for the Business Model & Problem containers */
+        .details-card {
+            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
             border: 2px solid #78C841;
-            transform: scale(1.1);
-            min-height: 200px;
-            opacity: 1;
+            border-radius: 12px;
+            max-width: 1200px;
+            margin: 20px auto;
         }
-        .challenge-container h4 {
-            color: #78C841 !important;
-            margin: 10px 0 5px 0;
+        .details-card[open] {
+            background: linear-gradient(135deg, #2e2e2e, #1B3C53);
+            border: 3px solid #A8F1FF !important;
+            box-shadow: 0 0 15px rgba(120, 200, 65, 0.6);
         }
-        .challenge-container p {
-            font-size: 14px !important;
-            line-height: 1.4 !important;
-            margin: 10px 0 0 0 !important;
-            color: #FFF5F2 !important;
-        }
-        .challenge-container.active p {
-            font-size: 18px !important;
-            line-height: 1.4 !important;
-            margin: 10px 0 0 0 !important;
-            color: #FFF5F2 !important;
-        }
-        .challenge-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        .problem-image-container {
-            transition: opacity 0.3s;
-        }
-        .problem-image-container.faded {
-            opacity: 0.5;
-        }
-        .problem-text {
-            transition: opacity 0.3s;
-        }
-        .problem-text.faded {
-            opacity: 0.5;
-        }
-        /* Table styling for Ebike tables */
-        .ebike-table {
-            width: 100%;
-            max-width: 700px;
-            border-collapse: collapse;
-            background-color: #1B3C53;
-            color: #FFF5F2;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-        .ebike-table th {
-            background-color: #1B3C53;
-            color: #78C841;
-            font-size: 16px;
+        .details-card summary {
+            font-size: 18px;
             font-weight: 600;
-            padding: 12px;
-            border: 1px solid #78C841;
-            text-align: center;
-        }
-        .ebike-table td {
-            font-size: 14px;
-            padding: 12px;
-            border: 1px solid #78C841;
-            text-align: center;
-        }
-        .ebike-table-title {
             color: #78C841;
+            cursor: pointer;
+            outline: none;
+            padding: 15px;
+        }
+        .details-card .expander-content-body {
+            padding: 15px;
+        }
+        .details-card .expander-content-body h3 {
             font-size: 20px;
-            font-weight: 600;
-            margin-top: 30px;
-            margin-bottom: 10px;
-            text-align: left;
+            color: #78C841;
+            margin: 10px 0;
+        }
+        .details-card .expander-content-body p, .details-card .expander-content-body ul, .details-card .expander-content-body li {
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 5px 0;
+            color: #A8F1FF;
+        }
+        .details-card .expander-content-body ul {
+            padding-left: 20px;
+        }
+        
+        /* New CSS for the static container in the Problem tab */
+        .problem-card-static {
+            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
+            border: 2px solid #78C841;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .problem-card-static h3 {
+            color: #78C841;
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .problem-card-static p {
+            color: #A8F1FF;
+            font-size: 14px;
+            line-height: 1.5;
         }
     </style>
     """,
@@ -327,26 +299,26 @@ def create_html_table(df, title):
 # ---- Function to Load and Transpose Excel Data ----
 def load_excel_data(file_name, expected_columns, fallback_data, transpose=False):
     try:
-        df = pd.read_excel(file_name)
-        if all(col.lower() in [c.lower() for c in df.columns] for col in expected_columns):
-            if transpose:
-                df = df.set_index(df.columns[0]).T.reset_index()
-                attr_count = len(df.columns) - 1
-                if attr_count > 0:
-                    attr_names = ['Cost', 'Performance', 'Efficiency', 'Features', 'Average Price'][:attr_count]
-                    df.columns = ['Drive System'] + attr_names
-                else:
-                    df.columns = ['Drive System']
-            return df, None
-        else:
-            st.error(f"Error: {file_name} does not contain all required columns: {expected_columns}")
-            return pd.DataFrame(fallback_data, columns=expected_columns), f"Missing columns in {file_name}"
-    except FileNotFoundError:
-        st.error(f"Error: {file_name} not found in the current directory")
-        return pd.DataFrame(fallback_data, columns=expected_columns), f"{file_name} not found"
+        response = requests.get(file_name)
+        response.raise_for_status()
+        df = pd.read_excel(BytesIO(response.content))
+        if not all(col in df.columns for col in expected_columns):
+            st.warning(f"Expected columns {expected_columns} not found in {file_name}. Using fallback data.")
+            if transpose and isinstance(fallback_data, pd.DataFrame):
+                return fallback_data, f"Column mismatch in {file_name}"
+            elif not transpose and isinstance(fallback_data, pd.DataFrame):
+                return fallback_data, f"Column mismatch in {file_name}"
+            else:
+                return pd.DataFrame(fallback_data), f"Column mismatch in {file_name}"
+        return df, None
     except Exception as e:
-        st.error(f"Error loading {file_name}: {str(e)}")
-        return pd.DataFrame(fallback_data, columns=expected_columns), f"Error loading {file_name}"
+        st.warning(f"Error loading {file_name}: {str(e)}. Using fallback data.")
+        if transpose and isinstance(fallback_data, pd.DataFrame):
+            return fallback_data, str(e)
+        elif not transpose and isinstance(fallback_data, pd.DataFrame):
+            return fallback_data, str(e)
+        else:
+            return pd.DataFrame(fallback_data), str(e)
 
 # ---- TABS ----
 tabs = st.tabs([
@@ -442,88 +414,80 @@ with tabs[1]:
     st.markdown(
         """
         <p class='problem-text' style='font-size: 18px; color: #e0e0e0; text-align: center; margin: 20px 0;'>
-            Current e-bike drive systems face significant hurdles that limit performance, affordability, and scalability. Click on any of the challenges below to learn more.
+            Current e-bike drive systems face significant hurdles that limit performance, affordability, and scalability. Below are the key challenges our solution addresses.
         </p>
         """,
         unsafe_allow_html=True
     )
 
-    # Challenge data
+    # Challenge data with full, markdown-formatted descriptions
     challenges = [
         {
             "icon": "🚲",
             "title": "Inefficient Ride",
             "detailed_desc": """
-                <div class="expander-content-body">
-                    <h3>Poor cadence sensors, expensive torque sensors</h3>
-                    <p>
-                    In many low-cost Chinese drive systems, cadence-based pedal assist dominates. Cadence sensors only detect if the pedals are turning — they don’t measure how hard the rider is pedaling.
-                    </p>
-                    <ul>
-                        <li>This results in delayed motor activation, abrupt surges, and assistance that feels disconnected from rider effort.</li>
-                        <li>While torque sensors provide a much smoother and more natural ride by measuring actual pedaling force, they are significantly more expensive, which pushes up system cost.</li>
-                        <li>In practice, OEMs often opt for cadence sensors to keep prices low, sacrificing efficiency and ride quality.</li>
-                    </ul>
-                </div>
+                **Poor cadence sensors, expensive torque sensors**
+
+                In many low-cost Chinese drive systems, cadence-based pedal assist dominates. Cadence sensors only detect if the pedals are turning — they don’t measure how hard the rider is pedaling.
+                
+                - This results in delayed motor activation, abrupt surges, and assistance that feels disconnected from rider effort.
+                - While torque sensors provide a much smoother and more natural ride by measuring actual pedaling force, they are significantly more expensive, which pushes up system cost.
+                - In practice, OEMs often opt for cadence sensors to keep prices low, sacrificing efficiency and ride quality.
             """
         },
         {
             "icon": "💰",
             "title": "High Costs",
             "detailed_desc": """
-                <div class="expander-content-body">
-                    <h3>Japanese and European systems are too expensive</h3>
-                    <p>
-                    Japanese and European drive systems deliver top-tier refinement, reliability, and performance — but at a price that’s out of reach for many OEMs in emerging markets.
-                    </p>
-                    <ul>
-                        <li>The drive unit cost alone can make up 30–50% of an eBike’s retail price.</li>
-                        <li>This pricing model locks out small to mid-size manufacturers and limits the spread of high-performance eBikes in cost-sensitive regions.</li>
-                    </ul>
-                </div>
+                **Japanese and European systems are too expensive**
+
+                Japanese and European drive systems deliver top-tier refinement, reliability, and performance — but at a price that’s out of reach for many OEMs in emerging markets.
+                
+                - The drive unit cost alone can make up 30–50% of an eBike’s retail price.
+                - This pricing model locks out small to mid-size manufacturers and limits the spread of high-performance eBikes in cost-sensitive regions.
             """
         },
         {
             "icon": "⚙️⚙️",
             "title": "Integration Issues",
             "detailed_desc": """
-                <div class="expander-content-body">
-                    <h3>Lack of interoperability, difficult to integrate, no diagnostics, causing downtime</h3>
-                    <ul>
-                        <li>Many existing systems are closed ecosystems, making them hard to integrate with third-party components.</li>
-                        <li>Limited compatibility with different displays, batteries, and controllers forces OEMs into vendor lock-in.</li>
-                        <li>Integration can require custom wiring harnesses, firmware changes, and long trial-and-error cycles.</li>
-                        <li>The absence of built-in self-diagnostics means even small issues require manual troubleshooting, increasing downtime and service costs.</li>
-                    </ul>
-                </div>
+                **Lack of interoperability, difficult to integrate, no diagnostics, causing downtime**
+
+                - Many existing systems are closed ecosystems, making them hard to integrate with third-party components.
+                - Limited compatibility with different displays, batteries, and controllers forces OEMs into vendor lock-in.
+                - Integration can require custom wiring harnesses, firmware changes, and long trial-and-error cycles.
+                - The absence of built-in self-diagnostics means even small issues require manual troubleshooting, increasing downtime and service costs.
             """
         },
         {
             "icon": "📉",
             "title": "Limited Features",
             "detailed_desc": """
-                <div class="expander-content-body">
-                    <h3>Lack of affordable remote diagnostics and smart analytics</h3>
-                    <p>
-                    While premium systems offer connected apps, cloud analytics, and remote troubleshooting, affordable drive systems rarely include these features.
-                    </p>
-                    <ul>
-                        <li>Without remote diagnostics, problems are identified only after a manual inspection, delaying repairs.</li>
-                        <li>The absence of usage analytics means there’s no visibility into rider behavior, battery health trends, or early signs of failure.</li>
-                        <li>This results in reactive maintenance, higher operational costs, and missed opportunities to improve performance over time.</li>
-                    </ul>
-                </div>
+                **Lack of affordable remote diagnostics and smart analytics**
+
+                While premium systems offer connected apps, cloud analytics, and remote troubleshooting, affordable drive systems rarely include these features.
+                
+                - Without remote diagnostics, problems are identified only after a manual inspection, delaying repairs.
+                - The absence of usage analytics means there’s no visibility into rider behavior, battery health trends, or early signs of failure.
+                - This results in reactive maintenance, higher operational costs, and missed opportunities to improve performance over time.
             """
         }
     ]
 
-    # Display each problem in a collapsible expander
+    # Display each problem in a static, colored container
     for challenge in challenges:
-        with st.expander(
-            label=f"&nbsp;&nbsp;{challenge['icon']} &nbsp;&nbsp;{challenge['title']}",
-            expanded=False
-        ):
-            st.markdown(challenge['detailed_desc'], unsafe_allow_html=True)
+        with st.container():
+            st.markdown(
+                f"""
+                <div class="problem-card-static">
+                    <h3 style='color: #78C841; margin-top: 0;'>{challenge['icon']} &nbsp;&nbsp;{challenge['title']}</h3>
+                    <div style='color: #A8F1FF; font-size: 16px;'>
+                        {challenge['detailed_desc']}
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
 # ---- TAB 3: Market Opportunity ----
 with tabs[2]:

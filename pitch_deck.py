@@ -1904,6 +1904,7 @@ def get_base64_of_bin_file(bin_file):
             data = f.read()
         return base64.b64encode(data).decode('utf-8')
     except FileNotFoundError:
+        st.error(f"Error: The video file '{bin_file}' was not found. Please ensure it is in the same folder as your app.")
         return None
 
 # --- Get encoded video data for embedding ---
@@ -2033,6 +2034,10 @@ with tabs[7]:
         
         /* This rule hides the native help button/tooltip */
         button[title="Help button"] {
+            display: none !important;
+        }
+        /* This rule hides the entire keyboard shortcut tooltip overlay */
+        div[role="tooltip"] {
             display: none !important;
         }
 

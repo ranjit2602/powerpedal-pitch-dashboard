@@ -116,6 +116,7 @@ st.markdown(
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
+                font-size: 5vw !important; /* Dynamically scales with viewport width */
             }
             .main-title-logo-container {
                 display: flex;
@@ -124,10 +125,10 @@ st.markdown(
                 white-space: nowrap; /* Keep logo and 'powerpedal' on one line */
             }
             .main-title-logo-container img {
-                height: 28px !important; /* Smaller logo for mobile */
+                height: 4vw !important; /* Scales with viewport width for better alignment */
             }
             .main-title-tagline {
-                font-size: 0.6em !important; /* Smaller tagline for mobile */
+                font-size: 0.6em !important; /* Relative to the h1 font size */
                 margin-left: 0;
             }
             .stTabs [data-baseweb="tab-list"] {

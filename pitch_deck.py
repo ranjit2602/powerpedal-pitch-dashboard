@@ -2095,7 +2095,15 @@ with tabs[7]:
             "value": "N/A",
             "icon": "🛠️",
             "details": "Built our first functional prototype with custom electronics and motor control algorithms, achieving a seamless, natural ride experience, supported by the Indian Institute of Science's Design Clinic Scheme.",
-            "media": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/videos/prototype_development.mp4"
+            "media": "https://www.dropbox.com/scl/fi/nxb6h4r0d4vntdd9zp87a/design_clinic.mp4?rlkey=lcy831kcxq51jwh4hyfz3w43t&st=k8mimdkc&dl=1"
+        },
+        {
+            "name": "Design Clinic Scheme",
+            "type": "Funding",
+            "value": "₹15 Lakh",
+            "icon": "🏆",
+            "details": "Received a grant of ₹15 Lakh from the Indian Institute of Science's Design Clinic Scheme.",
+            "media": None
         },
         {
             "name": "Meity-EIR (PSG)",
@@ -2119,7 +2127,7 @@ with tabs[7]:
             "value": "N/A",
             "icon": "✅",
             "details": "Developed and rigorously tested PowerPedal V1, our first complete eBike drive system, meeting stringent performance, efficiency, and cost benchmarks.",
-            "media": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/videos/design_clinic.mp4"
+            "media": ["https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/functional_proto1.jpg", "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/functional_proto.jpg"]
         },
         {
             "name": "Elevate Karnataka",
@@ -2146,31 +2154,39 @@ with tabs[7]:
         st.markdown('<div class="timeline-entry">', unsafe_allow_html=True)
         col_left, col_center, col_right = st.columns([5, 0.01, 5])
         
+        # Format the expander title
         title = f"{milestone['icon']} **{milestone['name']}**"
         if milestone['value'] != 'N/A':
             title += f" — *{milestone['value']}*"
         
+        # Assign unique class based on milestone type
         class_name = "expander-product" if milestone["type"] == "Product" else "expander-funding"
         
         if milestone["type"] == "Product":
             with col_left:
-                st.markdown('<div class="timeline-content-left">', unsafe_allow_html=True)
                 with st.container():
                     with st.expander(title, expanded=False):
                         st.markdown(f'<div class="{class_name}">', unsafe_allow_html=True)
                         st.write(milestone['details'])
                         if milestone['media']:
                             st.markdown('<div class="timeline-media">', unsafe_allow_html=True)
-                            if milestone['media'].endswith(('.png', '.jpg', '.jpeg')):
-                                st.image(milestone['media'], caption=milestone['name'], use_container_width=True)
-                            elif milestone['media'].endswith('.mp4'):
-                                st.video(milestone['media'])
+                            # Handle a single media item
+                            if isinstance(milestone['media'], str):
+                                if milestone['media'].endswith(('.png', '.jpg', '.jpeg')):
+                                    st.image(milestone['media'], caption=milestone['name'], use_container_width=True)
+                                elif milestone['media'].endswith('.mp4') or "drive.google.com" in milestone['media'] or "dropbox.com" in milestone['media']:
+                                    st.video(milestone['media'])
+                            # Handle a list of media items
+                            elif isinstance(milestone['media'], list):
+                                for media_url in milestone['media']:
+                                    if media_url.endswith(('.png', '.jpg', '.jpeg')):
+                                        st.image(media_url, use_container_width=True)
+                                    elif media_url.endswith('.mp4'):
+                                        st.video(media_url)
                             st.markdown('</div>', unsafe_allow_html=True)
                         st.markdown('</div>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
         else:
             with col_right:
-                st.markdown('<div class="timeline-content-right">', unsafe_allow_html=True)
                 with st.container():
                     with st.expander(title, expanded=False):
                         st.markdown(f'<div class="{class_name}">', unsafe_allow_html=True)

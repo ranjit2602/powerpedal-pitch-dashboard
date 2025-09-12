@@ -1904,7 +1904,6 @@ def get_base64_of_bin_file(bin_file):
             data = f.read()
         return base64.b64encode(data).decode('utf-8')
     except FileNotFoundError:
-        st.error(f"Error: The video file '{bin_file}' was not found. Please ensure it is in the same folder as your app.")
         return None
 
 # --- Get encoded video data for embedding ---
@@ -1958,40 +1957,39 @@ with tabs[7]:
             margin-left: -5px; /* Negative margin to pull closer */
         }
 
-        /* Styling for Product expanders */
-        .expander-product div[data-testid="stExpander"] {
+        /* Styling for milestone content boxes */
+        .milestone-box {
+            padding: 10px !important;
+            border-radius: 10px !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+            margin: 0 !important;
+            height: 100% !important;
+            min-height: 100px;
+        }
+
+        .milestone-box.product {
             background: #1A3636 !important;
-            border: none !important;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-            border-radius: 10px !important;
-            margin: 0 !important;
-            height: 100% !important;
         }
 
-        /* Styling for Funding expanders */
-        .expander-funding div[data-testid="stExpander"] {
+        .milestone-box.funding {
             background: #40534C !important;
-            border: none !important;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-            border-radius: 10px !important;
-            margin: 0 !important;
-            height: 100% !important;
         }
-
-        div[data-testid="stExpander"] .st-emotion-cache-p5msec {
+        
+        .milestone-box h4 {
             font-size: 1.2em !important;
             font-weight: 600 !important;
             color: #A8F1FF !important;
-            padding: 8px !important;
+            padding: 0;
+            margin: 0 0 8px 0 !important;
         }
-        
-        div[data-testid="stExpander"] p {
+
+        .milestone-box p {
             font-size: 1em !important;
             color: #FFF5F2 !important;
             margin: 0 !important;
-            padding: 8px !important;
+            padding: 0;
         }
-
+        
         /* Media styling for images */
         .timeline-media img {
             max-width: 100% !important;
@@ -2032,49 +2030,8 @@ with tabs[7]:
             margin: 0 0 10px 0 !important;
         }
         
-        /* This rule hides the native help button/tooltip */
-        button[title="Help button"] {
-            display: none !important;
-        }
-        /* This rule hides the entire keyboard shortcut tooltip overlay */
-        div[role="tooltip"] {
-            display: none !important;
-        }
-
     </style>
     """, unsafe_allow_html=True)
-
-    # --- JavaScript to ensure background colors ---
-    st.components.v1.html("""
-    <script>
-        function applyExpanderColors() {
-            const productExpanders = document.querySelectorAll('.expander-product div[data-testid="stExpander"]');
-            const fundingExpanders = document.querySelectorAll('.expander-funding div[data-testid="stExpander"]');
-            
-            productExpanders.forEach(expander => {
-                expander.style.background = '#1A3636';
-                expander.style.border = 'none';
-                expander.style.borderRadius = '10px';
-                expander.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-                expander.style.margin = '0';
-            });
-            
-            fundingExpanders.forEach(expander => {
-                expander.style.background = '#40534C';
-                expander.style.border = 'none';
-                expander.style.borderRadius = '10px';
-                expander.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-                expander.style.margin = '0';
-            });
-        }
-
-        // Run on page load
-        window.addEventListener('load', applyExpanderColors);
-
-        // Run periodically for dynamic rendering
-        setInterval(applyExpanderColors, 100);
-    </script>
-    """, height=0)
 
     # --- Tab Content ---
     st.header("📍 Our Journey of Traction & Milestones")
@@ -2097,7 +2054,7 @@ with tabs[7]:
 
     st.subheader("Our Journey, Step by Step")
     st.markdown(
-        "From a bold idea to a production-ready eBike drive system, our path combines cutting-edge innovation with strategic funding. Explore our milestones below, with product breakthroughs on the left (dark teal expanders) and funding achievements on the right (dark gray-green expanders)."
+        "From a bold idea to a production-ready eBike drive system, our path combines cutting-edge innovation with strategic funding. Explore our milestones below, with product breakthroughs on the left and funding achievements on the right."
     )
 
     # --- Data for Milestones (with media only for Product milestones) ---
@@ -2190,51 +2147,40 @@ with tabs[7]:
     # --- Building the Vertical Timeline ---
     st.markdown('<div class="timeline-container">', unsafe_allow_html=True)
     
-    for index, milestone in enumerate(milestones_data):
+    for milestone in milestones_data:
         st.markdown('<div class="timeline-entry">', unsafe_allow_html=True)
         col_left, col_center, col_right = st.columns([5, 0.01, 5])
         
-        # Format the expander title
+        # Format the title and value
         title = f"{milestone['icon']} **{milestone['name']}**"
         if milestone['value'] != 'N/A':
             title += f" — *{milestone['value']}*"
         
-        # Assign unique class based on milestone type
-        class_name = "expander-product" if milestone["type"] == "Product" else "expander-funding"
+        box_class = "milestone-box product" if milestone['type'] == 'Product' else "milestone-box funding"
         
-        if milestone["type"] == "Product":
+        if milestone['type'] == 'Product':
             with col_left:
-                with st.container():
-                    with st.expander(title, expanded=False):
-                        st.markdown(f'<div class="{class_name}">', unsafe_allow_html=True)
-                        st.write(milestone['details'])
-                        if milestone['media']:
-                            st.markdown('<div class="timeline-media">', unsafe_allow_html=True)
-                            if isinstance(milestone['media'], dict) and milestone['media'].get("type") == "embedded_video":
-                                if EMBEDDED_VIDEO_HTML:
-                                    st.markdown(EMBEDDED_VIDEO_HTML, unsafe_allow_html=True)
-                            # Handle a single media item
-                            elif isinstance(milestone['media'], str):
-                                if milestone['media'].endswith(('.png', '.jpg', '.jpeg')):
-                                    st.image(milestone['media'], caption=milestone['name'], use_container_width=True)
-                                elif milestone['media'].endswith('.mp4') or "drive.google.com" in milestone['media'] or "dropbox.com" in milestone['media']:
-                                    st.video(milestone['media'])
-                            # Handle a list of media items
-                            elif isinstance(milestone['media'], list):
-                                for media_url in milestone['media']:
-                                    if media_url.endswith(('.png', '.jpg', '.jpeg')):
-                                        st.image(media_url, use_container_width=True)
-                                    elif media_url.endswith('.mp4'):
-                                        st.video(media_url)
-                            st.markdown('</div>', unsafe_allow_html=True)
-                        st.markdown('</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="timeline-content-left {box_class}">', unsafe_allow_html=True)
+                st.markdown(f"<h4>{title}</h4>", unsafe_allow_html=True)
+                st.markdown(f"<p>{milestone['details']}</p>", unsafe_allow_html=True)
+                if milestone['media']:
+                    st.markdown('<div class="timeline-media">', unsafe_allow_html=True)
+                    if isinstance(milestone['media'], dict) and milestone['media'].get("type") == "embedded_video":
+                        if EMBEDDED_VIDEO_HTML:
+                            st.markdown(EMBEDDED_VIDEO_HTML, unsafe_allow_html=True)
+                    elif isinstance(milestone['media'], str):
+                        st.image(milestone['media'], use_container_width=True)
+                    elif isinstance(milestone['media'], list):
+                        for media_url in milestone['media']:
+                            st.image(media_url, use_container_width=True)
+                    st.markdown('</div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
         else:
             with col_right:
-                with st.container():
-                    with st.expander(title, expanded=False):
-                        st.markdown(f'<div class="{class_name}">', unsafe_allow_html=True)
-                        st.write(milestone['details'])
-                        st.markdown('</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="timeline-content-right {box_class}">', unsafe_allow_html=True)
+                st.markdown(f"<h4>{title}</h4>", unsafe_allow_html=True)
+                st.markdown(f"<p>{milestone['details']}</p>", unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
     

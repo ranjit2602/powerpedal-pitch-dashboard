@@ -31,6 +31,8 @@ st.markdown(
 
 st.caption("Switch Mobility | Interactive Pitch Deck")
 
+import streamlit as st
+
 st.markdown(
     """
     <details>
@@ -44,7 +46,7 @@ st.markdown(
         <h4>Here’s how to get the most out of it:</h4>
         <ol>
           <li><b>Navigate with the Tabs:</b> The tabs at the top of the page act as your table of contents. Click on any tab to jump to a specific section of our pitch, from our <b>Vision</b> to our <b>Financials</b>.</li>
-          <li><b>Look for Interactive Elements:</b> Many sections contain interactive charts, buttons, and dropdown menus. These tools allow you to dive deeper into our market analysis, play with our financial projections, and see our data in real-time.</li>
+          <li><b>Look for Interactive Elements:</b> Many sections contain interactive charts, buttons, and dropdown menus. These tools allow you to dive deeper into our market analysis, play with our financial projections, and see our data in real-time. Don't forget to visit our **live test dashboard** from the product section to see real-world performance data which keeps getting updated with our latest test results!</li>
           <li><b>Explore Our Narrative:</b> Don't miss our detailed breakdown of the market challenges. Each one is a separate, scrollable section detailing our problem-solving approach. You can also explore our journey through the interactive timeline in the <b>Milestones & Traction</b> tab.</li>
           <li><b>Listen to the Audio Pitch:</b> For a concise, dynamic summary of our presentation, click on the <b>Audio Pitch</b> tab. It's a two-person conversation where they discuss our vision and strategy, just like a podcast episode.</li>
         </ol>

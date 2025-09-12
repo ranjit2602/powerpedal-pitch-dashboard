@@ -1161,18 +1161,58 @@ with tabs[3]:
 
     st.divider()
 
-    # Center videos and text side by side with space between
+    # Center videos and text side by side with increased space, stack vertically on mobile
     st.markdown("""
-        <div style="display: flex; flex-direction: row; justify-content: center; gap: 20px; max-width: 700px; margin: 20px auto;">
-            <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e); border: 2px solid #78C841; border-radius: 12px; width: 330px;">
-                <h4 style="color: #78C841;">Efficiency Testing</h4>
-                <video src="https://www.dropbox.com/scl/fi/twxuhmmg0wgpnbx8fsqnz/powerpedal_efficiency_testing.mp4?rlkey=he1nnr7mqicrovk3655gg8w2j&st=bltkehlt&dl=1" width="300" controls style="display: block; margin: 0 auto;"></video>
-                <p style="color: #A8F1FF; margin-top: 15px;">Explore how PowerPedal optimizes energy use across various riding conditions, showcasing its superior efficiency and range extension.</p>
+        <style>
+        .video-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 50px; /* Increased from 20px to 50px */
+            max-width: 750px;
+            margin: 20px auto;
+        }
+        .video-card {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
+            border: 2px solid #78C841;
+            border-radius: 12px;
+            width: 330px;
+        }
+        .video-card h4 {
+            color: #78C841;
+            margin-bottom: 15px;
+        }
+        .video-card p {
+            color: #A8F1FF;
+            margin-top: 15px;
+        }
+        .video-card video {
+            display: block;
+            margin: 0 auto;
+        }
+        @media (max-width: 768px) {
+            .video-container {
+                flex-direction: column;
+                gap: 20px;
+                max-width: 400px;
+            }
+            .video-card {
+                width: 100%;
+            }
+        }
+        </style>
+        <div class="video-container">
+            <div class="video-card">
+                <h4>Efficiency Testing</h4>
+                <video src="https://www.dropbox.com/scl/fi/twxuhmmg0wgpnbx8fsqnz/powerpedal_efficiency_testing.mp4?rlkey=he1nnr7mqicrovk3655gg8w2j&st=bltkehlt&dl=1" width="300" controls></video>
+                <p>Explore how PowerPedal optimizes energy use across various riding conditions, showcasing its superior efficiency and range extension.</p>
             </div>
-            <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e); border: 2px solid #78C841; border-radius: 12px; width: 330px;">
-                <h4 style="color: #78C841;">Terrain Testing</h4>
-                <video src="https://www.dropbox.com/scl/fi/2nv6z20pfnnrg9skipljs/powerpedal_terrain_testing.mp4?rlkey=gh5tannj0jx5l2lohen09xc4z&st=x3oep0fy&dl=1" width="300" controls style="display: block; margin: 0 auto;"></video>
-                <p style="color: #A8F1FF; margin-top: 15px;">Witness PowerPedal’s performance across diverse terrains, from steep hills to rough trails, proving its versatility and durability.</p>
+            <div class="video-card">
+                <h4>Terrain Testing</h4>
+                <video src="https://www.dropbox.com/scl/fi/2nv6z20pfnnrg9skipljs/powerpedal_terrain_testing.mp4?rlkey=gh5tannj0jx5l2lohen09xc4z&st=x3oep0fy&dl=1" width="300" controls></video>
+                <p>Witness PowerPedal’s performance across diverse terrains, from steep hills to rough trails, proving its versatility and durability.</p>
             </div>
         </div>
     """, unsafe_allow_html=True)

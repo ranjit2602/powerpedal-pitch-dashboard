@@ -2004,7 +2004,7 @@ with tabs[7]:
             margin: 0 0 10px 0 !important;
         }
 
-        /* Hide the native help tooltips */
+        /* Hides the native help button/tooltip */
         button[title="Help button"] {
             display: none !important;
         }

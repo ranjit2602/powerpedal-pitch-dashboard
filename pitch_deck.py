@@ -1541,6 +1541,14 @@ with tabs[5]:
                 )
             st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import plotly.graph_objects as go
+import plotly.express as px
+
+# ---- TAB 6: Financial Projections ----
 with tabs[6]:
     st.header("📈 Financial Projections")
     st.caption("From 1,000 units in 2025 → 1 Million units by 2030")
@@ -1550,10 +1558,10 @@ with tabs[6]:
     if 'financials' not in st.session_state:
         st.session_state.financials = {
             'scenario': 'Base Case',
-            'asp_powerpedal': 10000,  # Default ₹10,000
-            'cogs_powerpedal': 6000,  # Default ₹6,000
-            'opex_percent': 0.15,     # Default 0.15
-            'fixed_costs': 2.4e7      # ₹2.4 Cr
+            'asp_powerpedal': 10000,
+            'cogs_powerpedal': 6000,
+            'opex_percent': 0.15,
+            'fixed_costs': 2.4e7
         }
 
     # Simplified CSS for Key Elements
@@ -1562,105 +1570,69 @@ with tabs[6]:
         <style>
         .financial-tab {
             font-family: Arial, sans-serif;
-        }
-        .variables-section {
-            background: #D6DAC8 !important;
-            border: 2px solid #9CAFAA !important;
-            border-radius: 10px !important;
-            padding: 20px;
-            margin: 10px 0;
-            text-align: center;
-        }
-        .variables-section h3 {
-            color: #FFFFFF !important;
-            font-size: 20px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .variables-section .stSlider > div {
-            padding: 0 8px;
-        }
-        .variables-section .stSlider label {
-            color: #000000 !important;
-            font-weight: 600;
-            text-align: center;
+            color: #FFFFFF;
         }
         .data-table-container {
-            background: #D6DAC8 !important;
-            border: 2px solid #9CAFAA !important;
-            border-radius: 10px !important;
+            background: #D6DAC8;
+            border: 2px solid #9CAFAA;
+            border-radius: 10px;
             padding: 20px;
             margin: 10px 0;
+        }
+        .data-table-container h5 {
+            color: #000000;
         }
         .data-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
-            border-radius: 10px !important;
+            border-radius: 10px;
             overflow: hidden;
+            color: #000000;
         }
         .data-table th {
-            background: #EE791F !important;
-            color: #000000 !important;
+            background: #EE791F;
+            color: #000000;
             font-weight: 600;
             padding: 10px;
             text-align: center;
-            border-bottom: 1px solid #9CAFAA !important;
-            border-right: 1px solid #9CAFAA !important;
+            border-bottom: 1px solid #9CAFAA;
+            border-right: 1px solid #9CAFAA;
         }
         .data-table td {
-            color: #000000 !important;
+            color: #000000;
             padding: 10px;
             text-align: center;
-            border-bottom: 1px solid #9CAFAA !important;
-            border-right: 1px solid #9CAFAA !important;
+            border-bottom: 1px solid #9CAFAA;
+            border-right: 1px solid #9CAFAA;
         }
         .data-table tr:nth-child(even) {
-            background: #F5F5F5 !important;
+            background: #F5F5F5;
         }
         .data-table tr:nth-child(odd) {
-            background: #FFFFFF !important;
+            background: #FFFFFF;
         }
         .data-table tr:hover {
-            background: #FFD6BA !important;
+            background: #FFD6BA;
         }
         .data-table td.highlight {
-            background: #FFF9BD !important;
+            background: #FFF9BD;
             font-weight: 600;
         }
-        .data-table-caption {
-            color: #FFFFFF !important;
-            font-size: 14px;
-            text-align: left;
-            margin-top: 10px;
-        }
-        .data-table-caption h3 {
-            color: #FFFFFF !important;
-            font-size: 16px;
-            margin-bottom: 0px;
-        }
-        .data-table-caption ul {
-            margin-top: 0px;
-            padding-left: 20px;
-        }
-        .data-table-caption li {
-            color: #FFFFFF !important;
-            font-size: 14px;
-        }
         .scenario-highlight {
-            background: #9CAFAA !important;
-            border: 2px solid #9CAFAA !important;
-            border-radius: 10px !important;
+            background: #9CAFAA;
+            border: 2px solid #9CAFAA;
+            border-radius: 10px;
             padding: 10px;
             margin-bottom: 20px;
             text-align: center;
             font-weight: 600;
-            color: #000000 !important;
+            color: #000000;
         }
         .headline-container {
-            background: #FFF9BD !important;
-            border: 2px solid #9CAFAA !important;
-            border-radius: 10px !important;
+            background: #FFF9BD;
+            border: 2px solid #9CAFAA;
+            border-radius: 10px;
             padding: 20px;
             text-align: center;
             min-height: 120px;
@@ -1669,29 +1641,32 @@ with tabs[6]:
             justify-content: center;
         }
         .headline-container h4 {
-            color: #000000 !important;
+            color: #000000;
             font-size: 14px;
             margin: 0 0 8px;
         }
         .headline-container p {
-            color: #000000 !important;
+            color: #000000;
             font-size: 18px;
             font-weight: 600;
             margin: 0;
         }
         .highlights-section {
-            background: #D6DAC8 !important;
-            border: 2px solid #9CAFAA !important;
-            border-radius: 10px !important;
+            background: #D6DAC8;
+            border: 2px solid #9CAFAA;
+            border-radius: 10px;
             padding: 20px;
             margin: 10px 0;
-            text-align: center;
+            color: #000000; /* Corrected to black for visibility */
         }
         .highlights-section p {
-            color: #000000 !important;
+            color: #000000;
             font-size: 16px;
             font-weight: 600;
             margin: 0;
+        }
+        .highlights-section ul li {
+            color: #000000;
         }
         </style>
         """,
@@ -1703,11 +1678,11 @@ with tabs[6]:
     # Image in Centered Column
     _, col_img, _ = st.columns([1, 4, 1])
     with col_img:
-        image_path = os.path.abspath("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/financial.png")
-        if os.path.exists(image_path):
-            st.image(image_path, caption="PowerPedal Growth Vision", use_container_width=True)
-        else:
-            st.warning("Image file not found at: https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/financial.png")
+        image_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/financial.png"
+        try:
+            st.image(image_url, caption="PowerPedal Growth Vision", use_container_width=True)
+        except Exception:
+            st.warning("Image file not found at: " + image_url)
             st.markdown(
                 """
                 <div style="text-align: center; border: 1px solid #e6e6e6; border-radius: 10px; padding: 20px; background-color: #f0f0f0;">
@@ -1722,337 +1697,192 @@ with tabs[6]:
     revenue_base = [0.85e7, 8.5e7, 124e7, 237.45e7, 654e7, 1467.5e7]
     years = [2025, 2026, 2027, 2028, 2029, 2030]
     fixed_cogs_2025 = 8500  # Fixed COGS for 2025
+    asp_powerpedal = 10000
+    cogs_powerpedal = 6000
+    opex_percent = 0.15
+    fixed_costs = 2.4e7
 
-    # Financial Calculations
-    def calculate_financials(scenario, asp_powerpedal, cogs_powerpedal, opex_percent, fixed_costs):
-        unit_sales = unit_sales_base
-        if scenario == 'Conservative':
-            unit_sales = [int(u * 0.8) for u in unit_sales_base]
-        elif scenario == 'Aggressive':
-            unit_sales = [int(u * 1.2) for u in unit_sales_base]
-
+    # Financial Calculations for all scenarios
+    def calculate_scenario(scenario_factor):
+        unit_sales = [int(u * scenario_factor) for u in unit_sales_base]
+        
         cogs_decline_rate = 0.02
         base_tax_rate = 0.25
         tax_exemption_years = [2025, 2026, 2027]
-        cogs_powerpedal_list = [fixed_cogs_2025] + [cogs_powerpedal * (1 - cogs_decline_rate) ** i for i in range(0, len(years) - 1)]
-        revenue = [u * asp_powerpedal for u in unit_sales]
-        gross_profit = [u * (asp_powerpedal - c) for u, c in zip(unit_sales, cogs_powerpedal_list)]
-        opex = [
-            0.35e7 if year == 2025 else
-            2.3e7 if year == 2026 else
-            15e7 if year == 2027 else
-            r * opex_percent + fixed_costs
-            for year, r in zip(years, revenue)
-        ]
+        cogs_powerpedal_list = [fixed_cogs_2025] + [cogs_powerpedal * (1 - cogs_decline_rate) ** i for i in range(1, len(years))]
+        
+        if scenario_factor == 1.0:
+            revenue = revenue_base
+        else:
+            revenue = [u * asp_powerpedal for u in unit_sales]
+        
+        gross_profit = [r - (u * c) for r, u, c in zip(revenue, unit_sales, cogs_powerpedal_list)]
+        
+        opex = [0.35e7, 2.3e7, 15e7]
+        for i in range(3, len(years)):
+            opex.append(revenue[i] * opex_percent + fixed_costs)
+        
         ebitda = [gp - o for gp, o in zip(gross_profit, opex)]
         tax_rate = [0 if year in tax_exemption_years else base_tax_rate for year in years]
         net_income = [e * (1 - tr) for e, tr in zip(ebitda, tax_rate)]
+        
         return unit_sales, revenue, cogs_powerpedal_list, gross_profit, opex, ebitda, net_income
 
-    # Calculate Financials
-    try:
-        unit_sales, revenue, cogs_powerpedal_list, gross_profit, opex, ebitda, net_income = calculate_financials(
-            st.session_state.financials['scenario'],
-            st.session_state.financials['asp_powerpedal'],
-            st.session_state.financials['cogs_powerpedal'],
-            st.session_state.financials['opex_percent'],
-            st.session_state.financials['fixed_costs']
-        )
-    except Exception as e:
-        st.error(f"Error in financial calculations: {e}")
-        st.stop()
+    unit_sales_cons, revenue_cons, cogs_cons, gross_profit_cons, opex_cons, ebitda_cons, net_income_cons = calculate_scenario(0.8)
+    unit_sales_base_case, revenue_base_case, cogs_base_case, gross_profit_base_case, opex_base_case, ebitda_base_case, net_income_base_case = calculate_scenario(1.0)
+    unit_sales_agg, revenue_agg, cogs_agg, gross_profit_agg, opex_agg, ebitda_agg, net_income_agg = calculate_scenario(1.2)
 
-    # Headline Metrics
+    scenario_data = {
+        'Conservative': {
+            'unit_sales': unit_sales_cons, 'revenue': revenue_cons, 'cogs': cogs_cons,
+            'gross_profit': gross_profit_cons, 'opex': opex_cons,
+            'ebitda': ebitda_cons, 'net_income': net_income_cons
+        },
+        'Base Case': {
+            'unit_sales': unit_sales_base_case, 'revenue': revenue_base_case, 'cogs': cogs_base_case,
+            'gross_profit': gross_profit_base_case, 'opex': opex_base_case,
+            'ebitda': ebitda_base_case, 'net_income': net_income_base_case
+        },
+        'Aggressive': {
+            'unit_sales': unit_sales_agg, 'revenue': revenue_agg, 'cogs': cogs_agg,
+            'gross_profit': gross_profit_agg, 'opex': opex_agg,
+            'ebitda': ebitda_agg, 'net_income': net_income_agg
+        }
+    }
+
+    st.subheader("Choose a Scenario")
+    col_sc1, col_sc2, col_sc3 = st.columns(3)
+    
+    with col_sc1:
+        if st.button("Conservative", key="conservative_btn", use_container_width=True):
+            st.session_state.financials['scenario'] = 'Conservative'
+            st.rerun()
+    with col_sc2:
+        if st.button("Base Case", key="base_case_btn", use_container_width=True):
+            st.session_state.financials['scenario'] = 'Base Case'
+            st.rerun()
+    with col_sc3:
+        if st.button("Aggressive", key="aggressive_btn", use_container_width=True):
+            st.session_state.financials['scenario'] = 'Aggressive'
+            st.rerun()
+
+    selected_scenario = st.session_state.financials['scenario']
+    data = scenario_data[selected_scenario]
+    unit_sales, revenue, gross_profit, opex, ebitda, net_income, cogs_powerpedal_list = (
+        data['unit_sales'], data['revenue'], data['gross_profit'],
+        data['opex'], data['ebitda'], data['net_income'], data['cogs']
+    )
+
     with st.container():
         st.markdown(
             f'<div class="scenario-highlight">'
-            f'Active Scenario: <strong>{st.session_state.financials["scenario"]}</strong>'
+            f'Active Scenario: <strong>{selected_scenario}</strong>'
             f'</div>',
             unsafe_allow_html=True
         )
         col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            try:
-                revenue_value = sum(revenue) / 1e7
-                st.markdown(
-                    f'<div class="headline-container" style="background: #FFF9BD;">'
-                    f'<h4 style="color: #000000; margin: 0 0 8px;">Total Revenue (2025–2030)</h4>'
-                    f'<p style="color: #000000; font-size: 18px; font-weight: 600; margin: 0;">₹{revenue_value:.2f} Cr</p>'
-                    f'</div>',
-                    unsafe_allow_html=True
-                )
-            except Exception as e:
-                st.error(f"Total Revenue: {e}")
-        with col2:
-            try:
-                gross_profit_value = sum(gross_profit) / 1e7
-                st.markdown(
-                    f'<div class="headline-container" style="background: #FFD6BA;">'
-                    f'<h4 style="color: #000000; margin: 0 0 8px;">Total Gross Profit (2025–2030)</h4>'
-                    f'<p style="color: #000000; font-size: 18px; font-weight: 600; margin: 0;">₹{gross_profit_value:.2f} Cr</p>'
-                    f'</div>',
-                    unsafe_allow_html=True
-                )
-            except Exception as e:
-                st.error(f"Total Gross Profit: {e}")
-        with col3:
-            try:
-                net_profit_value = sum(net_income) / 1e7
-                st.markdown(
-                    f'<div class="headline-container" style="background: #D6DAC8;">'
-                    f'<h4 style="color: #000000; margin: 0 0 8px;">Total Net Profit (2025–2030)</h4>'
-                    f'<p style="color: #000000; font-size: 18px; font-weight: 600; margin: 0;">₹{net_profit_value:.2f} Cr</p>'
-                    f'</div>',
-                    unsafe_allow_html=True
-                )
-            except Exception as e:
-                st.error(f"Total Net Profit: {e}")
-        with col4:
-            try:
-                st.markdown(
-                    f'<div class="headline-container" style="background: #9CAFAA;">'
-                    f'<h4 style="color: #000000; margin: 0 0 8px;">Break-even Year</h4>'
-                    f'<p style="color: #000000; font-size: 18px; font-weight: 600; margin: 0;">2026</p>'
-                    f'</div>',
-                    unsafe_allow_html=True
-                )
-            except Exception as e:
-                st.error(f"Break-even Year: {e}")
+        
+        metrics = [
+            {"title": "Total Revenue (2025–2030)", "value": sum(revenue) / 1e7, "color": "#FFF9BD"},
+            {"title": "Total Gross Profit (2025–2030)", "value": sum(gross_profit) / 1e7, "color": "#FFD6BA"},
+            {"title": "Total Net Profit (2025–2030)", "value": sum(net_income) / 1e7, "color": "#D6DAC8"},
+            {"title": "Break-even Year", "value": "2026", "color": "#9CAFAA", "is_year": True}
+        ]
 
-    # Sliders and Table
-    col_vars, col_table = st.columns([1, 3])
+        for col, metric in zip([col1, col2, col3, col4], metrics):
+            with col:
+                value_to_display = metric["value"] if metric.get("is_year") else f"₹{metric['value']:.2f} Cr"
+                st.markdown(
+                    f'<div class="headline-container" style="background: {metric["color"]};">'
+                    f'<h4 style="color: #000000; margin: 0 0 8px;">{metric["title"]}</h4>'
+                    f'<p style="color: #000000; font-size: 18px; font-weight: 600; margin: 0;">{value_to_display}</p>'
+                    f'</div>',
+                    unsafe_allow_html=True
+                )
 
-    with col_vars:
-        st.markdown('<div class="variables-section">', unsafe_allow_html=True)
-        st.markdown('<h3 style="color: #FFFFFF;">Key Variables</h3>', unsafe_allow_html=True)
-        st.session_state.financials['asp_powerpedal'] = st.slider(
-            "Selling Price of PowerPedal (₹)", 6000, 20000,
-            st.session_state.financials['asp_powerpedal'], 100,
-            key="asp_powerpedal_financial",
-            help="Average Selling Price for PowerPedal"
+    chart_data = pd.DataFrame({
+        'Year': years,
+        'Revenue': [r / 1e7 for r in revenue],
+        'Gross Profit': [gp / 1e7 for gp in gross_profit],
+        'Net Income': [ni / 1e7 for ni in net_income]
+    })
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=chart_data['Year'], y=chart_data['Revenue'], mode='lines+markers', name='Revenue', line=dict(color='#EE791F', width=3)))
+    fig.add_trace(go.Scatter(x=chart_data['Year'], y=chart_data['Gross Profit'], mode='lines+markers', name='Gross Profit', line=dict(color='#FFD6BA', width=3)))
+    fig.add_trace(go.Scatter(x=chart_data['Year'], y=chart_data['Net Income'], mode='lines+markers', name='Net Income', line=dict(color='#D6DAC8', width=3)))
+
+    fig.update_layout(
+        title_text='Financial Projections (₹ Cr) for ' + selected_scenario,
+        title_font_color='white',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(tickvals=years, showgrid=False, color='white', title_font_color='white', title='Year'),
+        yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.2)', color='white', title_font_color='white', title='₹ Cr'),
+        legend=dict(font=dict(color='white')),
+        hovermode='x unified',
+        height=400
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown('---')
+    st.subheader(f"Detailed Financial Table for {selected_scenario}")
+    st.markdown('<div class="data-table-container">', unsafe_allow_html=True)
+    try:
+        df_table = pd.DataFrame({
+            'Year': years,
+            'Units Sold': [f'{u:,}' for u in unit_sales],
+            'Revenue (₹ Cr)': [f'₹{round(r / 1e7, 2):,.2f}' for r in revenue],
+            'COGS (₹ Cr)': [f'₹{round(c * u / 1e7, 2):,.2f}' for u, c in zip(unit_sales, cogs_powerpedal_list)],
+            'Gross Profit (₹ Cr)': [f'₹{round(gp / 1e7, 2):,.2f}' for gp in gross_profit],
+            'Opex (₹ Cr)': [f'₹{round(o / 1e7, 2):,.2f}' for o in opex],
+            'EBITDA (₹ Cr)': [f'₹{round(e / 1e7, 2):,.2f}' for e in ebitda],
+            'Net Income (₹ Cr)': [f'<span class="highlight">₹{round(ni / 1e7, 2):,.2f}</span>' for ni in net_income],
+            'EBITDA Margin (%)': [f'<span class="highlight">{round((e / r) * 100, 1)}%</span>' if r > 0 else '0.0%'
+                                 for e, r in zip(ebitda, revenue)]
+        })
+        headers = df_table.columns.tolist()
+        html = '<table class="data-table">'
+        html += '<tr>' + ''.join(f'<th>{h}</th>' for h in headers) + '</tr>'
+        for idx, row in df_table.iterrows():
+            html += '<tr>'
+            for col in headers:
+                html += f'<td>{row[col]}</td>'
+            html += '</tr>'
+        html += '</table>'
+        st.markdown(html, unsafe_allow_html=True)
+        st.markdown(
+            '<div class="data-table-caption">'
+            '<h3>Note</h3>'
+            '<ul>'
+            '<li>We have considered Section 80-IAC tax exemptions for 2025–2027.</li>'
+            '<li>Opex will remain low in 2025–2026 due to lean operations, minimal hiring, and outsourced manufacturing (with only assembly done in-house).</li>'
+            '</ul>'
+            '</div>',
+            unsafe_allow_html=True
         )
-        st.session_state.financials['cogs_powerpedal'] = st.slider(
-            "PowerPedal COGS (₹, 2026)", 4000, 8000,
-            st.session_state.financials['cogs_powerpedal'], 100,
-            key="cogs_powerpedal_financial",
-            help="Cost of Goods Sold per unit for 2026 (2025 fixed at ₹8,500)"
-        )
-        st.session_state.financials['opex_percent'] = st.slider(
-            "Operating Expenses (% of Revenue)", 0.10, 0.25,
-            st.session_state.financials['opex_percent'], 0.01,
-            key="opex_percent_financial",
-            help="Operating Expenses as a percentage of revenue for 2028–2030"
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    # Table
-    with col_table:
-        st.markdown('<div class="data-table-container">', unsafe_allow_html=True)
-        try:
-            df = pd.DataFrame({
-                'Year': years,
-                'Units Sold': [f'{u:,}' for u in unit_sales],
-                'Revenue (₹ Cr)': [round(r / 1e7, 2) for r in revenue],
-                'COGS (₹ Cr)': [round((u * c) / 1e7, 2) for u, c in zip(unit_sales, cogs_powerpedal_list)],
-                'Gross Profit (₹ Cr)': [round(gp / 1e7, 2) for gp in gross_profit],
-                'Opex (₹ Cr)': [round(o / 1e7, 2) for o in opex],
-                'EBITDA (₹ Cr)': [round(e / 1e7, 2) for e in ebitda],
-                'Net Income (₹ Cr)': [f'<span class="highlight">{round(ni / 1e7, 2)}</span>' for ni in net_income],
-                'EBITDA Margin (%)': [f'<span class="highlight">{round((e / r) * 100, 1)}</span>' if r > 0 else '0.0'
-                                      for e, r in zip(ebitda, revenue)]
-            })
-            headers = df.columns.tolist()
-            html = '<table class="data-table">'
-            html += '<tr>' + ''.join(f'<th>{h}</th>' for h in headers) + '</tr>'
-            for idx, row in df.iterrows():
-                html += '<tr>'
-                for col in headers:
-                    html += f'<td>{row[col]}</td>'
-                html += '</tr>'
-            html += '</table>'
-            st.markdown(html, unsafe_allow_html=True)
-            st.markdown(
-                '<div class="data-table-caption">'
-                '<h3>Note</h3>'
-                '<ul>'
-                '<li>We have considered Section 80-IAC tax exemptions for 2025–2027.</li>'
-                '<li>Opex will remain low in 2025–2026 due to lean operations, minimal hiring, and outsourced manufacturing (with only assembly done in-house).</li>'
-                '</ul>'
-                '</div>',
-                unsafe_allow_html=True
-            )
-        except Exception as e:
-            st.error(f"Error rendering table: {e}")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    # Scenario Comparison
-    col_sc1, col_sc2, col_sc3 = st.columns(3)
-    scenarios = ['Conservative', 'Base Case', 'Aggressive']
-    scenario_units = {
-        'Conservative': [int(u * 0.8) for u in unit_sales_base],
-        'Base Case': unit_sales_base,
-        'Aggressive': [int(u * 1.2) for u in unit_sales_base]
-    }
-    scenario_revenue = {
-        'Conservative': [u * st.session_state.financials['asp_powerpedal'] for u in scenario_units['Conservative']],
-        'Base Case': revenue_base,
-        'Aggressive': [u * st.session_state.financials['asp_powerpedal'] for u in scenario_units['Aggressive']]
-    }
-    with col_sc1:
-        try:
-            st.markdown(
-                f'<div style="background: #FFF9BD; border: 2px solid #9CAFAA; border-radius: 10px; padding: 20px; text-align: center;">'
-                f'<h4 style="color: #000000;">Conservative (2030)</h4>'
-                f'<p style="color: #000000;">{scenario_units["Conservative"][-1]:,} units, ₹{scenario_revenue["Conservative"][-1] / 1e7:.2f} Cr</p>'
-                f'</div>',
-                unsafe_allow_html=True
-            )
-            if st.button("Conservative", key="conservative_financial", use_container_width=True):
-                st.session_state.financials['scenario'] = 'Conservative'
-                st.rerun()
-        except Exception as e:
-            st.error(f"Conservative scenario: {e}")
-    with col_sc2:
-        try:
-            st.markdown(
-                f'<div style="background: #FFD6BA; border: 2px solid #9CAFAA; border-radius: 10px; padding: 20px; text-align: center;">'
-                f'<h4 style="color: #000000;">Base Case (2030)</h4>'
-                f'<p style="color: #000000;">{scenario_units["Base Case"][-1]:,} units, ₹{scenario_revenue["Base Case"][-1] / 1e7:.2f} Cr</p>'
-                f'</div>',
-                unsafe_allow_html=True
-            )
-            if st.button("Base Case", key="base_case_financial", use_container_width=True):
-                st.session_state.financials['scenario'] = 'Base Case'
-                st.rerun()
-        except Exception as e:
-            st.error(f"Base Case scenario: {e}")
-    with col_sc3:
-        try:
-            st.markdown(
-                f'<div style="background: #D6DAC8; border: 2px solid #9CAFAA; border-radius: 10px; padding: 20px; text-align: center;">'
-                f'<h4 style="color: #000000;">Aggressive (2030)</h4>'
-                f'<p style="color: #000000;">{scenario_units["Aggressive"][-1]:,} units, ₹{scenario_revenue["Aggressive"][-1] / 1e7:.2f} Cr</p>'
-                f'</div>',
-                unsafe_allow_html=True
-            )
-            if st.button("Aggressive", key="aggressive_financial", use_container_width=True):
-                st.session_state.financials['scenario'] = 'Aggressive'
-                st.rerun()
-        except Exception as e:
-            st.error(f"Aggressive scenario: {e}")
-
-    # Charts
-    st.markdown('<div class="charts-section">', unsafe_allow_html=True)
-    col_chart1, col_chart2, col_chart3 = st.columns(3)
-
-    with col_chart1:
-        try:
-            fig1, ax1 = plt.subplots(figsize=(4, 2.5))
-            fig1.patch.set_facecolor('none')
-            ax1.set_facecolor('none')
-            ax1.spines['top'].set_visible(False)
-            ax1.spines['right'].set_visible(False)
-            ax1.spines['left'].set_color('#FFFFFF')
-            ax1.spines['bottom'].set_color('#FFFFFF')
-            ax1.tick_params(colors='#FFFFFF', labelsize=8)
-            ax1.plot(years, [r / 1e7 for r in revenue], label='Revenue', color='#EE791F', linewidth=2)
-            ax1.set_xlabel('Year', color='#FFFFFF', fontsize=8)
-            ax1.set_ylim(0, max([r / 1e7 for r in revenue]) * 1.2)
-            ax1.set_title('Revenue (₹ Cr)', color='#FFFFFF', fontsize=10)
-            ax1.legend(fontsize=7, frameon=False, labelcolor='#FFFFFF')
-            ax1.set_ylabel('Revenue (₹ Cr)', color='#FFFFFF', fontsize=8)
-            plt.tight_layout(pad=1.0)
-            st.pyplot(fig1)
-        except Exception as e:
-            st.error(f"Revenue chart: {e}")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with col_chart2:
-        try:
-            fig2, ax2 = plt.subplots(figsize=(4, 2.5))
-            fig2.patch.set_facecolor('none')
-            ax2.set_facecolor('none')
-            ax2.spines['top'].set_visible(False)
-            ax2.spines['right'].set_visible(False)
-            ax2.spines['left'].set_color('#FFFFFF')
-            ax2.spines['bottom'].set_color('#FFFFFF')
-            ax2.tick_params(colors='#FFFFFF', labelsize=8)
-            ax2.bar(years, unit_sales, color='#FFF9BD', label='Units Sold')
-            ax2.set_ylim(0, max(unit_sales) * 1.2)
-            ax2.set_ylabel('Units Sold', color='#FFFFFF', fontsize=8)
-            ax2.set_title('Units Sold', color='#FFFFFF', fontsize=10)
-            ax2.legend(loc='upper left', fontsize=7, frameon=False, labelcolor='#FFFFFF')
-            plt.tight_layout(pad=1.0)
-            st.pyplot(fig2)
-        except Exception as e:
-            st.error(f"Units Sold chart: {e}")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with col_chart3:
-        try:
-            fig3, ax3 = plt.subplots(figsize=(4, 2.5))
-            fig3.patch.set_facecolor('none')
-            ax3.set_facecolor('none')
-            ax3.spines['top'].set_visible(False)
-            ax3.spines['right'].set_visible(False)
-            ax3.spines['left'].set_color('#FFFFFF')
-            ax3.spines['bottom'].set_color('#FFFFFF')
-            ax3.tick_params(colors='#FFFFFF', labelsize=8)
-            ax3.bar(years, [gp / 1e7 for gp in gross_profit], color='#FFD6BA', label='Gross Profit')
-            ax3.bar(years, [o / 1e7 for o in opex], bottom=[gp / 1e7 for gp in gross_profit],
-                    color='#EE791F', label='Opex')
-            ax3.plot(years, [e / 1e7 for e in ebitda], color='#FFF9BD', linewidth=2, label='EBITDA')
-            ax3.plot(years, [ni / 1e7 for ni in net_income], color='#9CAFAA', linewidth=2, label='Net Income')
-            ax3.set_xlabel('Year', color='#FFFFFF', fontsize=8)
-            ax3.set_ylim(min([min([e / 1e7 for e in ebitda]), 0]) * 1.2, max([max([(gp + o) / 1e7 for gp, o in zip(gross_profit, opex)]), 10]) * 1.2)
-            ax3.set_title('Profitability (₹ Cr)', color='#FFFFFF', fontsize=10)
-            ax3.legend(fontsize=7, frameon=False, labelcolor='#FFFFFF')
-            ax3.set_ylabel('₹ Cr', color='#FFFFFF', fontsize=8)
-            plt.tight_layout(pad=1.0)
-            st.pyplot(fig3)
-        except Exception as e:
-            st.error(f"Profitability chart: {e}")
-        st.markdown('</div>', unsafe_allow_html=True)
+    except Exception as e:
+        st.error(f"Error rendering table: {e}")
     st.markdown('</div>', unsafe_allow_html=True)
+
 
     # Key Investor Highlights
-    st.markdown('<div class="highlights-section">', unsafe_allow_html=True)
-    with st.container():
-        st.markdown(
-            f'<div style="background: #D6DAC8; border: 2px solid #9CAFAA; border-radius: 10px; padding: 20px; text-align: center;">'
-            f'<p style="color: #000000; font-size: 16px; font-weight: 600;">💡 Foundation built on grant money with minimal dilution – R&D, patents, pilots achieved capital-efficiently.</p>'
-            f'</div>',
-            unsafe_allow_html=True
-        )
-    with st.container():
-        st.markdown(
-            f'<div style="background: #D6DAC8; border: 2px solid #9CAFAA; border-radius: 10px; padding: 20px; text-align: center;">'
-            f'<p style="color: #000000; font-size: 16px; font-weight: 600;">🤝 Equity given only to strategic partner – securing early distribution & GTM strength.</p>'
-            f'</div>',
-            unsafe_allow_html=True
-        )
-    with st.container():
-        st.markdown(
-            f'<div style="background: #D6DAC8; border: 2px solid #9CAFAA; border-radius: 10px; padding: 20px; text-align: center;">'
-            f'<p style="color: #000000; font-size: 16px; font-weight: 600;">📈 Profitability achieved at 10K units (2026) – EBITDA positive far earlier than typical hardware.</p>'
-            f'</div>',
-            unsafe_allow_html=True
-        )
-    with st.container():
-        st.markdown(
-            f'<div style="background: #D6DAC8; border: 2px solid #9CAFAA; border-radius: 10px; padding: 20px; text-align: center;">'
-            f'<p style="color: #000000; font-size: 16px; font-weight: 600;">🚀 10x growth in 2027 – driven by European expansion & OEM adoption.</p>'
-            f'</div>',
-            unsafe_allow_html=True
-        )
-    with st.container():
-        st.markdown(
-            f'<div style="background: #D6DAC8; border: 2px solid #9CAFAA; border-radius: 10px; padding: 20px; text-align: center;">'
-            f'<p style="color: #000000; font-size: 16px; font-weight: 600;">🏭 Capital-light scaling model – contract manufacturing keeps costs lean while margins expand towards ~30% by 2030.</p>'
-            f'</div>',
-            unsafe_allow_html=True
-        )
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('---')
+    st.subheader("Key Investor Highlights")
+    st.markdown(
+        """
+        <div class="highlights-section" style="color: #FFFFFF;">
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li style="margin-bottom: 5px; color: #000000;">💡 **Capital Efficiency:** Foundation built on grant money with minimal dilution—R&D, patents, and pilots were achieved capital-efficiently.</li>
+                <li style="margin-bottom: 5px; color: #000000;">🤝 **Strategic Partnership:** Equity was given only to a strategic partner, securing early distribution and go-to-market strength.</li>
+                <li style="margin-bottom: 5px; color: #000000;">📈 **Early Profitability:** Profitability is achieved at just 10K units (2026), making the company EBITDA positive far earlier than typical hardware startups.</li>
+                <li style="margin-bottom: 5px; color: #000000;">🚀 **Scalable Growth:** A 10x growth is projected in 2027, driven by strategic European expansion and OEM adoption.</li>
+                <li style="margin-bottom: 5px; color: #000000;">🏭 **Lean Operations:** The capital-light scaling model uses contract manufacturing to keep costs lean, with margins expanding towards ~30% by 2030.</li>
+            </ul>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.markdown('</div>', unsafe_allow_html=True)
 import streamlit as st

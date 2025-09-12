@@ -2125,6 +2125,10 @@ with tabs[8]:
             border: 3px solid #A8F1FF;
             box-shadow: 0 0 15px rgba(120, 200, 65, 0.6);
         }}
+        .team-advisors-tab .profile-image.core-team-image {{
+            width: 100px !important;
+            height: 100px !important;
+        }}
         .team-advisors-tab .profile-image {{
             width: 120px !important;
             height: 120px !important;
@@ -2346,13 +2350,13 @@ with tabs[8]:
                 st.markdown(f"""
                     <a href="{member['linkedin']}" target="_blank" style="text-decoration: none;">
                         <div class="team-advisors-tab profile-container">
-                            <img src="{load_image(member['image'])}" class="profile-image">
+                            <img src="{load_image(member['image'])}" class="profile-image core-team-image">
                             <div class="profile-name">{member['name']}</div>
                             <div class="profile-role">{member['role']}</div>
                         </div>
                     </a>
                 """, unsafe_allow_html=True)
-                with st.expander(f"About"):
+                with st.expander("About"):
                     st.markdown(f'<div class="team-advisors-tab profile-details">{member["bio"]}</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="team-advisors-tab summary-text">Our core team drives innovation and execution to lead our e-mobility revolution.</div>', unsafe_allow_html=True)
@@ -2399,7 +2403,7 @@ with tabs[8]:
                         </div>
                     </a>
                 """, unsafe_allow_html=True)
-                with st.expander(f"About"):
+                with st.expander("About"):
                     st.markdown(f'<div class="team-advisors-tab profile-details">{advisor["bio"]}</div>', unsafe_allow_html=True)
     st.markdown('<div class="team-advisors-tab summary-text">Our advisors bring world-class expertise to propel our global impact.</div>', unsafe_allow_html=True)
     st.markdown('<hr class="team-advisors-tab section-divider">', unsafe_allow_html=True)

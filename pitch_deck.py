@@ -1897,167 +1897,13 @@ import base64
 import os
 from pathlib import Path
 
-# --- Function to get base64 encoded video ---
-def get_base64_of_bin_file(bin_file):
-    try:
-        with open(bin_file, 'rb') as f:
-            data = f.read()
-        return base64.b64encode(data).decode('utf-8')
-    except FileNotFoundError:
-        return None
+# --- Direct URL for the video ---
+VIDEO_URL = "https://www.dropbox.com/scl/fi/nxb6h4r0d4vntdd9zp87a/design_clinic.mp4?rlkey=lcy831kcxq51jwh4hyfz3w43t&raw=1"
 
-# --- Get encoded video data for embedding ---
-VIDEO_PATH = "design_clinic.mp4"
-base64_video = get_base64_of_bin_file(VIDEO_PATH)
-
-if base64_video:
-    EMBEDDED_VIDEO_HTML = f"""
-        <video width="100%" controls>
-            <source src="data:video/mp4;base64,{base64_video}" type="video/mp4">
-        </video>
-    """
-else:
-    EMBEDDED_VIDEO_HTML = f"Video file not found at '{VIDEO_PATH}'. Please ensure it is in the same folder as your app."
-
+# Assuming 'tabs' is a list created with st.tabs() earlier in your script.
+# Example: tabs = st.tabs(["Tab 1", "Tab 2", "...", "Milestones"])
 with tabs[7]:
-    # --- Styles specific to this storytelling timeline ---
-    st.markdown("""
-    <style>
-        /* Reset Streamlit default margins and padding */
-        .st-emotion-cache-1wmy9hl, .st-emotion-cache-0, .st-emotion-cache-1r4s1nx, .st-emotion-cache-12fmjuu {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        /* Main container for the timeline */
-        .timeline-container {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-        }
-
-        /* Container for each timeline entry */
-        .timeline-entry {
-            display: flex;
-            justify-content: space-between;
-            align-items: stretch;
-            margin: 0 !important; /* Reduced from 0px */
-            min-height: 30px; /* Reduced from 40px */
-        }
-
-        .timeline-content-left {
-            text-align: right;
-            padding: 0 !important; /* Set to 0px */
-            margin-right: -5px; /* Negative margin to pull closer */
-        }
-
-        .timeline-content-right {
-            text-align: left;
-            padding: 0 !important; /* Set to 0px */
-            margin-left: -5px; /* Negative margin to pull closer */
-        }
-
-        /* Styling for milestone content boxes */
-        .milestone-box {
-            padding: 10px !important;
-            border-radius: 10px !important;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-            margin: 0 !important;
-            height: 100% !important;
-            min-height: 100px;
-        }
-
-        .milestone-box.product {
-            background: #1A3636 !important;
-        }
-
-        .milestone-box.funding {
-            background: #40534C !important;
-        }
-        
-        .milestone-box h4 {
-            font-size: 1.2em !important;
-            font-weight: 600 !important;
-            color: #A8F1FF !important;
-            padding: 0;
-            margin: 0 0 8px 0 !important;
-        }
-
-        .milestone-box p {
-            font-size: 1em !important;
-            color: #FFF5F2 !important;
-            margin: 0 !important;
-            padding: 0;
-        }
-        
-        /* Media styling for images */
-        .timeline-media img {
-            max-width: 100% !important;
-            border-radius: 8px !important;
-            margin-top: 5px !important;
-            border: 1px solid #78C841 !important;
-        }
-
-        /* Video styling */
-        .timeline-media video {
-            max-width: 100% !important;
-            border-radius: 8px !important;
-            margin-top: 5px !important;
-            border: 1px solid #78C841 !important;
-        }
-
-        /* Story section styling */
-        .story-section {
-            background: linear-gradient(135deg, #1B3C53, #2e2e2e) !important;
-            border: 2px solid #78C841 !important;
-            border-radius: 12px !important;
-            padding: 20px !important;
-            margin: 20px 0 !important;
-            text-align: center !important;
-            max-width: 800px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-        }
-        .story-section h3 {
-            color: #78C841 !important;
-            font-size: 24px !important;
-            margin-bottom: 10px !important;
-        }
-        .story-section p {
-            color: #A8F1FF !important;
-            font-size: 16px !important;
-            line-height: 1.6 !important;
-            margin: 0 0 10px 0 !important;
-        }
-        
-    </style>
-    """, unsafe_allow_html=True)
-
-    # --- Tab Content ---
-    st.header("📍 Our Journey of Traction & Milestones")
-    st.markdown("---")
-
-    # --- High-level Visual Summary ---
-    col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
-    with col_img2:
-        timeline_image_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/timeline.png"
-        st.image(timeline_image_url, caption="A visual summary of our progress.", use_container_width=True)
-
-    # --- Enhanced Story Section ---
-    st.markdown('<div class="story-section">', unsafe_allow_html=True)
-    st.markdown('<h3>The Spark That Started It All</h3>', unsafe_allow_html=True)
-    st.markdown("""
-    <p>Our journey began in a college lab, where we built an award-winning electric skateboard, igniting our passion for redefining mobility. Driven by curiosity, we explored urban transportation—bicycles emerged as the perfect fusion of efficiency, practicality, and sustainability.</p>
-    <p>We fearlessly experimented, creating a powered wheelchair attachment for accessibility, a Hybrid Energy Storage System (HESS), road presence lighting, and custom drivetrains. Each project honed our skills, but our focus crystallized on advanced drive technology. Today, Switch Mobility is a B2B leader, delivering responsive, efficient, and cost-effective eBike drive systems to OEMs worldwide, transforming urban mobility.</p>
-    """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.subheader("Our Journey, Step by Step")
-    st.markdown(
-        "From a bold idea to a production-ready eBike drive system, our path combines cutting-edge innovation with strategic funding. Explore our milestones below, with product breakthroughs on the left and funding achievements on the right."
-    )
-
-    # --- Data for Milestones (with media only for Product milestones) ---
+    # --- Data for Milestones ---
     milestones_data = [
         {
             "name": "Concept Validation",
@@ -2091,7 +1937,7 @@ with tabs[7]:
             "details": "Built our first functional prototype with custom electronics and motor control algorithms, achieving a seamless, natural ride experience, supported by the Indian Institute of Science's Design Clinic Scheme.",
             "media": {
                 "type": "embedded_video",
-                "path": "design_clinic.mp4"
+                "url": VIDEO_URL
             }
         },
         {
@@ -2144,47 +1990,106 @@ with tabs[7]:
         }
     ]
 
-    # --- Building the Vertical Timeline ---
-    st.markdown('<div class="timeline-container">', unsafe_allow_html=True)
+    # --- Page Layout ---
+    st.title("📍 Our Journey of Traction & Milestones")
+    st.markdown("---")
+
+    # Use HTML to center the timeline image.
+    st.markdown("""
+        <div style="text-align: center;">
+            <img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/timeline.png" style="width: 600px;">
+        </div>
+    """, unsafe_allow_html=True)
     
+    # Introduction Section
+    st.markdown(
+        """
+        <div style="background-color: #1B3C53; border: 2px solid #78C841; border-radius: 12px; padding: 20px; text-align: center; margin: 20px auto; max-width: 800px;">
+            <h3 style="color: #78C841;">The Spark That Started It All</h3>
+            <p style="color: #A8F1FF; font-size: 16px; line-height: 1.6;">Our journey began in a college lab, where we built an award-winning electric skateboard, igniting our passion for redefining mobility. Driven by curiosity, we explored urban transportation—bicycles emerged as the perfect fusion of efficiency, practicality, and sustainability.</p>
+            <p style="color: #A8F1FF; font-size: 16px; line-height: 1.6;">We fearlessly experimented, creating a powered wheelchair attachment for accessibility, a Hybrid Energy Storage System (HESS), road presence lighting, and custom drivetrains. Each project honed our skills, but our focus crystallized on advanced drive technology. Today, Switch Mobility is a B2B leader, delivering responsive, efficient, and cost-effective eBike drive systems to OEMs worldwide, transforming urban mobility.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    st.subheader("Our Journey, Step by Step")
+    st.write("Explore our product breakthroughs and funding achievements below.")
+
+    # --- Product Milestones Container ---
+    st.header("Product Milestones")
+    
+    # This loop creates a new, separate container for each product milestone
     for milestone in milestones_data:
-        st.markdown('<div class="timeline-entry">', unsafe_allow_html=True)
-        col_left, col_center, col_right = st.columns([5, 0.01, 5])
-        
-        # Format the title and value
-        title = f"{milestone['icon']} **{milestone['name']}**"
-        if milestone['value'] != 'N/A':
-            title += f" — *{milestone['value']}*"
-        
-        box_class = "milestone-box product" if milestone['type'] == 'Product' else "milestone-box funding"
-        
         if milestone['type'] == 'Product':
-            with col_left:
-                st.markdown(f'<div class="timeline-content-left {box_class}">', unsafe_allow_html=True)
-                st.markdown(f"<h4>{title}</h4>", unsafe_allow_html=True)
-                st.markdown(f"<p>{milestone['details']}</p>", unsafe_allow_html=True)
-                if milestone['media']:
-                    st.markdown('<div class="timeline-media">', unsafe_allow_html=True)
-                    if isinstance(milestone['media'], dict) and milestone['media'].get("type") == "embedded_video":
-                        if EMBEDDED_VIDEO_HTML:
-                            st.markdown(EMBEDDED_VIDEO_HTML, unsafe_allow_html=True)
-                    elif isinstance(milestone['media'], str):
-                        st.image(milestone['media'], use_container_width=True)
-                    elif isinstance(milestone['media'], list):
-                        for media_url in milestone['media']:
-                            st.image(media_url, use_container_width=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-        else:
-            with col_right:
-                st.markdown(f'<div class="timeline-content-right {box_class}">', unsafe_allow_html=True)
-                st.markdown(f"<h4>{title}</h4>", unsafe_allow_html=True)
-                st.markdown(f"<p>{milestone['details']}</p>", unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+            product_html = f"""
+            <style>
+                .product-milestone-container {{
+                    background-color: #1A3636; 
+                    border: 2px solid #78C841;
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin: 15px 0;
+                }}
+            </style>
+            """
+            title = f"{milestone['icon']} {milestone['name']}"
+            
+            # --- Build media HTML string
+            media_html = ""
+            if milestone['media']:
+                media = milestone['media']
+                if isinstance(media, dict) and media.get("type") == "embedded_video":
+                    media_html = f"""<div style="text-align: center;">
+                                       <video width="250" controls style="border-radius: 8px; border: 1px solid #78C841;">
+                                           <source src="{media.get('url')}" type="video/mp4">
+                                           Your browser does not support the video tag.
+                                       </video>
+                                   </div>"""
+                elif isinstance(media, str):
+                    media_html = f"""<div style="text-align: center;">
+                                       <img src="{media}" width="250" style="border-radius: 8px; border: 1px solid #78C841;">
+                                   </div>"""
+                elif isinstance(media, list):
+                    images_html = "".join([f'<img src="{url}" width="250" style="border-radius: 8px; border: 1px solid #78C841; margin: 5px;">' for url in media])
+                    media_html = f"""<div style="display: flex; justify-content: center; flex-wrap: wrap;">{images_html}</div>"""
+            
+            product_html += f"""
+            <div class="product-milestone-container">
+                <h4 style="font-size: 1.2em; font-weight: 600; color: #A8F1FF; padding: 0; margin: 0 0 8px 0;">{title}</h4>
+                <p style="font-size: 1em; color: #FFF5F2; margin: 0; padding: 0;">{milestone['details']}</p>
+                {media_html}
+            </div>
+            """
+            st.markdown(product_html, unsafe_allow_html=True)
+
+    # --- Funding Milestones Container ---
+    st.header("Funding Milestones")
     
-    st.markdown('</div>', unsafe_allow_html=True)
+    # This loop creates a new, separate container for each funding milestone
+    for milestone in milestones_data:
+        if milestone['type'] == 'Funding':
+            funding_html = f"""
+            <style>
+                .funding-milestone-container {{
+                    background-color: #40534C; 
+                    border: 2px solid #78C841;
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin: 15px 0;
+                }}
+            </style>
+            """
+            title = f"{milestone['icon']} {milestone['name']}"
+            if milestone['value'] != 'N/A':
+                title += f" — {milestone['value']}"
+            
+            funding_html += f"""
+            <div class="funding-milestone-container">
+                <h4 style="font-size: 1.2em; font-weight: 600; color: #A8F1FF; padding: 0; margin: 0 0 8px 0;">{title}</h4>
+                <p style="font-size: 1em; color: #FFF5F2; margin: 0; padding: 0;">{milestone['details']}</p>
+            </div>
+            """
+            st.markdown(funding_html, unsafe_allow_html=True)
 
 # ---- TAB 8: Team & Advisors ----
 with tabs[8]:

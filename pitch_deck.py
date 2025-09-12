@@ -111,9 +111,11 @@ st.markdown(
         
         /* --- Mobile-specific styles (on screens <= 768px) --- */
         @media (max-width: 768px) {
-            /* This targets the 'Welcome' message summary tag */
-            summary {
-                font-size: 12px !important; /* Makes the text significantly smaller on mobile */
+            .st-emotion-cache-1dumvfu { /* The main app container class */
+                padding-top: 0.5rem !important;
+            }
+            .st-emotion-cache-z5in97 { /* A common header container class */
+                margin-top: -20px !important; 
             }
             .main-title {
                 display: flex;
@@ -134,6 +136,7 @@ st.markdown(
             }
             .powerpedal-wordmark {
                 font-size: 1.2em !important; /* Increased wordmark size */
+                transform: translateY(-2px) !important; /* Pushes the text up for better alignment */
             }
             .main-title-tagline {
                 font-size: 0.6em !important; /* Relative to the h1 font size */
@@ -151,6 +154,9 @@ st.markdown(
             }
             .stTabs [data-baseweb="tab"] > div {
                 font-size: 8px !important;
+            }
+            summary {
+                font-size: 14px !important;
             }
         }
         /* --- End of mobile styles --- */

@@ -111,7 +111,8 @@ st.markdown(
         
         /* --- Mobile-specific styles (on screens <= 768px) --- */
         @media (max-width: 768px) {
-            .stApp > header {
+            /* This is the new, more reliable class for padding control */
+            .st-emotion-cache-1dumvfu { 
                 padding-top: 0.5rem !important; /* Drastically reduces top spacing */
             }
             .main-title {

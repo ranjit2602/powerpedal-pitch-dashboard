@@ -1216,7 +1216,7 @@ with tabs[3]:
             </div>
         </div>
     """, unsafe_allow_html=True)
-    
+
 with tabs[4]:
     # Top Section: Title & Tagline
     st.markdown(
@@ -2987,11 +2987,10 @@ with tabs[10]:
 
 with tabs[11]:
     import streamlit as st
-    from pathlib import Path
-
+    
     st.header("🎙️ Audio Pitch", anchor=False)
     st.caption("Listen to Our Vision for the Future of E-Mobility")
-
+    
     # --- CSS for Audio Pitch ---
     st.markdown(
         """
@@ -3027,16 +3026,14 @@ with tabs[11]:
         """,
         unsafe_allow_html=True
     )
-
+    
     # --- Load and Display Audio ---
-    audio_path = Path(r"https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/audio/powerpedal_audio_pitch.mp3")
+    audio_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/audio/powerpedal_audio_pitch.mp3"
+    
     try:
-        if audio_path.is_file():
-            st.markdown('<div class="audio-pitch-tab audio-container">', unsafe_allow_html=True)
-            st.audio(str(audio_path), format="audio/mp3")
-            st.markdown('</div>', unsafe_allow_html=True)
-            st.markdown('<div class="audio-pitch-tab summary-text">Hear our pitch to discover how we’re revolutionizing e-mobility.</div>', unsafe_allow_html=True)
-        else:
-            st.warning("Audio file 'powerpedal_audio_pitch.mp3' not found. Please ensure the file is in the correct directory.")
+        st.markdown('<div class="audio-pitch-tab audio-container">', unsafe_allow_html=True)
+        st.audio(audio_url, format="audio/mp3")
+        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('<div class="audio-pitch-tab summary-text">Hear our pitch to discover how we’re revolutionizing e-mobility.</div>', unsafe_allow_html=True)
     except Exception as e:
         st.error(f"Error loading audio file: {e}")

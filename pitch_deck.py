@@ -1668,36 +1668,6 @@ with tabs[6]:
         .highlights-section ul li {
             color: #000000;
         }
-        .zoomable-image-container {
-            width: 100%;
-            overflow-x: scroll;
-            overflow-y: scroll;
-            -webkit-overflow-scrolling: touch;
-            text-align: center;
-        }
-        .zoomable-image {
-            max-width: none;
-            height: auto;
-            width: 1500px;
-        }
-        .magnify-container {
-            position: relative;
-            cursor: zoom-in;
-            overflow: hidden;
-            border-radius: 10px;
-        }
-        .magnify-container img {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            transition: transform 0.2s ease-out;
-        }
-        .magnify-container:hover img {
-            transform: scale(2); /* Adjust zoom level here */
-        }
-        .magnify-container:hover {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
         </style>
         """,
         unsafe_allow_html=True
@@ -1710,21 +1680,7 @@ with tabs[6]:
     with col_img:
         image_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/financial.png"
         try:
-            # Desktop magnify effect
-            st.markdown(
-                f'<div class="magnify-container">'
-                f'<img src="{image_url}" alt="PowerPedal Growth Vision">'
-                f'</div>',
-                unsafe_allow_html=True
-            )
-            # Mobile zoomable image
-            st.markdown(
-                f'<div class="zoomable-image-container" style="display: none; @media only screen and (max-width: 768px) {{ display: block; }}">'
-                f'<img src="{image_url}" class="zoomable-image" alt="PowerPedal Growth Vision">'
-                f'</div>',
-                unsafe_allow_html=True
-            )
-            st.caption("PowerPedal Growth Vision")
+            st.image(image_url, caption="PowerPedal Growth Vision", use_container_width=True)
         except Exception:
             st.warning("Image file not found at: " + image_url)
             st.markdown(
@@ -1866,7 +1822,7 @@ with tabs[6]:
         hovermode='x unified',
         height=400
     )
-    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+    st.plotly_chart(fig, use_container_width=True, config={'staticPlot': True})
 
     st.markdown('---')
     st.subheader(f"Detailed Financial Table for {selected_scenario}")

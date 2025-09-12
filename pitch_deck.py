@@ -2369,12 +2369,48 @@ with tabs[8]:
     # --- Core Team Section ---
     st.markdown('<div class="team-advisors-tab"><h2 class="section-title" style="text-align:center;">Core Team</h2></div>', unsafe_allow_html=True)
     team_members = [
-        {"name": "Vineeth Muthanna", "role": "Technical Head", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Vineeth.png", "linkedin": "https://linkedin.com/in/vineethmuthanna", "bio": "Vineeth leads product development..."},
-        {"name": "Ranjit B C", "role": "Business & Operations", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Ranjit.jpeg", "linkedin": "https://linkedin.com/in/ranjit-b-c-a3981215a", "bio": "Ranjit drives operational excellence..."},
-        {"name": "Vinay Sharma", "role": "Marketing & Finance", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/vinay.png", "linkedin": "https://linkedin.com/in/vinay-sharma-0563a816a", "bio": "Vinay drives brand growth..."},
-        {"name": "Shravan Aiyappa", "role": "Production Head", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Shravan.png", "linkedin": "https://linkedin.com/in/shravan-aiyappa-kadiamada-b8958ab9", "bio": "Shravan oversees production..."},
-        {"name": "Rohit Kuttappa", "role": "Strategy & GTM", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Rohit.jpg", "linkedin": "https://linkedin.com/in/rohit-kuttappa-a6256439", "bio": "Rohit shapes go-to-market strategies..."},
-        {"name": "Abbishek Bharadwaj", "role": "Sales & OEM Partnerships", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Abbishek.jpg", "linkedin": "https://linkedin.com/in/abbishek-v-bharadwaj-21171911", "bio": "Abbishek drives sales..."}
+        {
+            "name": "Vineeth Muthanna",
+            "role": "Technical Head",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Vineeth.png",
+            "linkedin": "https://linkedin.com/in/vineethmuthanna",
+            "bio": "Vineeth leads Product Development and Engineering at Switch. With deep expertise in hardware and prototyping, he ensures PowerPedal’s technology is reliable, scalable, and globally competitive. His focus is on translating concepts into robust systems that meet real-world needs."
+        },
+        {
+            "name": "Ranjit B C",
+            "role": "Business & Operations",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Ranjit.jpeg",
+            "linkedin": "https://linkedin.com/in/ranjit-b-c-a3981215a",
+            "bio": "Ranjit drives Business Operations and Strategic Planning at Switch. He develops business plans, digital platforms, and growth strategies, while managing the operational backbone including supply chain and execution. By blending creative thinking with structured problem-solving, he ensures Switch remains agile while powering the success of PowerPedal."
+        },
+        {
+            "name": "Vinay Sharma",
+            "role": "Marketing & Finance",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/vinay.png",
+            "linkedin": "https://linkedin.com/in/vinay-sharma-0563a816a",
+            "bio": "Vinay oversees Marketing and Finance at Switch, combining storytelling with financial discipline. He builds market strategies that amplify PowerPedal’s reach while ensuring long-term sustainability through sound financial planning."
+        },
+        {
+            "name": "Shravan Aiyappa",
+            "role": "Production Head",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Shravan.png",
+            "linkedin": "https://linkedin.com/in/shravan-aiyappa-kadiamada-b8958ab9",
+            "bio": "Shravan manages Production and Quality Control at Switch. He leads manufacturing processes, tooling, and testing to ensure PowerPedal products meet international standards. His detail-oriented approach guarantees consistency and reliability at scale."
+        },
+        {
+            "name": "Rohit Kuttappa",
+            "role": "Strategy & GTM",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Rohit.jpg",
+            "linkedin": "https://linkedin.com/in/rohit-kuttappa-a6256439",
+            "bio": "Rohit heads Go-To-Market Strategy and Partnerships at Switch. He shapes brand positioning, fundraising narratives, and market-entry plans, ensuring that PowerPedal is well-positioned in both domestic and global markets."
+        },
+        {
+            "name": "Abbishek Bharadwaj",
+            "role": "Sales & OEM Partnerships",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Abbishek.jpg",
+            "linkedin": "https://linkedin.com/in/abbishek-v-bharadwaj-21171911",
+            "bio": "Abbishek drives Sales, OEM Partnerships, and After-Sales Ecosystems at Switch. He focuses on expanding distribution networks and building strong customer relationships, enabling PowerPedal to achieve sustained market growth."
+        }
     ]
     for i in range(0, len(team_members), 3):
         cols = st.columns(3)
@@ -2418,12 +2454,48 @@ with tabs[8]:
     # --- Advisory Board Section ---
     st.markdown('<div class="team-advisors-tab"><h2 class="section-title" style="text-align:center;">Advisory Board</h2></div>', unsafe_allow_html=True)
     advisors = [
-        {"name": "Supria Dhanda", "role": "CEO, WYSER", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Supria.jpeg", "linkedin": "https://linkedin.com/in/supriadhanda", "bio": "Supria brings expertise in AI..."},
-        {"name": "Satyakam Mohanty", "role": "Entrepreneur", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Satyakam.png", "linkedin": "https://linkedin.com/in/satymohanty", "bio": "Satyakam brings expertise in building AI-driven startups..."},
-        {"name": "Krishna Prasad", "role": "Tech Manager, CeNSE IISc", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/krishna.png", "linkedin": "https://linkedin.com/in/placeholder", "bio": "Krishna guides in integrating advanced sensor systems..."},
-        {"name": "Dr. Vijay Mishra", "role": "Ex-CTO, CeNSE IISc", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Vijay.jpg", "linkedin": "https://linkedin.com/in/placeholder", "bio": "Dr. Vijay Mishra brings decades of leadership..."},
-        {"name": "Rohan Ganapathy", "role": "CEO, Bellatrix Aerospace", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/rohan.png", "linkedin": "https://linkedin.com/in/rohanmganapathy", "bio": "Rohan brings deep-tech startup expertise..."},
-        {"name": "Sandeep Bahl", "role": "Vice President, NASSCOM", "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Sandeep.png", "linkedin": "https://linkedin.com/in/sandeepbahl1", "bio": "Sandeep provides access to a vast network..."}
+        {
+            "name": "Supria Dhanda",
+            "role": "CEO, WYSER",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Supria.jpeg",
+            "linkedin": "https://linkedin.com/in/supriadhanda",
+            "bio": "Supria contributes expertise in strategy, governance, and corporate leadership. With experience spanning Western Digital, ABS India, and 50+ startup investments, she guides Switch in scaling PowerPedal with a sharp focus on innovation and sustainable growth."
+        },
+        {
+            "name": "Satyakam Mohanty",
+            "role": "Entrepreneur",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Satyakam.png",
+            "linkedin": "https://linkedin.com/in/satymohanty",
+            "bio": "Satyakam brings over 23 years of experience in data, AI, and startup innovation. As founder of Lymbyc and now part of WYSER, he advises Switch on disruptive technologies and zero-to-one journeys, helping PowerPedal carve its space in the mobility ecosystem."
+        },
+        {
+            "name": "Krishna Prasad",
+            "role": "Tech Manager, CeNSE IISc",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/krishna.png",
+            "linkedin": "https://linkedin.com/in/placeholder",
+            "bio": "Krishna advises Switch on sensor integration and advanced technology adoption. As a Technology Manager at CeNSE, IISc, his expertise ensures PowerPedal stays at the forefront of innovation and practical engineering applications."
+        },
+        {
+            "name": "Dr. Vijay Mishra",
+            "role": "Ex-CTO, CeNSE IISc",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Vijay.jpg",
+            "linkedin": "https://linkedin.com/in/placeholder",
+            "bio": "Dr. Mishra provides guidance on technology translation and scalability. With decades of experience as CTO at CeNSE, IISc, he helps Switch move advanced research into market-ready, reliable products like PowerPedal."
+        },
+        {
+            "name": "Rohan Ganapathy",
+            "role": "CEO, Bellatrix Aerospace",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/rohan.png",
+            "linkedin": "https://linkedin.com/in/rohanmganapathy",
+            "bio": "Rohan brings deep-tech entrepreneurship insights to Switch. As founder of Bellatrix Aerospace, his experience in scaling engineering ventures supports PowerPedal’s journey toward becoming a globally competitive mobility solution."
+        },
+        {
+            "name": "Sandeep Bahl",
+            "role": "Vice President, NASSCOM",
+            "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Sandeep.png",
+            "linkedin": "https://linkedin.com/in/sandeepbahl1",
+            "bio": "Sandeep strengthens Switch with ecosystem connections and strategic guidance. As VP at NASSCOM, he helps position PowerPedal within the larger technology and startup landscape, enabling access to critical networks and opportunities."
+        }
     ]
     for i in range(0, len(advisors), 3):
         cols = st.columns(3)

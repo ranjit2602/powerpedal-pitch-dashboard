@@ -2090,12 +2090,11 @@ with tabs[7]:
             """
             st.markdown(funding_html, unsafe_allow_html=True)
 
-# ---- TAB 8: Team & Advisors ----
 with tabs[8]:
     st.header("🧑‍🤝‍🧑 Team & Advisors", anchor=False)
     st.caption("Meet the Visionaries Powering Our Mission")
 
-    # --- CSS (Updated for consistent styling and fixing expander icon) ---
+    # --- CSS (Updated for consistent styling and fixing expander icon, plus disabling keyboard navigation) ---
     st.markdown(
         f"""
         <style>
@@ -2291,7 +2290,33 @@ with tabs[8]:
         .team-advisors-tab .connect-icon {{
             font-size: 16px;
         }}
+        
+        /* Specific CSS to make the expander icons invisible and disable keyboard navigation */
+        div[data-testid="stExpander"] details summary svg {{
+            color: #1B3C53 !important;
+        }}
+        div[data-testid="stExpander"] details summary:focus {{
+            outline: none !important;
+        }}
+        div[data-testid="stExpander"] details summary::-webkit-details-marker {{
+            display: none !important; /* Hides the default arrow for expanders */
+        }}
+        div[data-testid="stExpander"] details {{
+            pointer-events: auto; /* Ensure the expander is still clickable */
+        }}
         </style>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {{
+            const expanders = document.querySelectorAll('div[data-testid="stExpander"] details summary');
+            expanders.forEach(expander => {{
+                expander.addEventListener('keydown', function(event) {{
+                    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {{
+                        event.preventDefault(); /* Prevent default arrow key navigation */
+                    }}
+                }});
+            }});
+        }});
+        </script>
         """,
         unsafe_allow_html=True
     )

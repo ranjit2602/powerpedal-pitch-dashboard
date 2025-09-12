@@ -1668,36 +1668,21 @@ with tabs[6]:
         .highlights-section ul li {
             color: #000000;
         }
-        /* Mobile-specific styles for zoomable image */
-        .mobile-zoom-container {
-            overflow: scroll; /* Enable scrolling for zoom/pan */
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        .zoomable-image-container {
             width: 100%;
-            max-width: 100%; /* Ensure it fits parent */
-            margin: auto;
-            display: none; /* Hide by default */
-        }
-        .mobile-zoom-container img {
-            max-width: none; /* Allow image to exceed container width for zoom */
-            width: 1500px; /* Forces horizontal scroll */
+            max-width: 100%;
             height: auto;
+            overflow: scroll;
+            -webkit-overflow-scrolling: touch;
+            text-align: center;
+            margin: auto;
             display: block;
         }
-
-        /* Show mobile-specific zoom container only on small screens */
-        @media (max-width: 768px) {
-            .mobile-zoom-container {
-                display: block;
-            }
-            .desktop-image-wrapper {
-                display: none; /* Hide desktop image on small screens */
-            }
-        }
-
-        /* Desktop-specific image wrapper (for st.image) */
-        .desktop-image-wrapper {
-            display: block; /* Show by default */
-            text-align: center;
+        .zoomable-image {
+            max-width: none;
+            height: auto;
+            width: 1500px;
+            display: block;
         }
         </style>
         """,
@@ -1711,21 +1696,8 @@ with tabs[6]:
     with col_img:
         image_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/financial.png"
         try:
-            # HTML for desktop magnify effect
-            st.markdown(
-                f'<div class="desktop-image-wrapper">'
-                f'<img src="{image_url}" alt="PowerPedal Growth Vision" style="max-width: 100%;">'
-                f'</div>',
-                unsafe_allow_html=True
-            )
-            # HTML for mobile zoom
-            st.markdown(
-                f'<div class="mobile-zoom-container">'
-                f'<img src="{image_url}" class="mobile-zoom-container" alt="PowerPedal Growth Vision">'
-                f'</div>',
-                unsafe_allow_html=True
-            )
-            st.caption("PowerPedal Growth Vision")
+            st.image(image_url, caption="PowerPedal Growth Vision", use_container_width=True)
+            st.markdown(f'<a href="{image_url}" target="_blank">View Full-Size Image</a>', unsafe_allow_html=True)
         except Exception:
             st.warning("Image file not found at: " + image_url)
             st.markdown(
@@ -1867,7 +1839,7 @@ with tabs[6]:
         hovermode='x unified',
         height=400
     )
-    st.plotly_chart(fig, use_container_width=True, config={'staticPlot': True})
+    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
     st.markdown('---')
     st.subheader(f"Detailed Financial Table for {selected_scenario}")

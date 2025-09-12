@@ -1231,7 +1231,7 @@ with tabs[4]:
             margin: 10px 0;
         }
         .details-card p {
-            font-size: 14px;
+            font-size: 16px; /* Increased from 14px to 16px */
             line-height: 1.5;
             margin: 5px 0;
         }
@@ -1300,7 +1300,6 @@ with tabs[4]:
         """,
         unsafe_allow_html=True
     )
-
 # ---- TAB 5: Go-to-Market Strategy ----
 with tabs[5]:
     # Minimal CSS for Go-to-Market Tab
@@ -2108,27 +2107,28 @@ with tabs[8]:
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #2e2e2e, #1B3C53);
-            border: 3px solid #00FF7F;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
+            border: 2px solid #78C841;
+            border-radius: 12px;
             padding: 15px !important;
             margin: 15px;
             max-width: 250px !important;
             width: 100%;
             box-sizing: border-box;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            transition: transform 0.4s ease, box-shadow 0.4s ease, border 0.4s ease;
             text-align: center;
             text-decoration: none; /* Ensure no underline on link */
         }}
         .team-advisors-tab .profile-container:hover {{
             transform: scale(1.07);
-            box-shadow: 0 0 15px rgba(0, 255, 127, 0.7);
+            box-shadow: 0 0 15px rgba(120, 200, 65, 0.6);
+            border: 3px solid #A8F1FF;
         }}
         .team-advisors-tab .profile-image {{
             width: 120px !important;
             height: 120px !important;
             border-radius: 50%;
-            object-fit: cover; /* Changed to cover for consistent fill */
+            object-fit: cover;
             border: 2px solid #A8F1FF;
             padding: 2px;
             background: #FFFFFF;
@@ -2136,7 +2136,7 @@ with tabs[8]:
             margin: 0 auto;
         }}
         .team-advisors-tab .profile-name {{
-            color: #00FF7F;
+            color: #78C841;
             font-size: 18px;
             font-weight: 600;
             margin: 10px 0 5px 0;
@@ -2151,8 +2151,8 @@ with tabs[8]:
             width: 100%;
         }}
         .team-advisors-tab .profile-details {{
-            color: #FFF5F2;
-            font-size: 12px;
+            color: #A8F1FF;
+            font-size: 14px;
         }}
         .team-advisors-tab .collage-grid {{
             display: flex;

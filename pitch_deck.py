@@ -128,10 +128,11 @@ st.markdown(
                 white-space: nowrap; /* Keep logo and 'powerpedal' on one line */
             }
             .main-title-logo-container img {
-                height: 4vw !important; /* Scales with viewport width for better alignment */
+                height: 4.5vw !important; /* Adjusted to better align with the 'p' */
+                vertical-align: text-bottom !important;
             }
             .powerpedal-wordmark {
-                font-size: 1.1em !important; /* Slightly increases the wordmark size relative to h1 */
+                font-size: 1.2em !important; /* Increased wordmark size */
             }
             .main-title-tagline {
                 font-size: 0.6em !important; /* Relative to the h1 font size */

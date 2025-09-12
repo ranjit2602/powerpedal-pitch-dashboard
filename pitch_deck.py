@@ -108,6 +108,9 @@ st.markdown(
         
         /* --- Mobile-specific styles (on screens <= 768px) --- */
         @media (max-width: 768px) {
+            .st-emotion-cache-18j13t5 { /* Targets the main container of the page */
+                padding-top: 1rem !important;
+            }
             .main-title {
                 display: flex;
                 flex-direction: column;
@@ -121,10 +124,10 @@ st.markdown(
                 white-space: nowrap; /* Keep logo and 'powerpedal' on one line */
             }
             .main-title-logo-container img {
-                height: 30px !important; /* Larger logo for mobile */
+                height: 28px !important; /* Smaller logo for mobile */
             }
             .main-title-tagline {
-                font-size: 0.7em !important; /* Smaller tagline for mobile */
+                font-size: 0.6em !important; /* Smaller tagline for mobile */
                 margin-left: 0;
             }
             .stTabs [data-baseweb="tab-list"] {

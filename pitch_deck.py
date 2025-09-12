@@ -2095,7 +2095,7 @@ with tabs[8]:
     st.header("🧑‍🤝‍🧑 Team & Advisors", anchor=False)
     st.caption("Meet the Visionaries Powering Our Mission")
 
-    # --- CSS (Updated for profile-image fit) ---
+    # --- CSS (Updated for consistent styling and fixing expander icon) ---
     st.markdown(
         f"""
         <style>
@@ -2117,12 +2117,13 @@ with tabs[8]:
             box-sizing: border-box;
             transition: transform 0.4s ease, box-shadow 0.4s ease, border 0.4s ease;
             text-align: center;
-            text-decoration: none; /* Ensure no underline on link */
+            text-decoration: none;
         }}
         .team-advisors-tab .profile-container:hover {{
             transform: scale(1.07);
-            box-shadow: 0 0 15px rgba(120, 200, 65, 0.6);
+            background: linear-gradient(135deg, #2e2e2e, #1B3C53);
             border: 3px solid #A8F1FF;
+            box-shadow: 0 0 15px rgba(120, 200, 65, 0.6);
         }}
         .team-advisors-tab .profile-image {{
             width: 120px !important;
@@ -2351,7 +2352,7 @@ with tabs[8]:
                         </div>
                     </a>
                 """, unsafe_allow_html=True)
-                with st.expander(f"About {member['name']}"):
+                with st.expander(f"About"):
                     st.markdown(f'<div class="team-advisors-tab profile-details">{member["bio"]}</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="team-advisors-tab summary-text">Our core team drives innovation and execution to lead our e-mobility revolution.</div>', unsafe_allow_html=True)
@@ -2398,7 +2399,7 @@ with tabs[8]:
                         </div>
                     </a>
                 """, unsafe_allow_html=True)
-                with st.expander(f"About {advisor['name']}"):
+                with st.expander(f"About"):
                     st.markdown(f'<div class="team-advisors-tab profile-details">{advisor["bio"]}</div>', unsafe_allow_html=True)
     st.markdown('<div class="team-advisors-tab summary-text">Our advisors bring world-class expertise to propel our global impact.</div>', unsafe_allow_html=True)
     st.markdown('<hr class="team-advisors-tab section-divider">', unsafe_allow_html=True)

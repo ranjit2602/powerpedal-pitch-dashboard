@@ -2638,126 +2638,161 @@ with tabs[9]:
     import numpy as np
 
     # --- Header ---
-    st.header("💰 Funding Ask & Use", anchor=False)
-    st.caption("Our Strategic Roadmap for Investment and Growth")
+    st.header("💰 Pre-Seed Requirement (2025)", anchor=False)
+    st.caption("A Detailed Look at Our Strategic Investment Plan")
 
-    # --- Data Preparation ---
+    # --- Data Preparation based on images ---
+    # Year 1 Data (from provided image)
     year1_data = [
-        {"milestone": "Functional Version 1 Development", "timeline": "Month 1-2", "cost_lakh": 26.2, "category": "R&D", "year": "Year 1"},
-        {"milestone": "System Integration & Testing", "timeline": "Month 3-4", "cost_lakh": 18.5, "category": "R&D", "year": "Year 1"},
-        {"milestone": "Manufacturing Preparation & Supply Chain Setup (100 units)", "timeline": "Month 5-6", "cost_lakh": 17.72, "category": "Manufacturing", "year": "Year 1"},
-        {"milestone": "Production Scaling", "timeline": "Month 7-8", "cost_lakh": 22.0, "category": "Manufacturing", "year": "Year 1"},
-        {"milestone": "Business Expansion & OEM Partnerships", "timeline": "Month 9-10", "cost_lakh": 18.0, "category": "Business Expansion", "year": "Year 1"},
-        {"milestone": "Entry into Europe & US Markets", "timeline": "Month 11-12", "cost_lakh": 17.58, "category": "Business Expansion", "year": "Year 1"},
+        {"milestone": "Functional Version 1 Development", "timeline": "Month 1-2", "cost_lakh": 26.2, "category": "R&D"},
+        {"milestone": "System Integration & Testing", "timeline": "Month 3-4", "cost_lakh": 18.5, "category": "R&D"},
+        {"milestone": "Manufacturing Preparation & Supply Chain Setup (100 units)", "timeline": "Month 5-6", "cost_lakh": 17.72, "category": "Manufacturing"},
+        {"milestone": "Production Scaling", "timeline": "Month 7-8", "cost_lakh": 22.0, "category": "Manufacturing"},
+        {"milestone": "Business Expansion & OEM Partnerships", "timeline": "Month 9-10", "cost_lakh": 18.0, "category": "Business Expansion"},
+        {"milestone": "Entry into Europe & US Markets", "timeline": "Month 11-12", "cost_lakh": 17.58, "category": "Business Expansion"},
     ]
 
+    # Year 2 Data (extrapolated for a 24-month plan as in the original code)
     year2_data = [
-        {"milestone": "Mass Manufacturing (10,000 units)", "timeline": "Month 13-15", "cost_lakh": 80.0, "category": "Manufacturing", "year": "Year 2"},
-        {"milestone": "Global Certifications & Compliance", "timeline": "Month 16-17", "cost_lakh": 40.0, "category": "Compliance", "year": "Year 2"},
-        {"milestone": "International OEM Partnerships", "timeline": "Month 18-19", "cost_lakh": 60.0, "category": "Business Expansion", "year": "Year 2"},
-        {"milestone": "Manufacturing Facility Expansion", "timeline": "Month 20-21", "cost_lakh": 50.0, "category": "Manufacturing", "year": "Year 2"},
-        {"milestone": "Final Scaling & Marketing Push", "timeline": "Month 22-24", "cost_lakh": 50.0, "category": "Business Expansion", "year": "Year 2"},
+        {"milestone": "Mass Manufacturing (10,000 units)", "timeline": "Month 13-15", "cost_lakh": 80.0, "category": "Manufacturing"},
+        {"milestone": "Global Certifications & Compliance", "timeline": "Month 16-17", "cost_lakh": 40.0, "category": "Compliance"},
+        {"milestone": "International OEM Partnerships", "timeline": "Month 18-19", "cost_lakh": 60.0, "category": "Business Expansion"},
+        {"milestone": "Manufacturing Facility Expansion", "timeline": "Month 20-21", "cost_lakh": 50.0, "category": "Manufacturing"},
+        {"milestone": "Final Scaling & Marketing Push", "timeline": "Month 22-24", "cost_lakh": 50.0, "category": "Business Expansion"},
     ]
 
+    # Combine all data for charts and tables
     all_data = year1_data + year2_data
     df = pd.DataFrame(all_data)
+    
+    # Calculate totals
+    total_funding_ask = df['cost_lakh'].sum()
+    year1_total = sum(d['cost_lakh'] for d in year1_data)
+    year2_total = sum(d['cost_lakh'] for d in year2_data)
 
-    # --- CSS for Styling ---
+    # --- CSS Styling for a cleaner look ---
     st.markdown(
         """
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap');
-        
-        .funding-tab {
-            font-family: 'Figtree', sans-serif;
-        }
-        .funding-tab .st-emotion-cache-1c7y3v2 { /* stTabs container */
-            background-color: #1E1E1E;
+        .metric-container {
+            padding: 20px;
             border-radius: 10px;
-            padding: 10px;
-        }
-        .funding-tab .st-emotion-cache-1r6slb0 { /* Expander header color */
-            color: #A8F1FF !important;
-        }
-        .funding-tab .st-emotion-cache-13k9f44, .st-emotion-cache-s1h49r { /* Expander content styling */
             background-color: #2e2e2e;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-        .funding-tab .st-emotion-cache-16j0542 { /* Expander arrow color */
+        .metric-label {
+            font-size: 1.2rem;
             color: #A8F1FF;
-        }
-        .milestone-title {
-            font-size: 18px;
             font-weight: 600;
-            color: #FFFFFF;
-            margin: 0;
         }
-        .milestone-cost {
-            font-size: 20px;
+        .metric-value {
+            font-size: 2.5rem;
             font-weight: 700;
             color: #00FF7F;
-            margin: 0;
+            margin-top: 5px;
         }
-        .milestone-timeline {
-            font-size: 14px;
-            color: #A8F1FF;
-            opacity: 0.8;
+        .st-emotion-cache-1r6slb0, .st-emotion-cache-16j0542 {
+            color: #A8F1FF !important;
         }
-        .milestone-header {
-            display: flex;
-            justify-content: space-between;
+        .st-emotion-cache-13k9f44 {
+            background-color: #2e2e2e !important;
+            border-radius: 8px !important;
+            padding: 1rem !important;
+        }
+        .st-emotion-cache-16ajthk {
+            background-color: #2e2e2e;
+        }
+
+        .row-header {
+            display: grid;
+            grid-template-columns: 4fr 2fr 2fr;
+            padding: 10px 0;
+            border-bottom: 2px solid #A8F1FF;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+        .row-item {
+            display: grid;
+            grid-template-columns: 4fr 2fr 2fr;
+            padding: 8px 0;
+            border-bottom: 1px solid #3e3e3e;
+            color: #FFFFFF;
             align-items: center;
-            margin-bottom: 12px;
+        }
+        .milestone-text {
+            color: #FFFFFF;
+        }
+        .timeline-text {
+            color: #A8F1FF;
+        }
+        .cost-text {
+            color: #00FF7F;
+            font-weight: bold;
+            text-align: right;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
 
-    # --- 1. Top-Line Metrics ---
-    with st.container():
-        st.markdown('<div class="funding-tab">', unsafe_allow_html=True)
-        col1, col2, col3 = st.columns(3)
-        col1.metric(label="Total Funding Ask", value="₹ 4 Crore", delta="Pre-Seed Round")
-        col2.metric(label="Implementation Timeline", value="24 Months")
-        col3.metric(label="Primary Goal", value="Full Market Entry & Scale")
-        st.markdown('</div>', unsafe_allow_html=True)
+    # --- 1. Top-Line Metrics Section ---
+    st.markdown("## Funding Overview")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown(f'<div class="metric-container"><div class="metric-label">Total Ask</div><div class="metric-value">₹ {total_funding_ask/100:.1f} Cr</div></div>', unsafe_allow_html=True)
+    with col2:
+        st.markdown(f'<div class="metric-container"><div class="metric-label">Year 1 Budget</div><div class="metric-value">₹ {year1_total/100:.2f} Cr</div></div>', unsafe_allow_html=True)
+    with col3:
+        st.markdown(f'<div class="metric-container"><div class="metric-label">Year 2 Budget</div><div class="metric-value">₹ {year2_total/100:.2f} Cr</div></div>', unsafe_allow_html=True)
 
     st.markdown("---")
 
     # --- 2. Visual Breakdown: Donut Chart ---
-    st.subheader("Visual Use of Proceeds")
-
-    # Aggregate data for the donut chart
+    st.subheader("Distribution of Funds by Category")
     category_costs = df.groupby('category')['cost_lakh'].sum().reset_index()
 
-    # Create the donut chart
+    # Define a consistent color map for categories
+    color_map = {
+        "R&D": '#00FF7F',
+        "Manufacturing": '#FFA500',
+        "Business Expansion": '#1E90FF',
+        "Compliance": '#A8F1FF'
+    }
+
     fig_donut = go.Figure(data=[go.Pie(
         labels=category_costs['category'],
         values=category_costs['cost_lakh'],
         hole=.6,
-        hoverinfo='label+percent',
+        hoverinfo='label+percent+value',
         textinfo='label+percent',
-        texttemplate='%{label}<br>₹%{value:.2f}L',
-        marker=dict(colors=['#00FF7F', '#A8F1FF', '#FFA500', '#1E90FF']),
-        pull=[0.02, 0.02, 0.02, 0.02]
+        texttemplate='<b>%{label}</b><br>₹%{value:.2f}L',
+        marker=dict(colors=[color_map[c] for c in category_costs['category']]),
+        pull=[0.02, 0.02, 0.02, 0.02],
+        insidetextorientation='radial',
+        domain=dict(x=[0, 1], y=[0.15, 0.85]),
+        marker_line_color='#2e2e2e', marker_line_width=2
     )])
 
-    # Add the total value in the center of the donut chart
+    # Add the total value in the center
     fig_donut.add_annotation(
-        text="₹4 Cr",
+        text=f"₹{total_funding_ask/100:.1f} Cr",
         x=0.5, y=0.5,
-        font_size=24,
+        font_size=28,
         font_color="#FFFFFF",
-        font_weight="bold",
         showarrow=False
+    )
+    
+    fig_donut.update_traces(
+        marker=dict(line=dict(color='#2e2e2e', width=2)),
+        hoverlabel=dict(bgcolor="black", font_size=13, font_family="Figtree")
     )
 
     fig_donut.update_layout(
-        showlegend=False,
-        height=400,
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=0.01, xanchor="center", x=0.5, font=dict(color="#FFFFFF")),
+        height=450,
         margin=dict(t=0, b=0, l=0, r=0),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
@@ -2767,52 +2802,34 @@ with tabs[9]:
 
     st.markdown("---")
 
-    # --- 3. Interactive Timeline with Expanders ---
-    st.subheader("Interactive Milestone Timeline")
+    # --- 3. Detailed Milestone Timeline ---
+    st.subheader("Detailed Milestone Timeline")
 
-    year1_total = sum(d['cost_lakh'] for d in year1_data)
-    year2_total = sum(d['cost_lakh'] for d in year2_data)
+    # Display Year 1 milestones with aligned columns
+    st.markdown("### Year 1: Building the Foundation")
+    st.markdown(
+        '<div class="row-header"><span>Milestone</span><span>Timeline</span><span style="text-align: right;">Cost (₹ Lakhs)</span></div>',
+        unsafe_allow_html=True
+    )
+    for item in year1_data:
+        st.markdown(
+            f'<div class="row-item"><span>{item["milestone"]}</span><span>{item["timeline"]}</span><span class="cost-text">{item["cost_lakh"]:.2f} L</span></div>',
+            unsafe_allow_html=True
+        )
     
-    # Define a consistent color map for categories
-    color_map = {
-        "R&D": '#00FF7F',
-        "Manufacturing": '#FFA500',
-        "Business Expansion": '#1E90FF',
-        "Compliance": '#A8F1FF'
-    }
+    st.markdown("---")
 
-    all_milestones = [
-        ("Year 1: Building the Foundation (Total: ₹ 1.2 Cr)", year1_data, year1_total),
-        ("Year 2: Scaling for Growth (Total: ₹ 2.8 Cr)", year2_data, year2_total)
-    ]
-
-    for title, data, total in all_milestones:
-        st.markdown(f"### {title}")
-        for item in data:
-            with st.expander(f"🗓️ {item['timeline']}: {item['milestone']} - ₹ {item['cost_lakh']:.2f} L"):
-                st.write(f"**Category:** {item['category']}")
-                st.write(f"**Cost as % of {title.split(':')[0]} Budget:** {item['cost_lakh'] / total * 100:.2f}%")
-                
-                fig_bar = go.Figure(go.Bar(
-                    x=[item['cost_lakh']],
-                    y=[''],
-                    orientation='h',
-                    marker_color=color_map[item['category']],
-                    showlegend=False,
-                    hoverinfo='none',
-                    width=0.2
-                ))
-                fig_bar.update_layout(
-                    xaxis_title="Cost in Lakhs (₹)",
-                    xaxis_range=[0, max(d['cost_lakh'] for d in data)],
-                    height=100,
-                    margin=dict(t=20, b=20, l=0, r=20),
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    font=dict(color="#FFFFFF")
-                )
-                st.plotly_chart(fig_bar, use_container_width=True)
-        st.markdown("---")
+    # Display Year 2 milestones with aligned columns
+    st.markdown("### Year 2: Scaling for Growth")
+    st.markdown(
+        '<div class="row-header"><span>Milestone</span><span>Timeline</span><span style="text-align: right;">Cost (₹ Lakhs)</span></div>',
+        unsafe_allow_html=True
+    )
+    for item in year2_data:
+        st.markdown(
+            f'<div class="row-item"><span>{item["milestone"]}</span><span>{item["timeline"]}</span><span class="cost-text">{item["cost_lakh"]:.2f} L</span></div>',
+            unsafe_allow_html=True
+        )
 
 with tabs[10]:
     st.header("🚀 Future Technology", anchor=False)

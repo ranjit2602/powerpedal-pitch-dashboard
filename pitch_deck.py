@@ -18,7 +18,7 @@ st.markdown(
     """
     <h1 class='main-title'>
         <div class='main-title-logo-container'>
-            <img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/logo.png" style="height: 40px; vertical-align: middle;">
+            <img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/logo.png" style="height: 40px; vertical-align: text-bottom;">
             <span class='powerpedal-wordmark'><i>powerpedal</i></span>
         </div>
         <div class='main-title-tagline'>
@@ -103,7 +103,10 @@ st.markdown(
         }
         .main-title-logo-container img {
             height: 40px;
-            vertical-align: middle;
+            vertical-align: text-bottom;
+        }
+        .powerpedal-wordmark {
+            font-size: 1.1em; /* Slightly increases the wordmark size */
         }
         
         /* --- Mobile-specific styles (on screens <= 768px) --- */
@@ -127,6 +130,9 @@ st.markdown(
             .main-title-logo-container img {
                 height: 4vw !important; /* Scales with viewport width for better alignment */
             }
+            .powerpedal-wordmark {
+                font-size: 1.1em; /* Slightly increases the wordmark size relative to h1 */
+            }
             .main-title-tagline {
                 font-size: 0.6em !important; /* Relative to the h1 font size */
                 margin-left: 0;
@@ -143,6 +149,9 @@ st.markdown(
             }
             .stTabs [data-baseweb="tab"] > div {
                 font-size: 8px !important;
+            }
+            summary {
+                font-size: 14px !important;
             }
         }
         /* --- End of mobile styles --- */

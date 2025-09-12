@@ -1657,7 +1657,7 @@ with tabs[6]:
             border-radius: 10px;
             padding: 20px;
             margin: 10px 0;
-            color: #000000; /* Corrected to black for visibility */
+            color: #000000;
         }
         .highlights-section p {
             color: #000000;
@@ -1667,6 +1667,19 @@ with tabs[6]:
         }
         .highlights-section ul li {
             color: #000000;
+        }
+        .zoomable-image-container {
+            overflow: auto;
+            touch-action: pan-x pan-y;
+            cursor: grab;
+            margin: 0 auto;
+            text-align: center;
+            width: 100%;
+        }
+        .zoomable-image {
+            max-width: 100%;
+            height: auto;
+            width: 1500px;
         }
         </style>
         """,
@@ -1680,7 +1693,13 @@ with tabs[6]:
     with col_img:
         image_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/financial.png"
         try:
-            st.image(image_url, caption="PowerPedal Growth Vision", use_container_width=True)
+            st.markdown(
+                f'<div class="zoomable-image-container">'
+                f'<img src="{image_url}" class="zoomable-image" alt="PowerPedal Growth Vision">'
+                f'</div>',
+                unsafe_allow_html=True
+            )
+            st.caption("PowerPedal Growth Vision")
         except Exception:
             st.warning("Image file not found at: " + image_url)
             st.markdown(
@@ -1871,13 +1890,13 @@ with tabs[6]:
     st.subheader("Key Investor Highlights")
     st.markdown(
         """
-        <div class="highlights-section" style="color: #FFFFFF;">
+        <div class="highlights-section">
             <ul style="list-style-type: none; padding-left: 0;">
-                <li style="margin-bottom: 5px; color: #000000;">💡 **Capital Efficiency:** Foundation built on grant money with minimal dilution—R&D, patents, and pilots were achieved capital-efficiently.</li>
-                <li style="margin-bottom: 5px; color: #000000;">🤝 **Strategic Partnership:** Equity was given only to a strategic partner, securing early distribution and go-to-market strength.</li>
-                <li style="margin-bottom: 5px; color: #000000;">📈 **Early Profitability:** Profitability is achieved at just 10K units (2026), making the company EBITDA positive far earlier than typical hardware startups.</li>
-                <li style="margin-bottom: 5px; color: #000000;">🚀 **Scalable Growth:** A 10x growth is projected in 2027, driven by strategic European expansion and OEM adoption.</li>
-                <li style="margin-bottom: 5px; color: #000000;">🏭 **Lean Operations:** The capital-light scaling model uses contract manufacturing to keep costs lean, with margins expanding towards ~30% by 2030.</li>
+                <li style="margin-bottom: 5px; color: #000000;">💡 <b>Capital Efficiency:</b> Foundation built on grant money with minimal dilution—R&D, patents, and pilots were achieved capital-efficiently.</li>
+                <li style="margin-bottom: 5px; color: #000000;">🤝 <b>Strategic Partnership:</b> Equity was given only to a strategic partner, securing early distribution and go-to-market strength.</li>
+                <li style="margin-bottom: 5px; color: #000000;">📈 <b>Early Profitability:</b> Profitability is achieved at just 10K units (2026), making the company EBITDA positive far earlier than typical hardware startups.</li>
+                <li style="margin-bottom: 5px; color: #000000;">🚀 <b>Scalable Growth:</b> A 10x growth is projected in 2027, driven by strategic European expansion and OEM adoption.</li>
+                <li style="margin-bottom: 5px; color: #000000;">🏭 <b>Lean Operations:</b> The capital-light scaling model uses contract manufacturing to keep costs lean, with margins expanding towards ~30% by 2030.</li>
             </ul>
         </div>
         """,

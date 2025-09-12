@@ -1126,7 +1126,7 @@ with tabs[3]:
     # HMI Control Unit Card - Centered
     col7, col8, col9 = st.columns([1, 4, 1])
     with col8:
-        st.markdown(f'<div style="text-align: center; border: 2px solid #78C841; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e);"><h3>HMI (Human–Machine Interface) – The rider’s handlebar command center</h3><img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powershift.png" style="max-width: 250px; border-radius: 8px; margin-top: 15px;" /><p style="color: #A8F1FF; margin-top: 15px;">Meet the HMI, the rider’s sleek handlebar command center that puts control in their hands. Twist the throttle for 0–100% variable control—though OEM-set speed limits keep it safe—and flip the assist level selector from eco cruising to a full-power boost. A battery State of Charge indicator, accurate to ±1%, reveals the rider’s range at a glance, while the horn switch delivers quick safety alerts in traffic. Plus, the built-in USB port powers the rider’s lights or charges their phone mid-ride—it’s a multitasking marvel!</p></div>', unsafe_allow_html=True)    
+        st.markdown(f'<div style="text-align: center; border: 2px solid #78C841; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e);"><h3>HMI (Human–Machine Interface) – The rider’s handlebar command center</h3><img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powershift.png" style="max-width: 250px; border-radius: 8px; margin-top: 15px;" /><p style="color: #A8F1FF; margin-top: 15px;">Meet the HMI, the rider’s sleek handlebar command center that puts control in their hands. Twist the throttle for 0–100% variable control—though OEM-set speed limits keep it safe—and flip the assist level selector from eco cruising to a full-power boost. A battery State of Charge indicator, accurate to ±1%, reveals the rider’s range at a glance, while the horn switch delivers quick safety alerts in traffic. Plus, the built-in USB port powers the rider’s lights or charges their phone mid-ride—it’s a multitasking marvel!</p></div>', unsafe_allow_html=True)
     st.header("PowerPedal Mobile App – Your eBike Companion")
     cols = st.columns(4)
     app_screenshots = [
@@ -1148,7 +1148,7 @@ with tabs[3]:
     </div>
     """, unsafe_allow_html=True)
 
-    st.divider()    
+    st.divider()
     st.header("Testing & Performance")
     st.caption("Putting PowerPedal to the Test")
 
@@ -1161,16 +1161,22 @@ with tabs[3]:
 
     st.divider()
 
-    col_v1, col_v2 = st.columns(2)
-    with col_v1:
-        st.video("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/videos/powerpedal_efficiency_testing.mp4")
-        st.markdown('<h4 style="text-align: center;">Efficiency Testing</h4>', unsafe_allow_html=True)
-        st.markdown('<p style="text-align: center;">Explore how PowerPedal optimizes energy use across various riding conditions, showcasing its superior efficiency and range extension.</p>', unsafe_allow_html=True)
-    with col_v2:
-        st.video("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/videos/powerpedal_terrain_testing.mp4")
-        st.markdown('<h4 style="text-align: center;">Terrain Testing</h4>', unsafe_allow_html=True)
-        st.markdown('<p style="text-align: center;">Witness PowerPedal’s performance across diverse terrains, from steep hills to rough trails, proving its versatility and durability.</p>', unsafe_allow_html=True)
-
+    # Center videos and text side by side with space between
+    st.markdown("""
+        <div style="display: flex; flex-direction: row; justify-content: center; gap: 20px; max-width: 700px; margin: 20px auto;">
+            <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e); border: 2px solid #78C841; border-radius: 12px; width: 330px;">
+                <h4 style="color: #78C841;">Efficiency Testing</h4>
+                <video src="https://www.dropbox.com/scl/fi/twxuhmmg0wgpnbx8fsqnz/powerpedal_efficiency_testing.mp4?rlkey=he1nnr7mqicrovk3655gg8w2j&st=bltkehlt&dl=1" width="300" controls style="display: block; margin: 0 auto;"></video>
+                <p style="color: #A8F1FF; margin-top: 15px;">Explore how PowerPedal optimizes energy use across various riding conditions, showcasing its superior efficiency and range extension.</p>
+            </div>
+            <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e); border: 2px solid #78C841; border-radius: 12px; width: 330px;">
+                <h4 style="color: #78C841;">Terrain Testing</h4>
+                <video src="https://www.dropbox.com/scl/fi/2nv6z20pfnnrg9skipljs/powerpedal_terrain_testing.mp4?rlkey=gh5tannj0jx5l2lohen09xc4z&st=x3oep0fy&dl=1" width="300" controls style="display: block; margin: 0 auto;"></video>
+                <p style="color: #A8F1FF; margin-top: 15px;">Witness PowerPedal’s performance across diverse terrains, from steep hills to rough trails, proving its versatility and durability.</p>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
 with tabs[4]:
     # Top Section: Title & Tagline
     st.markdown(

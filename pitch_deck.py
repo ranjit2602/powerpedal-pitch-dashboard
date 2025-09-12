@@ -1669,17 +1669,16 @@ with tabs[6]:
             color: #000000;
         }
         .zoomable-image-container {
-            overflow: auto;
-            touch-action: pan-x pan-y;
-            cursor: grab;
-            margin: 0 auto;
-            text-align: center;
             width: 100%;
+            height: auto;
+            overflow: scroll;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-x pan-y;
+            text-align: center;
         }
         .zoomable-image {
             max-width: 100%;
             height: auto;
-            width: 1500px;
         }
         </style>
         """,
@@ -1695,7 +1694,7 @@ with tabs[6]:
         try:
             st.markdown(
                 f'<div class="zoomable-image-container">'
-                f'<img src="{image_url}" class="zoomable-image" alt="PowerPedal Growth Vision">'
+                f'<img src="{image_url}" class="zoomable-image" alt="PowerPedal Growth Vision" style="width: 1500px;">'
                 f'</div>',
                 unsafe_allow_html=True
             )
@@ -1715,7 +1714,7 @@ with tabs[6]:
     unit_sales_base = [1000, 10000, 100000, 200000, 500000, 1000000]
     revenue_base = [0.85e7, 8.5e7, 124e7, 237.45e7, 654e7, 1467.5e7]
     years = [2025, 2026, 2027, 2028, 2029, 2030]
-    fixed_cogs_2025 = 8500  # Fixed COGS for 2025
+    fixed_cogs_2025 = 8500
     asp_powerpedal = 10000
     cogs_powerpedal = 6000
     opex_percent = 0.15
@@ -1724,7 +1723,6 @@ with tabs[6]:
     # Financial Calculations for all scenarios
     def calculate_scenario(scenario_factor):
         unit_sales = [int(u * scenario_factor) for u in unit_sales_base]
-        
         cogs_decline_rate = 0.02
         base_tax_rate = 0.25
         tax_exemption_years = [2025, 2026, 2027]
@@ -1842,7 +1840,7 @@ with tabs[6]:
         hovermode='x unified',
         height=400
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
     st.markdown('---')
     st.subheader(f"Detailed Financial Table for {selected_scenario}")

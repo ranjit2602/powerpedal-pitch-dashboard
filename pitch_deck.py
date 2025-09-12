@@ -111,8 +111,8 @@ st.markdown(
         
         /* --- Mobile-specific styles (on screens <= 768px) --- */
         @media (max-width: 768px) {
-            .st-emotion-cache-18j13t5 { /* Targets the main container of the page */
-                padding-top: 1rem !important;
+            .stApp > header {
+                padding-top: 0.5rem !important; /* Drastically reduces top spacing */
             }
             .main-title {
                 display: flex;
@@ -131,7 +131,7 @@ st.markdown(
                 height: 4vw !important; /* Scales with viewport width for better alignment */
             }
             .powerpedal-wordmark {
-                font-size: 1.1em; /* Slightly increases the wordmark size relative to h1 */
+                font-size: 1.1em !important; /* Slightly increases the wordmark size relative to h1 */
             }
             .main-title-tagline {
                 font-size: 0.6em !important; /* Relative to the h1 font size */

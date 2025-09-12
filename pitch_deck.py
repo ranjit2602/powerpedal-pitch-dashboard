@@ -1891,8 +1891,6 @@ with tabs[6]:
     )
 
     st.markdown('</div>', unsafe_allow_html=True)
-import streamlit as st
-import os
 
 with tabs[7]:
     # --- Styles specific to this storytelling timeline ---
@@ -2047,11 +2045,8 @@ with tabs[7]:
     # --- High-level Visual Summary ---
     col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
     with col_img2:
-        timeline_image_path = r"https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images\timeline.png"
-        if os.path.exists(timeline_image_path):
-            st.image(timeline_image_path, caption="A visual summary of our progress.", use_container_width=True)
-        else:
-            st.error(f"Image not found at {timeline_image_path}. Please verify the file exists.")
+        timeline_image_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/timeline.png"
+        st.image(timeline_image_url, caption="A visual summary of our progress.", use_container_width=True)
 
     # --- Enhanced Story Section ---
     st.markdown('<div class="story-section">', unsafe_allow_html=True)
@@ -2145,81 +2140,46 @@ with tabs[7]:
     ]
 
     # --- Building the Vertical Timeline ---
-    try:
-        st.markdown('<div class="timeline-container">', unsafe_allow_html=True)
+    st.markdown('<div class="timeline-container">', unsafe_allow_html=True)
+    
+    for index, milestone in enumerate(milestones_data):
+        st.markdown('<div class="timeline-entry">', unsafe_allow_html=True)
+        col_left, col_center, col_right = st.columns([5, 0.01, 5])
         
-        for index, milestone in enumerate(milestones_data):
-            st.markdown('<div class="timeline-entry">', unsafe_allow_html=True)
-            col_left, col_center, col_right = st.columns([5, 0.01, 5])  # Minimized center column width
-            
-            # Format the expander title
-            title = f"{milestone['icon']} **{milestone['name']}**"
-            if milestone['value'] != 'N/A':
-                title += f" — *{milestone['value']}*"
-            
-            # Assign unique class based on milestone type
-            class_name = "expander-product" if milestone["type"] == "Product" else "expander-funding"
-            
-            if milestone["type"] == "Product":
-                with col_left:
-                    st.markdown('<div class="timeline-content-left">', unsafe_allow_html=True)
-                    with st.container():
-                        with st.expander(title, expanded=False):
-                            st.markdown(f'<div class="{class_name}">', unsafe_allow_html=True)
-                            st.write(milestone['details'])
-                            if milestone['media']:
-                                media_path = r"C:\Users\ranji\OneDrive - Switch\Switch\Dashboards\Pitch Dashboard\{}".format(milestone['media'])
-                                if os.path.exists(media_path):
-                                    st.markdown('<div class="timeline-media">', unsafe_allow_html=True)
-                                    if milestone['media'].endswith(('.png', '.jpg', '.jpeg')):
-                                        st.image(media_path, caption=milestone['name'], use_container_width=True)
-                                    elif milestone['media'].endswith('.mp4'):
-                                        st.video(media_path)
-                                    st.markdown('</div>', unsafe_allow_html=True)
-                                else:
-                                    st.error(f"Media not found at {media_path}. Please verify the file exists.")
+        title = f"{milestone['icon']} **{milestone['name']}**"
+        if milestone['value'] != 'N/A':
+            title += f" — *{milestone['value']}*"
+        
+        class_name = "expander-product" if milestone["type"] == "Product" else "expander-funding"
+        
+        if milestone["type"] == "Product":
+            with col_left:
+                st.markdown('<div class="timeline-content-left">', unsafe_allow_html=True)
+                with st.container():
+                    with st.expander(title, expanded=False):
+                        st.markdown(f'<div class="{class_name}">', unsafe_allow_html=True)
+                        st.write(milestone['details'])
+                        if milestone['media']:
+                            st.markdown('<div class="timeline-media">', unsafe_allow_html=True)
+                            if milestone['media'].endswith(('.png', '.jpg', '.jpeg')):
+                                st.image(milestone['media'], caption=milestone['name'], use_container_width=True)
+                            elif milestone['media'].endswith('.mp4'):
+                                st.video(milestone['media'])
                             st.markdown('</div>', unsafe_allow_html=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
-            else:  # Funding milestones
-                with col_right:
-                    st.markdown('<div class="timeline-content-right">', unsafe_allow_html=True)
-                    with st.container():
-                        with st.expander(title, expanded=False):
-                            st.markdown(f'<div class="{class_name}">', unsafe_allow_html=True)
-                            st.write(milestone['details'])
-                            st.markdown('</div>', unsafe_allow_html=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
-            
-            st.markdown('</div>', unsafe_allow_html=True)
+                        st.markdown('</div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+        else:
+            with col_right:
+                st.markdown('<div class="timeline-content-right">', unsafe_allow_html=True)
+                with st.container():
+                    with st.expander(title, expanded=False):
+                        st.markdown(f'<div class="{class_name}">', unsafe_allow_html=True)
+                        st.write(milestone['details'])
+                        st.markdown('</div>', unsafe_allow_html=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
-    except Exception as e:
-        st.error(f"An error occurred while rendering the timeline: {str(e)}")
-
-
-import streamlit as st
-import os
-from pathlib import Path
-import base64
-import time
-
-# Disable all Streamlit caching
-st.set_page_config(page_title="PowerPedal Pitch Deck", layout="wide")
-st.cache_data.clear()
-st.cache_resource.clear()
-try:
-    st.experimental_memo.clear()
-    st.experimental_singleton.clear()
-except AttributeError:
-    pass  # Handle older Streamlit versions
-
-import streamlit as st
-import time
-import base64
-from pathlib import Path
-import os
-import requests
-from io import BytesIO
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ---- TAB 8: Team & Advisors ----
 with tabs[8]:

@@ -111,9 +111,9 @@ st.markdown(
         
         /* --- Mobile-specific styles (on screens <= 768px) --- */
         @media (max-width: 768px) {
-            /* This is the new, more reliable class for padding control */
-            .stApp > header {
-                padding-top: 0.5rem !important; /* Drastically reduces top spacing */
+            /* This targets the 'Welcome' message summary tag */
+            summary {
+                font-size: 12px !important; /* Makes the text significantly smaller on mobile */
             }
             .main-title {
                 display: flex;
@@ -151,9 +151,6 @@ st.markdown(
             }
             .stTabs [data-baseweb="tab"] > div {
                 font-size: 8px !important;
-            }
-            summary {
-                font-size: 14px !important;
             }
         }
         /* --- End of mobile styles --- */

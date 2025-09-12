@@ -2059,8 +2059,8 @@ with tabs[7]:
 
     st.subheader("Our Journey, Step by Step")
     st.markdown(
-        "From a bold idea to a production-ready eBike drive system, our path combines cutting-edge innovation with strategic funding. Explore our milestones below, with product breakthroughs on the left (dark teal expanders) and funding achievements on the right (dark gray-green expanders).",
-        help="Product milestones are highlighted with dark teal expanders (#1A3636), while funding milestones have dark gray-green expanders (#40534C) for clear differentiation."
+        "From a bold idea to a production-ready eBike drive system, our path combines cutting-edge innovation with strategic funding. Explore our milestones below, with product breakthroughs on the left (dark teal expanders) and funding achievements on the right (dark gray-green expanders)."
+        # Removed the 'help' parameter to prevent overlapping text
     )
 
     # --- Data for Milestones (with media only for Product milestones) ---

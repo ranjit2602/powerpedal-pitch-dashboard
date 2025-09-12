@@ -1547,7 +1547,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
-import base64
 
 # ---- TAB 6: Financial Projections ----
 with tabs[6]:
@@ -1669,22 +1668,6 @@ with tabs[6]:
         .highlights-section ul li {
             color: #000000;
         }
-        .zoomable-image-container {
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            overflow: scroll;
-            -webkit-overflow-scrolling: touch;
-            text-align: center;
-            margin: auto;
-            display: block;
-        }
-        .zoomable-image {
-            max-width: none;
-            height: auto;
-            width: 1500px;
-            display: block;
-        }
         </style>
         """,
         unsafe_allow_html=True
@@ -1696,39 +1679,11 @@ with tabs[6]:
     _, col_img, _ = st.columns([1, 4, 1])
     with col_img:
         image_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/financial.png"
-        
-        # HTML for the full-size image page with a black background
-        html_content = f"""
-        <html>
-        <head>
-            <style>
-                body {{
-                    background-color: black;
-                    margin: 0;
-                    padding: 0;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    min-height: 100vh;
-                }}
-                img {{
-                    max-width: 100%;
-                    max-height: 100vh;
-                    object-fit: contain;
-                }}
-            </style>
-        </head>
-        <body>
-            <img src="{image_url}" alt="Full-size PowerPedal Growth Vision">
-        </body>
-        </html>
-        """
-        b64_html = base64.b64encode(html_content.encode()).decode()
-        
         try:
             st.image(image_url, caption="PowerPedal Growth Vision", use_container_width=True)
+            # This button opens the image in a new tab for native zoom/pan
             st.markdown(
-                f'<a href="data:text/html;base64,{b64_html}" target="_blank">'
+                f'<a href="{image_url}" target="_blank" style="text-decoration: none;">'
                 f'<button style="background-color: #2E2E2E; color: #FFFFFF; border: none; padding: 10px 20px; border-radius: 5px;">'
                 f'View Full-Size Image</button></a>',
                 unsafe_allow_html=True

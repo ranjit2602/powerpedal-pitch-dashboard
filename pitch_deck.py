@@ -2094,7 +2094,7 @@ with tabs[8]:
     st.header("🧑‍🤝‍🧑 Team & Advisors", anchor=False)
     st.caption("Meet the Visionaries Powering Our Mission")
 
-    # --- CSS (Updated for consistent styling and fixing expander icon, plus disabling keyboard navigation) ---
+    # --- CSS (Updated to style <details> elements and maintain original styling) ---
     st.markdown(
         f"""
         <style>
@@ -2157,6 +2157,8 @@ with tabs[8]:
         .team-advisors-tab .profile-details {{
             color: #A8F1FF;
             font-size: 14px;
+            line-height: 1.5;
+            margin: 5px 0;
         }}
         .team-advisors-tab .collage-grid {{
             display: flex;
@@ -2291,32 +2293,38 @@ with tabs[8]:
             font-size: 16px;
         }}
         
-        /* Specific CSS to make the expander icons invisible and disable keyboard navigation */
-        div[data-testid="stExpander"] details summary svg {{
-            color: #1B3C53 !important;
+        /* Styling for <details> elements to match original expanders */
+        .team-advisors-tab .details-card {{
+            background: linear-gradient(135deg, #1B3C53, #2e2e2e);
+            border: 2px solid #78C841;
+            border-radius: 12px;
+            padding: 15px;
+            color: #A8F1FF;
+            margin: 10px 0;
+            max-width: 250px;
         }}
-        div[data-testid="stExpander"] details summary:focus {{
-            outline: none !important;
+        .team-advisors-tab .details-card[open] {{
+            background: linear-gradient(135deg, #2e2e2e, #1B3C53);
+            border: 3px solid #A8F1FF !important;
+            box-shadow: 0 0 15px rgba(120, 200, 65, 0.6);
         }}
-        div[data-testid="stExpander"] details summary::-webkit-details-marker {{
-            display: none !important; /* Hides the default arrow for expanders */
+        .team-advisors-tab .details-card summary {{
+            font-size: 18px;
+            font-weight: 600;
+            color: #78C841;
+            cursor: pointer;
+            outline: none;
+            list-style: none; /* Remove default marker */
         }}
-        div[data-testid="stExpander"] details {{
-            pointer-events: auto; /* Ensure the expander is still clickable */
+        .team-advisors-tab .details-card summary::-webkit-details-marker {{
+            display: none; /* Hide default arrow in WebKit browsers */
+        }}
+        .team-advisors-tab .details-card p {{
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 5px 0;
         }}
         </style>
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {{
-            const expanders = document.querySelectorAll('div[data-testid="stExpander"] details summary');
-            expanders.forEach(expander => {{
-                expander.addEventListener('keydown', function(event) {{
-                    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {{
-                        event.preventDefault(); /* Prevent default arrow key navigation */
-                    }}
-                }});
-            }});
-        }});
-        </script>
         """,
         unsafe_allow_html=True
     )
@@ -2380,9 +2388,11 @@ with tabs[8]:
                             <div class="profile-role">{member['role']}</div>
                         </div>
                     </a>
+                    <details class="team-advisors-tab details-card">
+                        <summary>About</summary>
+                        <p class="profile-details">{member['bio']}</p>
+                    </details>
                 """, unsafe_allow_html=True)
-                with st.expander("About"):
-                    st.markdown(f'<div class="team-advisors-tab profile-details">{member["bio"]}</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="team-advisors-tab summary-text">Our core team drives innovation and execution to lead our e-mobility revolution.</div>', unsafe_allow_html=True)
 
@@ -2427,9 +2437,11 @@ with tabs[8]:
                             <div class="profile-role">{advisor['role']}</div>
                         </div>
                     </a>
+                    <details class="team-advisors-tab details-card">
+                        <summary>About</summary>
+                        <p class="profile-details">{advisor['bio']}</p>
+                    </details>
                 """, unsafe_allow_html=True)
-                with st.expander("About"):
-                    st.markdown(f'<div class="team-advisors-tab profile-details">{advisor["bio"]}</div>', unsafe_allow_html=True)
     st.markdown('<div class="team-advisors-tab summary-text">Our advisors bring world-class expertise to propel our global impact.</div>', unsafe_allow_html=True)
     st.markdown('<hr class="team-advisors-tab section-divider">', unsafe_allow_html=True)
 

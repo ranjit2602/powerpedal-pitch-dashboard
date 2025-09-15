@@ -2640,7 +2640,7 @@ with tabs[9]:
     import numpy as np
 
     # --- Header ---
-    st.header("💰 Pre-Seed Requirement (2025)", anchor=False)
+    st.header("💰 Pre-Seed Requirement", anchor=False)
     st.caption("A Detailed Look at Our Strategic Investment Plan")
 
     # --- Data Preparation based on images ---
@@ -2745,9 +2745,9 @@ with tabs[9]:
     with col1:
         st.markdown(f'<div class="metric-container"><div class="metric-label">Total Ask</div><div class="metric-value">₹ {total_funding_ask/100:.1f} Cr</div></div>', unsafe_allow_html=True)
     with col2:
-        st.markdown(f'<div class="metric-container"><div class="metric-label">Year 1 Budget</div><div class="metric-value">₹ {year1_total/100:.2f} Cr</div></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="metric-container"><div class="metric-label">Year 1 Budget(2025)</div><div class="metric-value">₹ {year1_total/100:.2f} Cr</div></div>', unsafe_allow_html=True)
     with col3:
-        st.markdown(f'<div class="metric-container"><div class="metric-label">Year 2 Budget</div><div class="metric-value">₹ {year2_total/100:.2f} Cr</div></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="metric-container"><div class="metric-label">Year 2 Budget(2026)</div><div class="metric-value">₹ {year2_total/100:.2f} Cr</div></div>', unsafe_allow_html=True)
 
     st.markdown("---")
 

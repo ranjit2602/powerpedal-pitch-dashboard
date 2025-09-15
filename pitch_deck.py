@@ -3053,6 +3053,6 @@ with tabs[11]:
         st.markdown('<div class="audio-pitch-tab audio-container">', unsafe_allow_html=True)
         st.audio(audio_url, format="audio/mp3")
         st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown('<div class="audio-pitch-tab summary-text">Hear our pitch to discover how we’re revolutionizing e-mobility.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="audio-pitch-tab summary-text">As a final note, we’ve included an audio pitch — a short, conversational summary of Switch and our flagship product PowerPedal. It’s designed to give you a clear, engaging recap before you leave this deck..</div>', unsafe_allow_html=True)
     except Exception as e:
         st.error(f"Error loading audio file: {e}")

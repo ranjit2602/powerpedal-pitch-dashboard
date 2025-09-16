@@ -1093,6 +1093,10 @@ with tabs[2]:
         unsafe_allow_html=True
     )
 
+import streamlit as st
+import requests
+from io import BytesIO
+
 with tabs[3]:
     # ---- Main Product Page Layout ----
     st.header("Meet PowerPedal")
@@ -1118,7 +1122,7 @@ with tabs[3]:
     # Power Sensor Card - Centered
     col1, col2, col3 = st.columns([1, 4, 1])
     with col2:
-        st.markdown(f'<div style="text-align: center; border: 2px solid #78C841; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e);"><h3>Power Sensor – The “muscle detector” of the rider’s eBike</h3><img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powersense.png" style="max-width: 250px; border-radius: 8px; margin-top: 15px;" /><p style="color: #A8F1FF; margin-top: 15px;">Picture a clever little device tucked inside the rider’s pedal system—the PowerPedal Power Sensor—measuring every bit of force applied with stunning ±2% accuracy. In less than 10 milliseconds, it whisks this data to the controller, painting a vivid picture of the rider’s journey. Unlike basic cadence-based systems that merely tally pedal spins, this sensor knows whether the rider is gliding effortlessly or conquering a steep hill, ensuring the motor responds instantly with just the right boost. Say goodbye to jerky starts or wasted battery—every ride becomes a smooth, natural dance with the road!</p></div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="text-align: center; border: 2px solid #78C841; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e);"><h3>Power Sensor – The “muscle detector” of the rider’s eBike</h3><img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powersense.png" style="max-width: 250px; border-radius: 8px; margin-top: 15px;" /><p style="color: #A8F1FF; margin-top: 15px;">Picture a clever little device tucked inside the rider’s pedal system—Power Sensor—measuring every bit of force applied with stunning ±2% accuracy. In less than 10 milliseconds, it whisks this data to the controller, painting a vivid picture of the rider’s journey. Unlike basic cadence-based systems that merely tally pedal spins, this sensor knows whether the rider is gliding effortlessly or conquering a steep hill, ensuring the motor responds instantly with just the right boost. Say goodbye to jerky starts or wasted battery—every ride becomes a smooth, natural dance with the road!</p></div>', unsafe_allow_html=True)
 
     # Controller Card - Centered
     col4, col5, col6 = st.columns([1, 4, 1])
@@ -1129,19 +1133,30 @@ with tabs[3]:
     col7, col8, col9 = st.columns([1, 4, 1])
     with col8:
         st.markdown(f'<div style="text-align: center; border: 2px solid #78C841; border-radius: 12px; padding: 20px; background: linear-gradient(135deg, #1B3C53, #2e2e2e);"><h3>HMI (Human–Machine Interface) – The rider’s handlebar command center</h3><img src="https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/powershift.png" style="max-width: 250px; border-radius: 8px; margin-top: 15px;" /><p style="color: #A8F1FF; margin-top: 15px;">Meet the HMI, the rider’s sleek handlebar command center that puts control in their hands. Twist the throttle for 0–100% variable control—though OEM-set speed limits keep it safe—and flip the assist level selector from eco cruising to a full-power boost. A battery State of Charge indicator, accurate to ±1%, reveals the rider’s range at a glance, while the horn switch delivers quick safety alerts in traffic. Plus, the built-in USB port powers the rider’s lights or charges their phone mid-ride—it’s a multitasking marvel!</p></div>', unsafe_allow_html=True)
-    st.header("PowerPedal Mobile App – Your eBike Companion")
-    cols = st.columns(4)
-    app_screenshots = [
-        ("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_live.jpg", "Ride Dashboard: Live stats and real-time feedback."),
-        ("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_ride_history.jpg", "Ride History: Your personal cycling time machine."),
-        ("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_analytics.jpg", "Performance Analytics: Data-driven insights to ride smarter."),
-        ("https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/app_diagnostic.jpg", "Remote Diagnostics: AI-powered bike mechanic in your pocket."),
-    ]
 
-    for idx, (url, desc) in enumerate(app_screenshots):
-        with cols[idx]:
-            st.image(url, width=150)
-            st.markdown(f'<p style="font-size: 12px; color: #A8F1FF; text-align: center;">{desc}</p>', unsafe_allow_html=True)
+    st.header("PowerPedal Mobile App – Your eBike Companion")
+    
+    # New code for the single app screenshot with a fallback
+    app_image_url = "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/Mobile_app_screenshots.png"
+    
+    col_app1, col_app2, col_app3 = st.columns([1, 4, 1])
+    with col_app2:
+        try:
+            # Check if the image can be loaded from the URL
+            response = requests.get(app_image_url)
+            if response.status_code == 200:
+                st.image(BytesIO(response.content), use_container_width=True)
+            else:
+                st.error("Failed to load image from the URL.")
+                st.warning("Please check the URL or your internet connection.")
+        except Exception as e:
+            st.error(f"An error occurred while loading the image: {e}")
+            st.markdown(
+                '<div style="text-align: center; border: 2px solid #FF0000; border-radius: 8px; padding: 20px; color: #FF0000;">'
+                'Image not found. Please ensure the file is hosted correctly and the URL is public.'
+                '</div>',
+                unsafe_allow_html=True
+            )
 
     st.markdown("""
     <div style="text-align: center; padding: 20px; max-width: 800px; margin: 20px auto; background: linear-gradient(135deg, #1B3C53, #2e2e2e); border: 2px solid #78C841; border-radius: 12px; color: #FFF5F2;">
@@ -1348,6 +1363,14 @@ with tabs[4]:
         """,
         unsafe_allow_html=True
     )
+import streamlit as st
+import base64
+import os
+from pathlib import Path
+import requests
+from PIL import Image
+from io import BytesIO
+
 # ---- TAB 5: Go-to-Market Strategy ----
 with tabs[5]:
     # Minimal CSS for Go-to-Market Tab
@@ -1466,17 +1489,7 @@ with tabs[5]:
         unsafe_allow_html=True
     )
 
-    def load_image(image_url):
-        """Load remote image as PIL Image or return None if fails."""
-        try:
-            response = requests.get(image_url)
-            response.raise_for_status()
-            image = Image.open(BytesIO(response.content))
-            return image
-        except Exception:
-            return None
-
-    # Hero Section (Image Removed)
+    # Hero Section
     st.markdown('<div class="gtm-tab">', unsafe_allow_html=True)
     st.markdown('<div class="hero-container">', unsafe_allow_html=True)
     st.markdown('<h2 class="hero-title">Go-to-Market Story (2025–2030)</h2>', unsafe_allow_html=True)
@@ -1491,8 +1504,8 @@ with tabs[5]:
             "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/2025.png",
             "text": (
                 "We officially launch PowerPedal in India, our first testing ground. With pilot programs alongside <b>Hero, Pedalze, and Cypro</b>, "
-                "the product is put through real-world validation. To support this, we establish our first <b>30,000-unit production plant</b> in India. "
-                "By the end of the year, we target <b>10,000 units sold</b>, generating around <b>₹1.2 Cr</b> in revenue. This year is about proving that "
+                "the product is put through real-world validation. To support this, we establish our first <b>10,000-unit production plant</b> in India. "
+                "By the end of the year, we target <b>1,000 units sold</b>, generating <b>₹0.85 Cr</b> in revenue. This year is about proving that "
                 "PowerPedal works, scales, and delivers value."
             )
         },
@@ -1503,7 +1516,7 @@ with tabs[5]:
             "text": (
                 "With the pilots completed successfully, we turn them into long-term <b>OEM contracts</b> in India, capturing a larger share of the hub-drive market. "
                 "Having validated our product locally, the focus now shifts to preparing for international standards. We adapt PowerPedal to meet <b>European regulations (EN15194)</b> "
-                "and begin the certification process. At the same time, sales in India grow steadily, taking cumulative units to around <b>100,000</b> and revenues to <b>₹8.5 Cr</b>. "
+                "and begin the certification process. At the same time, sales in India grow steadily, taking cumulative units to around <b>10,000</b> sold, and revenues to <b>₹8.50 Cr</b>. "
                 "This year transforms PowerPedal from a local product into a globally certifiable technology."
             )
         },
@@ -1513,8 +1526,8 @@ with tabs[5]:
             "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/2027.png",
             "text": (
                 "Armed with <b>EU certification</b>, PowerPedal enters <b>Europe</b>, the world’s most mature eBike market, while also breaking into the <b>US</b> through OEM partnerships. "
-                "To support demand, we expand India’s production capacity to <b>100,000 units per year</b>. By the end of this stage, cumulative units double to <b>200,000</b>, "
-                "with revenues crossing <b>₹124 Cr</b>. The groundwork laid in India now becomes a global launchpad."
+                "To support demand, we expand India’s production capacity to <b>100,000 units per year</b>. By the end of this stage, total units sold reach <b>100,000</b>, "
+                "with revenues reaching a major milestone of <b>₹124.00 Cr</b>. The groundwork laid in India now becomes a global launchpad."
             )
         },
         {
@@ -1524,7 +1537,7 @@ with tabs[5]:
             "text": (
                 "Once established in Europe and the US, our strategy shifts toward scaling through <b>licensing deals</b> with OEMs, creating new recurring revenue streams. "
                 "Alongside OEM sales, we expand aggressively into <b>dealer networks</b>, enabling both retrofitting and aftermarket adoption of PowerPedal. With a balanced model of "
-                "licensing + OEM + dealers, sales rise sharply, taking cumulative units to <b>500,000</b> and revenues to <b>₹237 Cr</b>. This is the year PowerPedal begins to feel "
+                "licensing + OEM + dealers, sales rise sharply to <b>200,000</b> units, with revenues hitting <b>₹237.45 Cr</b>. This is the year PowerPedal begins to feel "
                 "like a standard in the industry, not just a product."
             )
         },
@@ -1534,8 +1547,8 @@ with tabs[5]:
             "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/2029.png",
             "text": (
                 "With momentum building, we expand our dealer base to over <b>850 globally</b>. To ensure supply resilience and faster delivery, we add manufacturing partnerships in "
-                "<b>Poland and Mexico</b>, complementing the India base. This reduces costs, shortens lead times, and diversifies risk. By the end of 2029, cumulative sales approach "
-                "<b>1 million units</b>, with revenues leaping to <b>₹654 Cr</b>. PowerPedal becomes a globally available technology backed by a strong manufacturing ecosystem."
+                "<b>Poland and Mexico</b>, complementing the India base. This reduces costs, shortens lead times, and diversifies risk. By the end of 2029, sales reach "
+                "<b>500,000 units</b>, with revenues leaping to <b>₹654.00 Cr</b>. PowerPedal becomes a globally available technology backed by a strong manufacturing ecosystem."
             )
         },
         {
@@ -1543,9 +1556,9 @@ with tabs[5]:
             "theme": "Market Leadership",
             "image": "https://raw.githubusercontent.com/ranjit2602/powerpedal-pitch-dashboard/main/assets/images/2030.png",
             "text": (
-                "By <b>2030</b>, PowerPedal reaches the milestone of <b>1 million units sold</b> worldwide and scales its dealer network to more than <b>1,650</b>. "
+                "By <b>2030</b>, PowerPedal reaches the milestone of <b>1,000,000 units sold</b> worldwide and scales its dealer network to more than <b>1,650</b>. "
                 "With this, we capture <b>1.94%</b> of the global eBike market and <b>8.64%</b> of the top non-Chinese hub-drive segment. "
-                "Revenues climb past <b>₹1,467 Cr</b>. At this stage, PowerPedal isn’t just a product—it’s a <b>global category leader</b> in eBike drive technology, "
+                "Revenues climb to a massive <b>₹1,467.50 Cr</b>. At this stage, PowerPedal isn’t just a product—it’s a <b>global category leader</b> in eBike drive technology, "
                 "built on patents, scalable manufacturing, and multi-channel growth."
             )
         }
@@ -1553,22 +1566,12 @@ with tabs[5]:
 
     # Year Selector
     selected_year = st.selectbox("Select Year", [year_data["year"] for year_data in years], key="year_selector")
-
+    
     # Display Selected Year's Content
     year_data = next(year_data for year_data in years if year_data["year"] == selected_year)
     col1, col2 = st.columns([1, 2])
     with col1:
-        image_path = load_image(year_data["image"])
-        if image_path:
-            st.image(image_path, use_container_width=True)
-        else:
-            try:
-                st.image(year_data["image"], use_container_width=True)
-            except Exception:
-                st.markdown(
-                    '<div class="placeholder-image">Year Placeholder<br><small>Image Loading...</small></div>',
-                    unsafe_allow_html=True
-                )
+        st.image(year_data["image"], use_container_width=True)
     with col2:
         st.markdown(f'<h3 class="year-title">{year_data["year"]} – {year_data["theme"]}</h3>', unsafe_allow_html=True)
         st.markdown(f'<p class="year-text">{year_data["text"]}</p>', unsafe_allow_html=True)
@@ -1578,7 +1581,7 @@ with tabs[5]:
                 {"title": "Dealers", "value": "1,650+"},
                 {"title": "Global Market Share", "value": "1.94%"},
                 {"title": "Non-China Hub-Drive Share", "value": "8.64%"},
-                {"title": "Revenue", "value": "₹1,467 Cr"}
+                {"title": "Revenue", "value": "₹1,467.50 Cr"}
             ]
             st.markdown('<div class="milestone-counters">', unsafe_allow_html=True)
             for milestone in milestones:
@@ -1587,7 +1590,7 @@ with tabs[5]:
                     unsafe_allow_html=True
                 )
             st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True) # Closes the .gtm-tab div
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt

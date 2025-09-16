@@ -1373,13 +1373,13 @@ from io import BytesIO
 
 # ---- TAB 5: Go-to-Market Strategy ----
 with tabs[5]:
-    # Minimal CSS for Go-to-Market Tab
+    # CSS for the new, simplified layout
     st.markdown(
         """
         <style>
         .gtm-tab .hero-container {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 30px;
         }
         .gtm-tab .hero-title {
             color: #78C841;
@@ -1392,69 +1392,46 @@ with tabs[5]:
             font-size: 14px;
             margin: 0 0 15px;
         }
-        .gtm-tab .year-selector {
-            max-width: 400px;
-            margin: 15px auto;
-            text-align: center;
-        }
-        .gtm-tab .year-section {
-            display: flex;
-            align-items: center;
-            margin: 15px auto;
-            max-width: 800px;
-            min-height: 120px;
-        }
-        .gtm-tab .year-image-container {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-        }
-        .gtm-tab .year-image {
-            max-width: 200px;
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            border: 1px solid #78C841;
-        }
-        .gtm-tab .year-text-container {
-            flex: 2;
-            padding: 10px;
+        .gtm-tab .timeline-item {
             background: #1B3C53;
             border: 1px solid #78C841;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
         }
-        .gtm-tab .year-title {
+        .gtm-tab .timeline-title {
             color: #78C841;
             font-size: 20px;
             font-weight: 600;
             margin: 0 0 6px;
         }
-        .gtm-tab .year-text {
+        .gtm-tab .timeline-text {
             color: #A8F1FF;
             font-size: 14px;
-            line-height: 1.4;
+            line-height: 1.5;
             margin: 0;
         }
-        .gtm-tab .year-text b {
+        .gtm-tab .timeline-text b {
             color: #FFF5F2;
             font-weight: 700;
         }
         .gtm-tab .milestone-counters {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             flex-wrap: wrap;
-            margin-top: 10px;
+            margin-top: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .gtm-tab .milestone-counter {
-            background: #1B3C53;
+            background: #244C66;
             border: 1px solid #78C841;
             border-radius: 6px;
-            padding: 8px;
-            min-width: 100px;
+            padding: 10px 15px;
+            min-width: 120px;
             text-align: center;
         }
         .gtm-tab .milestone-counter h4 {
@@ -1468,21 +1445,13 @@ with tabs[5]:
             font-weight: 700;
             margin: 0;
         }
-        .gtm-tab .placeholder-image {
-            width: 200px;
-            height: 150px;
-            background: linear-gradient(135deg, #1B3C53, #78C841);
-            border: 1px solid #78C841;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            color: #A8F1FF;
-            font-size: 12px;
-            text-align: center;
-            padding: 10px;
-            box-sizing: border-box;
+        .gtm-tab hr {
+            border: 0;
+            height: 1px;
+            background: #78C841;
+            margin: 40px auto;
+            width: 80%;
+            max-width: 700px;
         }
         </style>
         """,
@@ -1564,32 +1533,35 @@ with tabs[5]:
         }
     ]
 
-    # Year Selector
-    selected_year = st.selectbox("Select Year", [year_data["year"] for year_data in years], key="year_selector")
-    
-    # Display Selected Year's Content
-    year_data = next(year_data for year_data in years if year_data["year"] == selected_year)
-    col1, col2 = st.columns([1, 2])
-    with col1:
-        st.image(year_data["image"], use_container_width=True)
-    with col2:
-        st.markdown(f'<h3 class="year-title">{year_data["year"]} – {year_data["theme"]}</h3>', unsafe_allow_html=True)
-        st.markdown(f'<p class="year-text">{year_data["text"]}</p>', unsafe_allow_html=True)
-        if selected_year == "2030":
-            milestones = [
-                {"title": "Units Sold", "value": "1M"},
-                {"title": "Dealers", "value": "1,650+"},
-                {"title": "Global Market Share", "value": "1.94%"},
-                {"title": "Non-China Hub-Drive Share", "value": "8.64%"},
-                {"title": "Revenue", "value": "₹1,467.50 Cr"}
-            ]
-            st.markdown('<div class="milestone-counters">', unsafe_allow_html=True)
-            for milestone in milestones:
-                st.markdown(
-                    f'<div class="milestone-counter"><h4>{milestone["title"]}</h4><p>{milestone["value"]}</p></div>',
-                    unsafe_allow_html=True
-                )
-            st.markdown('</div>', unsafe_allow_html=True)
+    # Display all years in the timeline
+    for i, year_data in enumerate(years):
+        with st.container(border=True):
+            col1, col2 = st.columns([1, 2])
+            
+            with col1:
+                st.image(year_data["image"], width=350) # Increased the width here
+            
+            with col2:
+                st.markdown(f'<h3 class="timeline-title">{year_data["year"]} – {year_data["theme"]}</h3>', unsafe_allow_html=True)
+                st.markdown(f'<p class="timeline-text">{year_data["text"]}</p>', unsafe_allow_html=True)
+
+            # Add milestones only for the final year
+            if year_data["year"] == "2030":
+                milestones = [
+                    {"title": "Units Sold", "value": "1M"},
+                    {"title": "Dealers", "value": "1,650+"},
+                    {"title": "Global Market Share", "value": "1.94%"},
+                    {"title": "Non-China Hub-Drive Share", "value": "8.64%"},
+                    {"title": "Revenue", "value": "₹1,467.50 Cr"}
+                ]
+                st.markdown('<div class="milestone-counters">', unsafe_allow_html=True)
+                for milestone in milestones:
+                    st.markdown(
+                        f'<div class="milestone-counter"><h4>{milestone["title"]}</h4><p>{milestone["value"]}</p></div>',
+                        unsafe_allow_html=True
+                    )
+                st.markdown('</div>', unsafe_allow_html=True)
+
     st.markdown('</div>', unsafe_allow_html=True) # Closes the .gtm-tab div
 import streamlit as st
 import pandas as pd

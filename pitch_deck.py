@@ -2113,6 +2113,11 @@ with tabs[7]:
             """
             st.markdown(funding_html, unsafe_allow_html=True)
 
+import streamlit as st
+import base64
+from pathlib import Path
+import requests
+
 with tabs[8]:
     st.header("🧑‍🤝‍🧑 Team & Advisors", anchor=False)
     st.caption("Meet the Visionaries Powering Our Mission")
@@ -2150,6 +2155,7 @@ with tabs[8]:
         .team-advisors-tab .profile-image.core-team-image {{
             width: 100px !important;
             height: 100px !important;
+            object-fit: contain; /* FIX: Changed to 'contain' to prevent cropping */
         }}
         .team-advisors-tab .profile-image {{
             width: 120px !important;

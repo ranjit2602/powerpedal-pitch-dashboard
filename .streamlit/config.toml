@@ -1,0 +1,7 @@
+[theme]
+base = "dark"
+primaryColor = "#A8F1FF"
+backgroundColor = "#0E1117"
+secondaryBackgroundColor = "#1B3C53"
+textColor = "#E0E0E0"
+font = "sans serif"  # Or "Figtree" if you want to match your CSS (Streamlit supports basic fonts)

@@ -1,7 +1,0 @@
-[theme]
-base = "dark"
-primaryColor = "#A8F1FF"  # Matches your tab highlight color
-backgroundColor = "#0E1117"  # Dark background to align with your CSS
-secondaryBackgroundColor = "#1B3C53"  # Matches your card backgrounds
-textColor = "#E0E0E0"  # Matches your text color
-font = "Figtree"  # Matches your imported font
